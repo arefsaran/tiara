@@ -1,0 +1,54 @@
+<%- include("dashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>سفارش ها</h5>
+                    </div>
+                    <div class="card-body order-datatable">
+                        <div class="user-status table-responsive products-table">
+                            <table class="table table-bordernone mb-0">
+                                <thead>
+                                <tr>
+                                    <th scope="col">محصولات خریداری شده</th>
+                                    <th scope="col">نام خریدار</th>
+                                    <th scope="col">آدرس</th>
+                                    <th scope="col">تاریخ سفارش</th>
+                                    <th scope="col">مبلغ خرید</th>
+                                    <th scope="col">شماره سفارش</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            <% resultPurchases.forEach(purchase=> { %>
+                                <tr>
+                                    <td class="font-dark w-25">
+                                        <div class="d-block">
+                                        <% purchase.basket.forEach(products=> { %>
+                                            <small>
+                                            <%= products.count %> تا
+                                            <%= products.name %> -
+                                            </small>
+                                        <% }) %>
+                                        </div>
+                                    </td>
+                                    <td class="digits font-secondary"><%= purchase.customerInformations.customerName %></td>
+                                    <td class="digits"><small><%= purchase.customerInformations.customerAddress %></small></td>
+                                    <td class="font-secondary"><%= purchase.paidTime %></td>
+                                    <td class="digits"><%= purchase.totalPrice %> تومان</td>
+                                    <td class="digits font-secondary"><%= purchase.purchaseId %></td>
+                                </tr>
+                            <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("dashboardFooter"); -%>

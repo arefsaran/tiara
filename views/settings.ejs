@@ -1,0 +1,249 @@
+<%- include("dashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-12">
+                <% if (edit === 1 ) { %>
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                    role="alert"
+                    style="text-align: right"
+                >
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>پلتفرم تیارا :</strong> اطلاعات شما با موفقیت ویرایش
+                    شد
+                </div>
+                <% } %>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>ویرایش اطلاعات</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row product-adding">
+                            <div class="col-12">
+                                <form
+                                    class="needs-validation add-product-form"
+                                    action="/settings"
+                                    method="POST"
+                                    enctype="multipart/form-data"
+                                    id="settingsForm"
+                                >
+                                    <div class="form">
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom01"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >صاحب فروشگاه :</label
+                                            >
+                                            <input
+                                                name="userName"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom01"
+                                                type="text"
+                                                value="<%= storeDetails.userName %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom02"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >ایمیل صاحب فروشگاه :</label
+                                            >
+                                            <input
+                                                name="userEmail"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom02"
+                                                type="text"
+                                                value="<%= storeDetails.userEmail %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom03"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >نام فروشگاه :</label
+                                            >
+                                            <input
+                                                name="storeName"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom03"
+                                                type="text"
+                                                value="<%= storeDetails.userStore.storeName %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom04"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >آدرس اینترنتی فروشگاه :
+                                            </label>
+                                            <strong class="ml-2">
+                                                TiaraPlatform.ir.
+                                            </strong>
+                                            <div class="w-50 col-md-5">
+                                            <input
+                                                name="storeId"
+                                                class="form-control w-25"
+                                                id="validationCustom04"
+                                                type="text"
+                                                style="pointer-events: none;"
+                                                tabindex="-1"
+                                                value="<%= storeDetails.userStore.storeId %>"
+                                            />
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom05"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >نوع اشتراک فروشگاه :</label
+                                            >
+                                            <input
+                                                name="planType"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom05"
+                                                type="text"
+                                                tabindex="-1"
+                                                style="pointer-events: none;"
+                                                value="<%= storeDetails.userStore.storePlan.planType %>"
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom06"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >تاریخ پایان اشتراک فروشگاه :</label
+                                            >
+                                            <input
+                                                name="planTimeToExpiry"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom06"
+                                                type="text"
+                                                tabindex="-1"
+                                                style="pointer-events: none;"
+                                                value="<%= storeDetails.userStore.storePlan.planTimeToExpiry %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom07"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >آدرس فروشگاه :</label
+                                            >
+                                            <input
+                                                name="storeAddress"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom07"
+                                                type="text"
+                                                value="<%= storeDetails.userStore.storeAddress %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form">
+                                        <div class="form-group row">
+                                            <label
+                                                for="validationCustom08"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >شماره تماس فروشگاه:</label
+                                            >
+                                            <input
+                                                name="storePhoneNumber"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom08"
+                                                type="text"
+                                                value="<%= storeDetails.userStore.storePhoneNumber %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-sm-4" for="storePicture">
+                                                لوگوی فروشگاه:
+                                            </label>
+                                            <div class="box-input-file">
+                                                <input
+                                                    name="storePicture"
+                                                    class="upload"
+                                                    type="file"
+                                                    accept="image/*"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="userTokenHide" id="userTokenHide" value="<%= token %>">
+                                    <div class="offset-xl-3 offset-sm-4">
+                                        <button
+                                            onclick="actionSet()"
+                                            type="submit"
+                                            class="btn btn-success"
+                                        >
+                                            ویرایش
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+<script>
+    function actionSet() {
+        let token = localStorage.getItem("userToken");
+        document.getElementById("settingsForm").action = `settings?userToken=${token}`;;
+        document.getElementById("settingsForm").submit();
+
+    }
+</script>
+<%- include("dashboardFooter"); -%>

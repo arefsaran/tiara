@@ -1,0 +1,54 @@
+<%- include("dashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card" style="background-color: rgb(234, 235, 238);">
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="card-deck">
+                                    <% if (resultProducts.length === 0) { %>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <strong>پلتفرم تیارا :</strong> محصولی یافت نشد
+                                          </div>
+                                    <% } %>
+                                    <% resultProducts.forEach(product=> { %>
+                                        <% if (resultProducts.length === 1) { %>
+                                            <div class="col-xl-6 col-md-6 col-sm-12">
+                                                <% }else{ %>
+                                            <div class="col-xl-3 col-md-6 col-sm-12">
+                                                <% } %>
+                                            <form id="editProductsForm" method="GET" action="/editProduct">
+                                                <div class="card shadow-lg" style="width: 100%; height: 100%; margin-top: 25px;">
+                                                    <img src="<%= product.productPicture %>" class="card-img-top" style="width: 100%; height: 250px;" alt="...">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title"><%= product.productName %></h5>
+                                                        <p class="card-text"><%= product.productDetails.productSize %></p>
+                                                        <p class="card-text"><%= product.productDetails.productPrice %>تومان</p>
+                                                        <input type="hidden" name="userTokenHide" id="userTokenHide" value="<%= token %>">
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <button name="productId" value="<%= product._id %>" class="btn btn-solid w-100" type="submit">ویرایش</button>
+                                                        <a href=deleteProduct?userToken=<%= token %>&deleteProductId=<%= product._id %>&categoryNameForRequest=<%= product.productType %>><button name="deleteProductId" value="<%= product._id %>" class="btn btn-solid mt-2 w-100 text-danger" type="button">حذف</button></a>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    <% }) %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("dashboardFooter"); -%>

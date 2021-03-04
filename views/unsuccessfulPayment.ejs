@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت موفق</title>
+    <link href="static/img/icon.png" rel="icon">
+    <link href="static/img/icon.png" rel="apple-touch-icon">
+</head>
+<body>
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <div class="jumbotron text-center">
+        <h1 class="display-3">متاسفانه پرداخت ناموفق بود</h1>
+        <p class="lead">برای بازگشت به فروشگاه روی دکمه زیر کلیک کنید</p>
+        <hr>
+        <p class="lead">
+          <a class="btn btn-primary btn-sm" href="/" role="button">بازگشت به فروشگاه</a>
+        </p>
+      </div>
+
+  <script>
+    var shoppingCart = (function () {
+    // Private methods and properties
+    var cart = [];
+    
+    function Item(name, price, count, picture, id) {
+        this.name = name;
+        this.price = price;
+        this.count = count;
+        this.picture = picture;
+        this.id = id;
+    }
+    
+    function saveCart() {
+        localStorage.setItem("shoppingCart", JSON.stringify(cart));
+    }
+    
+    function loadCart() {
+        cart = JSON.parse(localStorage.getItem("shoppingCart"));
+        if (cart === null) {
+            cart = [];
+        }
+    }
+    
+    loadCart();
+    
+    // Public methods and properties
+    var obj = {};
+    
+    obj.totalCart = function () {
+            // -> return total cost
+            var totalCost = 0;
+            for (var i in cart) {
+                totalCost += cart[i].price * cart[i].count;
+            }
+            return totalCost;
+        };
+    return obj;
+    })();
+    </script>
+    
+    <script>
+        function addProductsToDatabase(){
+        try {
+            document.getElementById("storeId").value = "1001";
+            document.getElementById("totalPrice").value = shoppingCart.totalCart();
+            document.getElementById("paidTime").value = Date.now();
+        let url = "/purchase";
+        let productsInBasket = JSON.parse(localStorage.getItem("shoppingCart"));
+        let purchaseId = localStorage.getItem("purchaseId");
+        let data= {
+            basket :productsInBasket,
+            purchaseId: purchaseId
+        }
+        fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                "Content-Type": "application/json",
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *client
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+            }).then((response)=>{
+                return response.json();
+            }).then((res)=>{
+                // console.log("res", res);
+                if (res.status === 200) {
+                    localStorage.removeItem("purchaseId");
+                    window.location.href = "/unsuccessfulPayment";
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            }
+        }
+        addProductsToDatabase();
+    </script>
+</body>
+</html>

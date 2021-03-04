@@ -1,0 +1,76 @@
+<%- include("simpleHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <% if (error.length !== 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>پلتفرم تیارا :</strong> <%= error %>
+                      </div>
+                  <% } %>
+                <div class="card" style="background-color: rgb(234, 235, 238);">
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 xl-50">
+                                        <h3>ایجاد حساب کاربری</h3>
+                                        <div class="theme-card">
+                                            <form id="signUpForm" class="theme-form" action="/signUp" method="POST" enctype="application/x-www-form-urlencoded">
+                                                <div class="form-row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <strong style="display: flex; justify-content: flex-start;">نام و نام خانوادگی</strong>
+                                                        <input id="userName" type="text" class="form-control" name="userName" placeholder="نام و نام خانوادگی به فارسی" required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <strong style="display: flex; justify-content: flex-start;">نام فروشگاه</strong>
+                                                        <input id="userStoreName" type="text" class="form-control" name="userStoreName" placeholder="نام فروشگاه به فارسی" required>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <strong style="display: flex; justify-content: flex-start;">آدرس اینترنتی فروشگاه :
+                                                        </strong>
+                                                        <div class="col-md-5" style="display: flex; justify-content: flex-start;">
+                                                        <strong class="ml-0">
+                                                            TiaraPlatform.ir.
+                                                        </strong>
+                                                        <div class="w-100 col-md-12">
+                                                        <input
+                                                            name="userStoreNameInEnglish"
+                                                            class="form-control"
+                                                            id="userStoreNameInEnglish"
+                                                            type="text"
+                                                            placeholder=""
+                                                            required
+                                                        />
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <strong style="display: flex; justify-content: flex-start;">ایمیل</strong>
+                                                        <input id="userEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" class="form-control" name="userEmail" placeholder="ایمیل" required>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-6 mb-3">
+                                                        <strong style="display: flex; justify-content: flex-start;">رمز عبور</strong>
+                                                        <input id="userPassword"   pattern=".{4,}" type="password" class="form-control" name="userPassword" placeholder="رمز عبور خود را مشخص کنید(حداقل 4 کاراکتر)" required>
+                                                    </div>
+                                                        <input form="signUpForm" value="ثبت نام" type="submit" class="btn btn-solid ml-3 mt-3">
+                                                        <a href="logIn"class="btn btn-solid ml-3 mt-3">قبلا ثبت نام کرده اید؟</a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("dashboardFooter"); -%>

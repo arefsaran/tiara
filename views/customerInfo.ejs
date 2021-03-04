@@ -1,0 +1,148 @@
+<%- include("header"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <% if (error.length !== 0) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong id="errorAlert">پلتفرم تیارا :</strong> <%= error %>
+                  </div>
+            <% } %>
+            <div class="card col-xl-12 col-md-12 col-sm-6">
+                <div class="card-header">
+                    <h5>اطلاعات خود را وارد کنید: </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row product-adding">
+                        <div class="w-100">
+                            <form class="needs-validation add-product-form" action="/purchase" method="POST">
+                                <div class="form">
+                                    <div class="form-group mb-3 row">
+                                        <label for="validationCustomUsername" class="col-xl-3 col-sm-4 mb-0">نام و نام خانوادگی :</label>
+                                        <input name="customerName" id="customerName" class="form-control col-xl-8 col-sm-7" id="validationCustomUsername" type="text" required>
+                                        <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا نام و نام خانوادگی خود وارد کنید</div>
+                                    </div>
+                                    <div class="form-group mb-3 row">
+                                        <label for="validationCustom01" class="col-xl-3 col-sm-4 mb-0">شماره تماس :</label>
+                                        <input name="customerPhone" id="customerPhone" class="form-control col-xl-8 col-sm-7" id="validationCustom01" type="tel" required>
+                                        <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا شماره تماس خود وارد کنید</div>
+                                    </div>
+                                    <div class="form-group mb-3 row">
+                                        <label for="validationCustom02" class="col-xl-3 col-sm-4 mb-0">آدرس :</label>
+                                        <input name="customerAddress" id="customerAddress" class="form-control col-xl-8 col-sm-7" id="validationCustom02" type="text" required>
+                                        <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا آدرس خود وارد کنید</div>
+                                    </div>
+                                    <div class="form-group mb-3 row">
+                                        <label for="validationCustom03" class="col-xl-3 col-sm-4 mb-0">کدپستی :</label>
+                                        <input name="customerPostalCode" id="customerPostalCode" class="form-control col-xl-8 col-sm-7" id="validationCustom03" type="text" required>
+                                        <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا کدپستی خود وارد کنید</div>
+                                    </div>
+                                    <!-- <input name="basketJSON" id="basketJSON" class="form-control col-xl-8 col-sm-7" type="hidden" required> -->
+                                    <input name="totalPrice" id="totalPrice" class="form-control col-xl-8 col-sm-7" type="hidden" required>
+                                    <input name="paidTime" id="paidTime" class="form-control col-xl-8 col-sm-7" type="hidden" required>
+                                </div>
+                                <div class="offset-xl-3 offset-sm-4">   
+                                    <button type="button" name="purchaseButton" id="purchaseButton" class="btn btn-success">پرداخت</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var shoppingCart = (function () {
+// Private methods and properties
+var cart = [];
+
+function Item(name, price, count, picture, id) {
+    this.name = name;
+    this.price = price;
+    this.count = count;
+    this.picture = picture;
+    this.id = id;
+}
+
+function saveCart() {
+    localStorage.setItem("shoppingCart", JSON.stringify(cart));
+}
+
+function loadCart() {
+    cart = JSON.parse(localStorage.getItem("shoppingCart"));
+    if (cart === null) {
+        cart = [];
+    }
+}
+
+loadCart();
+
+// Public methods and properties
+var obj = {};
+
+obj.totalCart = function () {
+        // -> return total cost
+        var totalCost = 0;
+        for (var i in cart) {
+            totalCost += cart[i].price * cart[i].count;
+        }
+        return totalCost;
+    };
+return obj;
+})();
+</script>
+
+<script>
+    document.getElementById("purchaseButton").onclick = function paymentFunction(){
+    try {
+        if (shoppingCart.totalCart() == 0) {
+            document.getElementById("errorAlert").innerHTML = "هزینه پرداختی صفر"
+        } else {
+        document.getElementById("totalPrice").value = shoppingCart.totalCart();
+        document.getElementById("paidTime").value = Date.now();
+    let url = "/purchase";
+    let productsInBasket = JSON.parse(localStorage.getItem("shoppingCart"));
+    let data= {
+        basket :productsInBasket,
+        totalPrice: document.getElementById("totalPrice").value,
+        paidTime: document.getElementById("paidTime").value,
+        customerName: document.getElementById("customerName").value,
+        customerPhone: document.getElementById("customerPhone").value,
+        customerAddress: document.getElementById("customerAddress").value,
+        customerPostalCode: document.getElementById("customerPostalCode").value
+    }
+    fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+            "Content-Type": "application/json",
+            },
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *client
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        }).then((response)=>{
+            return response.json();
+        }).then((res)=>{
+            // console.log("res", res);
+            if (res.status === 200 && res.data !== "Deleted") {
+                localStorage.setItem("purchaseId",res.data.purchaseId);
+                window.location.href = `/zarinpal/payment?purchaseId=${res.data.purchaseId}&totalPrice=${res.data.totalPrice}`
+            } else if (res.status === 403 && outOfOrderProducts){
+                window.location.href = `/customerInfo?error=${res.data.outOfOrderProducts[0].name} سفارش شما بیش از تعداد موجود می باشد`
+            }
+        });
+    }
+    } catch (error) {
+        console.log(error);
+        }
+    }
+</script>
+<%- include("footer"); -%>

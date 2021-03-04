@@ -1,0 +1,53 @@
+<%- include("simpleHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <% if (error.length !== 0) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>پلتفرم تیارا :</strong> <%= error %>
+                  </div>
+              <% } %>
+            <div class="col-sm-12">
+                <div class="card" style="background-color: rgb(234, 235, 238);">
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 xl-50">
+                                    <div class="card-text">
+                                        <h3>ورود</h3>
+                                        <div class="theme-card">
+                                            <form class="theme-form" action="/logIn" method="POST" enctype="application/x-www-form-urlencoded">
+                                                <div class="col-lg-6">
+                                                    <input id="userEmail" type="text" class="form-control" name="userEmail" placeholder="ایمیل خود را وارد کنید" required>
+                                                </div>
+                                                <div class="col-lg-6 mt-2">
+                                                    <input id="userPassword" type="password" class="form-control" name="userPassword" placeholder="رمز عبور خود را وارد کنید" required>
+                                                </div>
+                                                <button style="display: flex; justify-content: flex-start;" id="logInButton" name="logInButton" class="btn btn-solid mt-3 mr-4" type="submit">ورود</button>
+                                                <h3 class="mt-5">مشتری جدید</h3>
+                                                <div class="theme-card authentication-right">
+                                                    <h6 class="title-font">ایجاد یک حساب کاربری</h6>
+                                                    <p>
+                                                        برای یک حساب کاربری رایگان در فروشگاه ما ثبت نام کنید. ثبت نام سریع و آسان است. این امکان را به شما می دهد تا بتوانید محصولات خود را به فروش برسانید. برای شروع، روی دکمه ثبت نام کلیک کنید.
+                                                    </p>
+                                                    <a href="signUp"class="btn btn-solid">ایجاد یک حساب کاربری</a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("footer"); -%>

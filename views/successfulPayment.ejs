@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت موفق</title>
+    <link href="static/img/icon.png" rel="icon">
+    <link href="static/img/icon.png" rel="apple-touch-icon">
+</head>
+<body>
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <div class="jumbotron text-center">
+        <h1 class="display-3">پرداخت موفقیت آمیز بود</h1>
+        <div>
+            <p>
+                شماره پیگیری شما : <%= RefID %>
+            </p>
+        </div>
+        <p class="lead">برای بازگشت به فروشگاه روی دکمه زیر کلیک کنید</p>
+        <hr>
+        <p class="lead">
+          <a class="btn btn-primary btn-sm" href="/" role="button">بازگشت به فروشگاه</a>
+        </p>
+      </div>
+    <script>
+        function clearBasket(){
+            window.localStorage.removeItem("shoppingCart");
+        }
+        clearBasket();
+    </script>
+</body>
+</html>

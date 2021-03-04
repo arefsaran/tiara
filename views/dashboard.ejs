@@ -1,0 +1,133 @@
+<%- include("dashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>فروشگاه <%= storeInfo.storeName %></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-3 col-md-6 xl-50">
+                                    <div class="card o-hidden shadow-lg widget-cards">
+                                        <div class="bg-warning card-body">
+                                            <div class="media static-top-widget row">
+                                                <div class="icons-widgets col-4">
+                                                    <div class="align-self-center text-center"><i data-feather="dollar-sign" class="font-warning"></i></div>
+                                                </div>
+                                                <div class="media-body col-8"><p class="m-0"></p>
+                                                    <h4 class="mb-0">درآمد کل<p class="counter"><%= totalPriceOfPurchases %> <strong>تومان</strong></p></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6 xl-50">
+                                    <div class="card o-hidden shadow-lg widget-cards">
+                                        <div class="bg-secondary card-body">
+                                            <div class="media static-top-widget row">
+                                                <div class="icons-widgets col-4">
+                                                    <div class="align-self-center text-center"><i data-feather="dollar-sign" class="font-secondary"></i></div>
+                                                </div>
+                                                <div class="media-body col-8"><p class="m-0"></p>
+                                                    <h4 class="mb-0">درآمد سی روز<p class="counter"><%= lastMonthSalesTotalPrice %> <strong>تومان</strong></p></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-md-6 xl-50">
+                                    <div class="card o-hidden shadow-lg widget-cards">
+                                        <div class="bg-primary card-body">
+                                            <div class="media static-top-widget row">
+                                                <div class="icons-widgets col-4">
+                                                    <div class="align-self-center text-center"><i data-feather="dollar-sign" class="font-primary"></i></div>
+                                                </div>
+                                                <div class="media-body col-8"><p class="m-0"></p>
+                                                    <h4 class="mb-0">مانده حساب<p class="counter"><%= totalPriceOfPurchases %> <strong>تومان</strong></p></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-md-6 xl-50">
+                                    <div class="card o-hidden shadow-lg widget-cards">
+                                        <div class="bg-danger card-body">
+                                            <div class="media static-top-widget row">
+                                                <div class="icons-widgets col-4">
+                                                    <div class="align-self-center text-center"><i data-feather="bar-chart" class="font-danger"></i></div>
+                                                </div>
+                                                <div class="media-body col-8"><p class="m-0"></p>
+                                                    <h4 class="mb-0">تعداد فروش<p class="counter"><%= numberOfPurchases %> <strong>بار</strong></p></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 xl-100">
+                    <div class="card height-equal">
+                        <div class="card-header">
+                            <h5>خلاصه آخرین سفارشات</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="user-status table-responsive products-table">
+                                <table class="table table-bordernone mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">نام خریدار</th>
+                                        <th scope="col">تعداد محصول</th>
+                                        <th scope="col">تاریخ سفارش</th>
+                                        <th scope="col">مبلغ خرید</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                <% purchases.forEach(purchase=> { %>
+                                    <tr>
+                                        <td class="font-dark w-25"><%= purchase.customerInformations.customerName %></td>
+                                        <td class="digits"><%= purchase.basket.length %></td>
+                                        <td class="font-secondary"><%= purchase.paidTime %></td>
+                                        <td class="digits"><%= purchase.totalPrice %> تومان</td>
+                                    </tr>
+                                <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <div class="code-box-copy">
+                                <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#example-head4" title="" data-original-title="Copy"><i class="icofont icofont-copy-alt"></i></button>
+                                <pre class=" language-html">
+                                    <code class=" language-html" id="example-head4"></code>
+                                </pre>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="<%= userToken %>" id="userToken" >
+<script>
+    function tokenSaverFunction() {
+        let userToken =  document.getElementById("userToken").value;
+        localStorage.setItem("userToken", userToken);
+        document.getElementById("logoutButton").onclick = function logout() {
+            localStorage.removeItem("userToken");
+        }
+    }
+    tokenSaverFunction();
+</script>
+<%- include("dashboardFooter"); -%>

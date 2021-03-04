@@ -1,0 +1,11 @@
+{
+    "serverConfig": {
+        "config": {
+            "host": "127.0.0.1",
+            "port": 4002,
+            "mongoDB": "mongodb://localhost:27017/ecommerce",
+            "ecommerceDB": "mongodb://localhost:27017/ecommerce",
+            "jwtPrivateKey": "5ctDYpcmlkIgcMOuDJ4oVIsb4FMyqDY11G2Xi6kdO41qSmZHjOsvjCAVrIpNnXB_"
+        }
+    }
+}

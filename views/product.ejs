@@ -1,0 +1,92 @@
+<%- include("header"); -%>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="./assets/js/shoppingCart.js"></script>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card" style="background-color: rgb(234, 235, 238);">
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-12 col-md-12 col-sm-12 xl-50">
+                                    <form class="card-text">
+                                        <div class="card shadow-lg" style="width: 100%; height: 100%; margin-top: 25px;">
+                                            <img src="<%= resultProduct.productPicture %>" class="card-img-top col-xl-3 col-md-3" style="width: 100%; height: 250px;" alt="...">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><%= resultProduct.productName %></h5>
+                                                <p class="card-text"><%= resultProduct.productDetails.productSize %></p>
+                                                <p class="card-text"><%= resultProduct.productDetails.productPrice %>تومان</p>
+                                                <p class="card-text">تاریخ تولید: <%= resultProduct.productDetails.productManufacturingDate %></p>
+                                                <p class="card-text">تاریخ انقضا: <%= resultProduct.productDetails.productExpirationDate %></p>
+                                            </div>
+                                            <div class="qty-box">
+                                                <div class="input-group">
+                                                    <h3 class="m-5">تعداد:</h3>
+                                                    <span class="input-group-prepend">
+                                                        <button type="button" class="btn quantity-left-minus" data-type="minus" data-field="">
+                                                            -
+                                                        </button>
+                                                    </span>
+                                                    <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1">
+                                                    <span class="input-group-prepend">
+                                                        <button type="button" class="btn quantity-right-plus" data-type="plus" data-field="">
+                                                            +
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer ">
+                                                <button data-picture="<%= resultProduct.productPicture %>" data-id="<%= resultProduct._id %>" data-name="<%= resultProduct.productName %>" data-price="<%= resultProduct.productDetails.productPriceEnglishNumber %>" id="productButton" name="productButton" class="add-to-cart btn btn-solid w-100 col-lg-3 col-md-6" type="submit">اضافه کردن به سبد خرید</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("productButton").onclick = function addToBasketFunction() {
+        try {
+            event.preventDefault();
+            var name = $(this).attr("data-name");
+            var picture = ($(this).attr("data-picture"));
+            var id = ($(this).attr("data-id"));
+            var price = Number($(this).attr("data-price"));
+            var count = Number(document.getElementById("quantity").value);
+            shoppingCart.addItemToCart(name, price, count, picture, id);
+            let url = "/basket";
+            let data = {};
+            fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                "Content-Type": "application/json",
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *client
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+            }).then((res) => {
+                // console.log("res.json",res.json());
+                return res.json();
+            }) // expecting a json response
+            .then((response)=>{
+                window.location.href = "/basket";
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+</script>
+
+<%- include("footer"); -%>

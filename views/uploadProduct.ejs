@@ -1,0 +1,90 @@
+<%- include("dashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <% if (productUploaded === "1") { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: right;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>پلتفرم تیارا :</strong> محصول شما با موفقیت اضافه شد
+                      </div>
+                <% } %>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>اضافه کردن محصول</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row product-adding">
+                            <div class="col-xl-7">
+                                <form id="uploadForm" class="needs-validation add-product-form" action="/uploadProduct" method="POST" enctype="multipart/form-data">
+                                    <div class="form">
+                                        <div class="form-group mb-3 row">
+                                            <input type="hidden" name="collectionName" class="form-control" type="text" placeholder="collectionName" value="1001" />
+                                            <label for="validationCustom01" class="col-xl-3 col-sm-4 mb-0">نام محصول :</label>
+                                            <input name="productName" class="form-control col-xl-8 col-sm-7" id="validationCustom01" type="text" required>
+                                            <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا مقدار معتبر وارد کنید</div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label for="validationCustom02" class="col-xl-3 col-sm-4 mb-0">قیمت محصول :</label>
+                                            <input name="productPrice" class="form-control col-xl-8 col-sm-7" id="validationCustom02" type="text" required>
+                                            <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا مقدار معتبر وارد کنید</div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label for="validationCustomUsername" class="col-xl-3 col-sm-4 mb-0">تاریخ تولید محصول :</label>
+                                            <input name="productManufacturingDate" class="form-control col-xl-8 col-sm-7" id="validationCustomUsername" type="text" required>
+                                            <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا مقدار معتبر وارد کنید</div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label for="validationCustomUsername" class="col-xl-3 col-sm-4 mb-0">تاریخ انقضا محصول :</label>
+                                            <input name="productExpirationDate" class="form-control col-xl-8 col-sm-7" id="validationCustomUsername" type="text" required>
+                                            <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا مقدار معتبر وارد کنید</div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label for="validationCustomUsername" class="col-xl-3 col-sm-4 mb-0">اندازه محصول(سایز) :</label>
+                                            <input name="productSize" class="form-control col-xl-8 col-sm-7" id="validationCustomUsername" type="text" required>
+                                            <div class="invalid-feedback offset-sm-4 offset-xl-3">لطفا مقدار معتبر وارد کنید</div>
+                                        </div>
+                                    </div>
+                                    <div class="form">
+                                        <div class="form-group row">
+                                            <label for="exampleFormControlSelect1" class="col-xl-3 col-sm-4 mb-0">دسته ی محصول را انتخاب کنید :</label>
+                                            <select name="categoryName" class="form-control digits col-xl-8 col-sm-7" id="exampleFormControlSelect1">
+                                            <% resultCategories.forEach(category=> { %>
+                                                <option><%= category.categoryName %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-sm-4 mb-0">تعداد موجوی این محصول:</label>
+                                            <fieldset class="qty-box col-xl-9 col-xl-8 col-sm-7 pl-0">
+                                                <div class="input-group">
+                                                    <input name="inStock" class="touchspin" type="text" value="1">
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-sm-4">اضافه کردن عکس:</label>
+                                            <div class="box-input-file"><input name="productPicture" class="upload" type="file" accept="image/*" required></div>
+                                        </div>
+                                        <input type="hidden" name="userTokenHide" id="userTokenHide" value="">
+                                    </div>
+                                    <div class="offset-xl-3 offset-sm-4">   
+                                        <button type="submit" class="btn btn-success">اضافه کردن</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+
+</div>
+
+<%- include("dashboardFooter"); -%>
