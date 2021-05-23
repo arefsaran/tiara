@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9d170c74-6785-4099-958f-74e5d92ca152" name="tiara" url="http://45.159.113.150:3031">
+        <fileTransfer rootFolder="/home/sites/tiaraplatform.ir" accessType="SFTP" host="45.159.113.150" port="3031" sshConfigId="e59d4995-e9e1-4755-95ed-4e2ce5ebc1c3" sshConfig="tiara">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

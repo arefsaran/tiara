@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" connectionConfig="{&quot;serverAliveInterval&quot;:300}" host="45.159.113.150" id="e59d4995-e9e1-4755-95ed-4e2ce5ebc1c3" port="3031" customName="tiara" nameFormat="CUSTOM" username="root">
+        <option name="customName" value="tiara" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>

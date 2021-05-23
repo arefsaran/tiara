@@ -1,126 +1,325 @@
-jQuery(document).ready(function ($) {
-  /*
-    |--------------------------------------------------------------------------
-    | Global myTheme Obj / Variable Declaration
-    |--------------------------------------------------------------------------
-    |
-    |
-    |
-    */
+$(function () {
 
-  var myTheme = window.myTheme || {},
-    $win = $(window);
+    "use strict";
 
-  /*
-    |--------------------------------------------------------------------------
-    | isotope
-    |--------------------------------------------------------------------------
-    |
-    |
-    |
-    */
+    //===== Prealoder
 
-  myTheme.Isotope = function () {
-    // 4 column layout
-    var isotopeContainer = $(".isotopeContainer");
-    if (!isotopeContainer.length || !jQuery().isotope) return;
-    $win.on("load", function () {
-      isotopeContainer.isotope({
-        itemSelector: ".isotopeSelector",
-      });
-      $(".isotopeFilters").on("click", "a", function (e) {
-        $(".isotopeFilters").find(".active").removeClass("active");
-        $(this).parent().addClass("active");
-        var filterValue = $(this).attr("data-filter");
-        isotopeContainer.isotope({ filter: filterValue });
-        e.preventDefault();
-      });
+    $('.preloader').delay(500).fadeOut(500);
+
+    
+    //===== Sticky
+
+    $(window).on('scroll', function (event) {
+        var scroll = $(window).scrollTop();
+        if (scroll < 20) {
+            $(".navbar-area").removeClass("sticky");
+            $(".navbar .navbar-brand img").attr("src", "assets/images/logo.svg");
+        } else {
+            $(".navbar-area").addClass("sticky");
+            $(".navbar .navbar-brand img").attr("src", "assets/images/logo-2.svg");
+        }
     });
 
-    // 3 column layout
-    var isotopeContainer2 = $(".isotopeContainer2");
-    if (!isotopeContainer2.length || !jQuery().isotope) return;
-    $win.on("load", function () {
-      isotopeContainer2.isotope({
-        itemSelector: ".isotopeSelector",
-      });
-      $(".isotopeFilters2").on("click", "a", function (e) {
-        $(".isotopeFilters2").find(".active").removeClass("active");
-        $(this).parent().addClass("active");
-        var filterValue = $(this).attr("data-filter");
-        isotopeContainer2.isotope({ filter: filterValue });
-        e.preventDefault();
-      });
+
+
+    //===== Section Menu Active
+
+    var scrollLink = $('.page-scroll');
+    // Active link switching
+    $(window).scroll(function () {
+        var scrollbarLocation = $(this).scrollTop();
+
+        scrollLink.each(function () {
+
+            var sectionOffset = $(this.hash).offset().top - 73;
+
+            if (sectionOffset <= scrollbarLocation) {
+                $(this).parent().addClass('active');
+                $(this).parent().siblings().removeClass('active');
+            }
+        });
     });
 
-    // 2 column layout
-    var isotopeContainer3 = $(".isotopeContainer3");
-    if (!isotopeContainer3.length || !jQuery().isotope) return;
-    $win.on("load", function () {
-      isotopeContainer3.isotope({
-        itemSelector: ".isotopeSelector",
-      });
-      $(".isotopeFilters3").on("click", "a", function (e) {
-        $(".isotopeFilters3").find(".active").removeClass("active");
-        $(this).parent().addClass("active");
-        var filterValue = $(this).attr("data-filter");
-        isotopeContainer3.isotope({ filter: filterValue });
-        e.preventDefault();
-      });
+
+    //===== close navbar-collapse when a  clicked
+
+    $(".navbar-nav a").on('click', function () {
+        $(".navbar-collapse").removeClass("show");
     });
 
-    // 1 column layout
-    var isotopeContainer4 = $(".isotopeContainer4");
-    if (!isotopeContainer4.length || !jQuery().isotope) return;
-    $win.on("load", function () {
-      isotopeContainer4.isotope({
-        itemSelector: ".isotopeSelector",
-      });
-      $(".isotopeFilters4").on("click", "a", function (e) {
-        $(".isotopeFilters4").find(".active").removeClass("active");
-        $(this).parent().addClass("active");
-        var filterValue = $(this).attr("data-filter");
-        isotopeContainer4.isotope({ filter: filterValue });
-        e.preventDefault();
-      });
+    $(".navbar-toggler").on('click', function () {
+        $(this).toggleClass("active");
     });
-  };
 
-  /*
-    |--------------------------------------------------------------------------
-    | Fancybox
-    |--------------------------------------------------------------------------
-    |
-    |
-    |
-    */
+    $(".navbar-nav a").on('click', function () {
+        $(".navbar-toggler").removeClass('active');
+    });    
+    
 
-  // myTheme.Fancybox = function () {
-  //
-  // 	$(".fancybox-pop").fancybox({
-  // 		maxWidth	: 900,
-  // 		maxHeight	: 700,
-  // 		fitToView	: true,
-  // 		width		: '80%',
-  // 		height		: '80%',
-  // 		autoSize	: false,
-  // 		closeClick	: false,
-  // 		openEffect	: 'elastic',
-  // 		closeEffect	: 'none'
-  // 	});
-  //
-  // };
-  //
+    //===== Counter Up
 
-  /*
-    |--------------------------------------------------------------------------
-    | Functions Initializers
-    |--------------------------------------------------------------------------
-    |
-    |
-    |
-    */
+    $('.counter').counterUp({
+        delay: 10,
+        time: 3000
+    });
 
-  myTheme.Isotope();
-  // myTheme.Fancybox();
+
+
+    //===== Back to top
+
+    // Show or hide the sticky footer button
+    $(window).on('scroll', function (event) {
+        if ($(this).scrollTop() > 600) {
+            $('.back-to-top').fadeIn(200);
+        } else {
+            $('.back-to-top').fadeOut(200);
+        }
+    });
+
+
+    //Animate the scroll to yop
+    $('.back-to-top').on('click', function (event) {
+        event.preventDefault();
+
+        $('html, body').animate({
+            scrollTop: 0,
+        }, 1500);
+    });
+
+
+    //=====  WOW active
+
+    new WOW().init();
+
+
+    //=====  particles
+
+
+    if (document.getElementById("particles-1")) particlesJS("particles-1", {
+        "particles": {
+            "number": {
+                "value": 40,
+                "density": {
+                    "enable": !0,
+                    "value_area": 4000
+                }
+            },
+            "color": {
+                "value": ["#FFFFFF", "#FFFFFF", "#FFFFFF"]
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#fff"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                },
+                "image": {
+                    "src": "img/github.svg",
+                    "width": 33,
+                    "height": 33
+                }
+            },
+            "opacity": {
+                "value": 0.15,
+                "random": !0,
+                "anim": {
+                    "enable": !0,
+                    "speed": 0.2,
+                    "opacity_min": 0.15,
+                    "sync": !1
+                }
+            },
+            "size": {
+                "value": 50,
+                "random": !0,
+                "anim": {
+                    "enable": !0,
+                    "speed": 2,
+                    "size_min": 5,
+                    "sync": !1
+                }
+            },
+            "line_linked": {
+                "enable": !1,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": !0,
+                "speed": 1,
+                "direction": "top",
+                "random": !0,
+                "straight": !1,
+                "out_mode": "out",
+                "bounce": !1,
+                "attract": {
+                    "enable": !1,
+                    "rotateX": 600,
+                    "rotateY": 600
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": !1,
+                    "mode": "bubble"
+                },
+                "onclick": {
+                    "enable": !1,
+                    "mode": "repulse"
+                },
+                "resize": !0
+            },
+            "modes": {
+                "grab": {
+                    "distance": 400,
+                    "line_linked": {
+                        "opacity": 1,
+                    }
+                },
+                "bubble": {
+                    "distance": 250,
+                    "size": 0,
+                    "duration": 2,
+                    "opacity": 0,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 400,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": !0
+    });
+
+    if (document.getElementById("particles-2")) particlesJS("particles-2", {
+        "particles": {
+            "number": {
+                "value": 40,
+                "density": {
+                    "enable": !0,
+                    "value_area": 4000
+                }
+            },
+            "color": {
+                "value": ["#FFFFFF", "#FFFFFF", "#FFFFFF"]
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#fff"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                },
+                "image": {
+                    "src": "img/github.svg",
+                    "width": 33,
+                    "height": 33
+                }
+            },
+            "opacity": {
+                "value": 0.15,
+                "random": !0,
+                "anim": {
+                    "enable": !0,
+                    "speed": 0.2,
+                    "opacity_min": 0.15,
+                    "sync": !1
+                }
+            },
+            "size": {
+                "value": 50,
+                "random": !0,
+                "anim": {
+                    "enable": !0,
+                    "speed": 2,
+                    "size_min": 5,
+                    "sync": !1
+                }
+            },
+            "line_linked": {
+                "enable": !1,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": !0,
+                "speed": 1,
+                "direction": "top",
+                "random": !0,
+                "straight": !1,
+                "out_mode": "out",
+                "bounce": !1,
+                "attract": {
+                    "enable": !1,
+                    "rotateX": 600,
+                    "rotateY": 600
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": !1,
+                    "mode": "bubble"
+                },
+                "onclick": {
+                    "enable": !1,
+                    "mode": "repulse"
+                },
+                "resize": !0
+            },
+            "modes": {
+                "grab": {
+                    "distance": 400,
+                    "line_linked": {
+                        "opacity": 1,
+                    }
+                },
+                "bubble": {
+                    "distance": 250,
+                    "size": 0,
+                    "duration": 2,
+                    "opacity": 0,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 400,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": !0
+    });
+
+
+
+
+
+
 });
