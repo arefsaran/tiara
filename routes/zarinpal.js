@@ -29,7 +29,7 @@ async function pay(req, res) {
         let params = {
             MerchantID: "c1b685fb-429a-436f-be23-99a03900f621",
             Amount: totalPrice,
-            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${totalPrice}`,
+            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${totalPrice}&purchaseId=${purchaseId}&storeId=${store}`,
             Description: `${purchaseId}`,
             Email: "tiaraplatform@gmail.com",
         };
@@ -58,8 +58,16 @@ async function pay(req, res) {
 
 async function checker(req, res, next) {
     try {
+        let paramsPuchase = {
+            done: 0,
+            purchaseId: req.query.purchaseId,
+        };
+        let requestURL = `https://${req.query.storeId}.tiaraplatform.ir/purchase`;
+        let optionsPurchase = getUrlOption(requestURL, paramsPuchase);
         if (req.query.Status !== "OK") {
-            res.render("unsuccessfulPayment");
+            request(optionsPurchase).then(async (data) => {
+                return res.render("unsuccessfulPayment");
+            });
         } else {
             let params = {
                 MerchantID: "c1b685fb-429a-436f-be23-99a03900f621",
@@ -75,13 +83,27 @@ async function checker(req, res, next) {
             request(options)
                 .then(async (data) => {
                     if (data.Status == 100) {
-                        res.render("successfulPayment", { RefID: data.RefID });
+                        let params = {
+                            done: 1,
+                            purchaseId: req.query.purchaseId,
+                        };
+                        let requestURL = `https://${req.query.storeId}.tiaraplatform.ir/purchase`;
+                        let options = getUrlOption(requestURL, params);
+                        request(options).then(async (result) => {
+                            return res.render("successfulPayment", {
+                                RefID: result.data.RefID,
+                            });
+                        });
                     } else {
-                        res.render("unsuccessfulPayment");
+                        request(optionsPurchase).then(async (data) => {
+                            return res.render("unsuccessfulPayment");
+                        });
                     }
                 })
                 .catch((err) => {
-                    res.render("unsuccessfulPayment");
+                    request(optionsPurchase).then(async (data) => {
+                        return res.render("unsuccessfulPayment");
+                    });
                 });
         }
     } catch (err) {

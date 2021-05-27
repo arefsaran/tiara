@@ -22,6 +22,7 @@ function inStockAPI(req, res) {
             purchaseId,
             totalPrice,
             basket,
+            done,
         } = req.body;
         let storeId = req.store.storeId;
         // let basket = [];
@@ -35,11 +36,16 @@ function inStockAPI(req, res) {
         let newPurchaseId = Math.floor(date + Math.random() * 900000)
             .toString()
             .slice(0, 6);
+        Date.prototype.addHours = function (h) {
+            this.setTime(this.getTime() + h * 60 * 60 * 1000);
+            return this;
+        };
         let nowISO = new Date();
+        let iranTime = nowISO.addHours(3.5);
         momentJalaali.loadPersian({ usePersianDigits: true });
-        let paidTime = momentJalaali(nowISO).format("jYYYY/jMM/jDD HH:mm");
+        let paidTime = momentJalaali(iranTime).format("jYYYY/jMM/jDD HH:mm");
         let coefficient = -1;
-        if (purchaseId) {
+        if (done === 0 && purchaseId) {
             coefficient = 1;
             MongoClient.connect(url, { useUnifiedTopology: true }, function (
                 err,
@@ -49,24 +55,38 @@ function inStockAPI(req, res) {
                     return console.log("erroR:", err);
                 }
                 let ecommerceDatabase = database.db("ecommerce");
-                for (let index = 0; index < basket.length; index++) {
-                    let element = basket[index];
-                    ecommerceDatabase
-                        .collection(storeId)
-                        .findOne({ _id: ObjectId(element.id) })
-                        .then((inStock) => {
-                            ecommerceDatabase.collection(storeId).updateOne(
-                                {
-                                    _id: ObjectId(element.id),
-                                },
-                                {
-                                    $inc: {
-                                        inStock: element.count * coefficient,
-                                    },
-                                }
-                            );
-                        });
-                }
+                ecommerceDatabase
+                    .collection("purchases")
+                    .findOne({ purchaseId: purchaseId })
+                    .then((purchaseResult) => {
+                        let resultBasket = purchaseResult.basket;
+                        for (
+                            let index = 0;
+                            index < resultBasket.length;
+                            index++
+                        ) {
+                            let element = resultBasket[index];
+                            ecommerceDatabase
+                                .collection(storeId)
+                                .findOne({ _id: ObjectId(element.id) })
+                                .then((inStock) => {
+                                    ecommerceDatabase
+                                        .collection(storeId)
+                                        .updateOne(
+                                            {
+                                                _id: ObjectId(element.id),
+                                            },
+                                            {
+                                                $inc: {
+                                                    inStock:
+                                                        element.count *
+                                                        coefficient,
+                                                },
+                                            }
+                                        );
+                                });
+                        }
+                    });
             });
             MongoClient.connect(url, { useUnifiedTopology: true }, function (
                 err,
@@ -231,6 +251,34 @@ function inStockAPI(req, res) {
                     }
                 }
             );
+        } else if (done === 1 && purchaseId) {
+            MongoClient.connect(url, { useUnifiedTopology: true }, function (
+                err,
+                database
+            ) {
+                if (err) {
+                    return console.log("erroR:", err);
+                }
+                let ecommerceDatabase = database.db("ecommerce");
+                ecommerceDatabase
+                    .collection("purchases")
+                    .findOneAndUpdate(
+                        { purchaseId: purchaseId },
+                        { $set: { done: 1 } }
+                    )
+                    .then(() => {
+                        res.json({
+                            status: 200,
+                            message:
+                                "The request has succeeded and Purchase is done",
+                            data: {
+                                succeeded: true,
+                                RefID: purchaseId,
+                            },
+                            address: "POST:/purchase",
+                        });
+                    });
+            });
         }
     } catch (error) {
         res.json({

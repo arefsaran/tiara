@@ -9,6 +9,7 @@ async function purchasesView(req, res, next) {
         let storeId = req.user.userStore.storeId;
         let resultPurchases = await Purchase.find({
             storeId: storeId,
+            done: 1,
         }).sort({ _id: -1 });
         res.render("purchasesView", {
             storeInfo: req.user.userStore,

@@ -55,20 +55,20 @@
         }
         for (var i in cartArray) {
             output +=
-            "<div class='col-xl-4 col-md-4 col-sm-12 xl-50' style='margin-top: 25px; margin-bottom: 25px;'>" +
+            "<div class='col-xl-4 col-md-8 col-sm-8 xl-50' style='margin-top: 25px; margin-bottom: 25px;'>" +
                 "<div class='card shadow-lg' style='width: 100%; height: 100%; margin-top: 25px;'>"+
-                    "<img src='"+cartArray[i].picture+"' class='card-img-top col-xl-3 col-md-6 col-sm-6' style='width: 100%;' alt='...'>"+
+                    "<img src='"+cartArray[i].picture+"' class='card-img-top col-xl-6 col-md-8 col-sm-4' style='width: 100%;' alt='...'>"+
                     "<div class='card-body'>"+
-                        "<h5 class='card-title' id='BasketCard'>"+
+                        "<h6 class='card-title' id='BasketCard'>"+
                         cartArray[i].name +
-                        "</h5>"+
+                        "</h6>"+
                         "<div style='display:flex; justify-content: flex-start ;'>"+
-                        "<h5 style='margin-left: 25px;'> قیمت: "+
+                        "<h6 style='margin-left: 25px;'> قیمت: "+
                         cartArray[i].price +
-                        " تومان</h5>"+
-                        "<h5> تعداد: "+
+                        " تومان</h6>"+
+                        "<h6> تعداد: "+
                         cartArray[i].count +
-                        "</h5>"+
+                        "</h6>"+
                         "</div>"+
                         "<p> قیمت کل: "+
                         cartArray[i].total+

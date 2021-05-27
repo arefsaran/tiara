@@ -32,7 +32,7 @@ var shoppingCart = (function () {
     obj.addItemToCart = function (name, price, count, picture, id) {
         for (var i in cart) {
             if (cart[i].id === id) {
-                cart[i].count = count;
+                cart[i].count = cart[i].count + count;
                 saveCart();
                 return;
             }

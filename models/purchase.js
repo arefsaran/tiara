@@ -11,6 +11,10 @@ const purchaseSchema = new mongoose.Schema(
             type: String,
             default: null,
         },
+        done: {
+            type: Number,
+            default: 0,
+        },
         purchaseId: {
             type: String,
             required: true,
