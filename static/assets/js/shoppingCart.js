@@ -5,7 +5,7 @@ var shoppingCart = (function () {
     // Private methods and properties
     var cart = [];
 
-    function Item(name, price, count, picture, id) {
+    function Item(id, count, price, picture, name) {
         this.name = name;
         this.price = price;
         this.count = count;
@@ -29,7 +29,7 @@ var shoppingCart = (function () {
     // Public methods and properties
     var obj = {};
 
-    obj.addItemToCart = function (name, price, count, picture, id) {
+    obj.addItemToCart = function (id, count, price, picture, name) {
         for (var i in cart) {
             if (cart[i].id === id) {
                 cart[i].count = cart[i].count + count;
@@ -40,7 +40,7 @@ var shoppingCart = (function () {
 
         // console.log("addItemToCart:", name, price, count, picture, id);
 
-        var item = new Item(name, price, count, picture, id);
+        var item = new Item(id, count, price, picture, name);
         cart.push(item);
         saveCart();
     };

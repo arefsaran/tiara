@@ -62,7 +62,7 @@
             var id = ($(this).attr("data-id"));
             var price = Number($(this).attr("data-price"));
             var count = Number(document.getElementById("quantity").value);
-            shoppingCart.addItemToCart(name, price, count, picture, id);
+            shoppingCart.addItemToCart(id, count, price, picture, name);
             let url = "/basket";
             let data = {};
             fetch(url, {

@@ -20,7 +20,7 @@
                             <div class="row">
                                 <div id="show-cart" class="card-deck col-xl-12 col-md-12 col-sm-12">
                                 </div>
-                                <div class='card shadow-lg' style='width: 100%; height: 100%; margin: 15px;'>
+                                <div class='card shadow-lg' style='width: 100%; height: 100%; margin-top: 35px;'>
                                     <p class="col-xl-12 col-md-12 col-sm-12">شما <span id="count-cart">0</span> محصول در سبدتان دارید</p>
                                     <p class="col-xl-12 col-md-12 col-sm-12">مجموع قیمت: <span id="total-cart"></span> تومان</p>
                                     <div style="display:flex; justify-content: space-between; margin-bottom: 12px;">
@@ -55,28 +55,17 @@
         }
         for (var i in cartArray) {
             output +=
-            "<div class='col-xl-4 col-md-8 col-sm-8 xl-50' style='margin-top: 25px; margin-bottom: 25px;'>" +
-                "<div class='card shadow-lg' style='width: 100%; height: 100%; margin-top: 25px;'>"+
-                    "<img src='"+cartArray[i].picture+"' class='card-img-top col-xl-6 col-md-8 col-sm-4' style='width: 100%;' alt='...'>"+
-                    "<div class='card-body'>"+
-                        "<h6 class='card-title' id='BasketCard'>"+
-                        cartArray[i].name +
-                        "</h6>"+
-                        "<div style='display:flex; justify-content: flex-start ;'>"+
-                        "<h6 style='margin-left: 25px;'> قیمت: "+
-                        cartArray[i].price +
-                        " تومان</h6>"+
-                        "<h6> تعداد: "+
-                        cartArray[i].count +
-                        "</h6>"+
-                        "</div>"+
-                        "<p> قیمت کل: "+
-                        cartArray[i].total+
-                        " تومان</p>"+
-                        // "<input type='button' onclick='" + deleteFunc(cartArray[i].id)+ "' value='🗑️' style='margin-right: 0px;' class='btn btn-solid'>"+
-                    "</div>"+
-                "</div>"+
-            "</div>"
+                "<div class='card col-xl-4 col-md-6 col-sm-8 xl-50 shadow-lg' style='width: 100%; height: 100%; margin-top: 25px; margin-bottom: 25px;'>"+
+                "<img src='"+cartArray[i].picture+"' class='card-img-top w-75' style='margin-top: 10px; margin-bottom: 10px;'>"+
+                +" <h6>نام: "+ cartArray[i].name
+                +" </h6><h6>تعداد: "+cartArray[i].count
+                +" </h6><h6>قیمت: "+cartArray[i].total
+                +" </h6><div class='d-flex' style='justify-content: space-around;'><button class='plus-item btn btn-solid' style='width: 25%; display:inline; margin-bottom: 12px;' data-id='"
+                +cartArray[i].id+"'>+</button>"
+                +" <button class='subtract-item btn btn-solid' style='width: 25%; display:flex; margin-bottom: 12px;' data-id='"
+                +cartArray[i].id+"'>-</button>"
+                +" <button class='delete-item btn btn-solid' style='width: 25%; color: red; display:flex; margin-bottom: 12px;' data-id='"
+                +cartArray[i].id+"'>حذف</button>"+ "</div></div>"
         }
         function deleteFunc(id){
         shoppingCart.removeItemFromCartAll(id);
@@ -85,8 +74,23 @@
         $("#show-cart").html(output);
         $("#count-cart").html( shoppingCart.countCart() );
         $("#total-cart").html( shoppingCart.totalCart() );
+        ConvertNumberToPersion();
     }
-    
+    $("#show-cart").on("click", ".subtract-item", function(event){
+        var id = $(this).attr("data-id");
+        shoppingCart.removeItemFromCart(id);
+        displayCart();
+    });
+    $("#show-cart").on("click", ".delete-item", function(event){
+        var id = $(this).attr("data-id");
+        shoppingCart.removeItemFromCartAll(id);
+        displayCart();
+    });
+    $("#show-cart").on("click", ".plus-item", function(event){
+        var id = $(this).attr("data-id");
+        shoppingCart.addItemToCart(id, 1);
+        displayCart();
+    });
     $("#show-cart").on("change", ".item-count", function(event){
         var id = $(this).attr("data-id");
         var count = Number($(this).val());
