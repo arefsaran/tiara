@@ -24,8 +24,10 @@ const sort = require("./sort");
 const support = require("./support");
 const purchasesView = require("./purchasesView");
 const settings = require("./settings");
+const admin = require("./admin");
 
 router.use("/", subDomainChecker, home);
+router.use("/admin", admin);
 router.use("/storeInfo", subDomainChecker, storeInfo);
 router.use("/productsPage", subDomainChecker, productsPage);
 router.use("/productPage", subDomainChecker, productPage);
