@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User, validate } = require("../models/user");
+const { blockSubDomain } = require("../models/blockSubDomain");
 const MongoClient = require("mongodb").MongoClient;
 const config = require("config");
 const serverConfig = config.get("serverConfig.config");
@@ -42,6 +43,12 @@ async function signUpFunction(req, res, next) {
             let subDomainWithThisStoreName = await User.findOne({
                 "userStore.storeId": userStoreNameInEnglish.toLowerCase(),
             });
+            let blockedUserStoreName = await BlockSubDomain.findOne({
+                blockSubDomain: userStoreName.toLowerCase(),
+            });
+            let blockedblockSubDomain = await BlockSubDomain.findOne({
+                blockSubDomain: userStoreNameInEnglish.toLowerCase(),
+            });
 
             if (userWithThisEmail) {
                 // res.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
@@ -51,6 +58,11 @@ async function signUpFunction(req, res, next) {
             } else if (subDomainWithThisStoreName) {
                 return res.render("signUp", {
                     error: "با این آدرس قبلا ثبت نام شده است",
+                });
+            } else if (blockedUserStoreName || blockedSubDomain) {
+                return res.render("signUp", {
+                    error:
+                        "نام فروشگاه یا آدرس اینترنتی فروشگاه شما نامناسب تشخیص داده شد، . در صورت مناسب بودن نام یا آدرس پیشنهادی به پشتیبانی پیام دهید. ",
                 });
             } else {
                 let user = new User({

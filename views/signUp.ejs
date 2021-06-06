@@ -24,11 +24,11 @@
                                                 <div class="form-row">
                                                     <div class="col-md-6 mb-3">
                                                         <strong style="display: flex; justify-content: flex-start;">نام و نام خانوادگی</strong>
-                                                        <input id="userName" type="text" class="form-control" name="userName" placeholder="نام و نام خانوادگی به فارسی" required>
+                                                        <input id="userName" type="text" class="form-control" name="userName" placeholder="عارف ساران" required>
                                                     </div>
                                                     <div class="col-md-6 mb-3">
                                                         <strong style="display: flex; justify-content: flex-start;">نام فروشگاه</strong>
-                                                        <input id="userStoreName" type="text" class="form-control" name="userStoreName" placeholder="نام فروشگاه به فارسی" required>
+                                                        <input id="userStoreName" type="text" class="form-control" name="userStoreName" placeholder="سورنا" required>
                                                     </div>
                                                     <div class="col-md-6 mb-3">
                                                         <strong style="display: flex; justify-content: flex-start;">آدرس اینترنتی فروشگاه :
@@ -43,7 +43,7 @@
                                                             class="form-control"
                                                             id="userStoreNameInEnglish"
                                                             type="text"
-                                                            placeholder=""
+                                                            placeholder="sorena"
                                                             required
                                                         />
                                                         </div>
@@ -51,12 +51,12 @@
                                                     </div>
                                                     <div class="col-md-6 mb-3">
                                                         <strong style="display: flex; justify-content: flex-start;">ایمیل</strong>
-                                                        <input id="userEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" class="form-control" name="userEmail" placeholder="ایمیل" required>
+                                                        <input id="userEmail"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" class="form-control" name="userEmail" placeholder="myEmail@gmail.com" required>
                                                     </div>
                                                     
                                                     <div class="col-md-6 mb-3">
                                                         <strong style="display: flex; justify-content: flex-start;">رمز عبور</strong>
-                                                        <input id="userPassword"   pattern=".{4,}" type="password" class="form-control" name="userPassword" placeholder="رمز عبور خود را مشخص کنید(حداقل 4 کاراکتر)" required>
+                                                        <input id="userPassword"   pattern=".{4,}" type="password" class="form-control" name="userPassword" placeholder="حداقل 4 کاراکتر" required>
                                                     </div>
                                                         <input form="signUpForm" value="ثبت نام" type="submit" class="btn btn-solid ml-3 mt-3">
                                                         <a href="logIn"class="btn btn-solid ml-3 mt-3">قبلا ثبت نام کرده اید؟</a>
@@ -72,5 +72,10 @@
         </div>
     </div>
 </div>
-
+<style>
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: rgb(184, 38, 38);
+      opacity: 1; /* Firefox */
+    }
+    </style>
 <%- include("dashboardFooter"); -%>
