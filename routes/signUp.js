@@ -23,7 +23,7 @@ async function signUpView(req, res, next) {
 async function signUpFunction(req, res, next) {
     try {
         const { error } = validate(req.body);
-        console.log("er", error);
+        console.log("error", error);
         let {
             userName,
             userEmail,

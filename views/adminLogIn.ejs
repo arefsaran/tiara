@@ -34,7 +34,15 @@
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url('./uploads/adminLogin.jpg');">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form">
+				<% if (error.length !== 0) { %>
+					<div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<strong>پلتفرم تیارا :</strong> <%= error %>
+					  </div>
+				  <% } %>
+				<form class="login100-form validate-form" action="/admin" method="POST" enctype="application/x-www-form-urlencoded">
 					<span class="login100-form-logo">
 						<i class="zmdi zmdi-shield-check"></i>
 					</span>
@@ -43,18 +51,18 @@
 						پلتفرم تیارا
 					</span>
 
-					<div class="wrap-input100 validate-input p-r-35" data-validate = "نام کاربری را وارد کنید">
-						<input class="input100" type="text" name="username" placeholder="نام کاربری">
+					<div class="wrap-input100 validate-input p-r-35" data-validate = "ایمیل را وارد کنید">
+						<input class="input100" type="text" id="email" name="email" placeholder="ایمیل">
 						<span class="focus-input100" data-placeholder="🖊️"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input p-r-35" data-validate="رمز عبور را وارد کنید">
-						<input class="input100" type="password" name="pass" placeholder="رمز عبور">
+						<input class="input100" type="password" id="password" name="password" placeholder="رمز عبور">
 						<span class="focus-input100" data-placeholder="🔐"></span>
 					</div>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn" type="submit">
 							ورود
 						</button>
 					</div>
