@@ -9,20 +9,26 @@
     </div>
 </footer>
 <!-- footer end-->
-
 </div>
-
+<!-- <script>
+    function changeHref() {
+         let findlinks = document.getElementsByTagName("link");
+         findlinks = Array.prototype.slice.call( findlinks );
+         findlinks.forEach(link => {
+             link.href = link.href.replace("/admin", "");
+        });
+        }
+    changeHref();
+</script> -->
 </div>
 <script>
     function headerFunc() {
         let token = localStorage.getItem("adminToken");
-        document.getElementById("purchasesButton").href = `purchasesView?adminToken=${token}`;
-        document.getElementById("dashboardButton").href = `dashboard?adminToken=${token}`;
-        document.getElementById("settingsButton").href = `settings?adminToken=${token}`;
-        document.getElementById("aboutUsButton").href = `aboutUs?adminToken=${token}`;
-        document.getElementById("addProductButton").href = `uploadProduct?adminToken=${token}`;
-        document.getElementById("editButton").href = `editHome?adminToken=${token}`;
-        document.getElementById("uploadForm").action = `/uploadProduct?adminToken=${token}`;
+        document.getElementById("purchasesButton").href = `admin/stores?adminToken=${token}`;
+        document.getElementById("dashboardButton").href = `admin/dashboard?adminToken=${token}`;
+        document.getElementById("settingsButton").href = `admin/settings?adminToken=${token}`;
+        document.getElementById("addProductButton").href = `admin/addPlan?adminToken=${token}`;
+        document.getElementById("editButton").href = `admin/editPlan?adminToken=${token}`;
     }
     headerFunc();
 </script>
@@ -117,5 +123,6 @@
         traverse(document.body);
     }
 </script>
+
 </body>
 </html>
