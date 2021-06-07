@@ -12,6 +12,6 @@ const blockSubDomainSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const blockSubDomain = mongoose.model("blockSubDomain", blockSubDomainSchema);
+const blockSubDomain = mongoose.model("block_subdomain", blockSubDomainSchema);
 
 exports.BlockSubDomain = blockSubDomain;

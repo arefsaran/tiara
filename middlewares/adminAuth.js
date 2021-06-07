@@ -3,11 +3,11 @@ const config = require("config");
 const serverConfig = config.get("serverConfig.config");
 const { Admin } = require("../models/admin");
 
-module.exports.auth = async function (req, res, next) {
+module.exports.adminAuth = async function (req, res, next) {
     try {
         const token = req.query.adminToken || req.query.adminTokenHide;
         if (!token) {
-            return res.render("admin", {
+            return res.render("adminLogIn", {
                 error: "مشکلی پیش آمده است، مجددا تلاش کنید",
             });
         } else {
@@ -18,7 +18,9 @@ module.exports.auth = async function (req, res, next) {
         }
         next();
     } catch (error) {
-        res.render("admin", { error: "مشکلی پیش آمده است، مجددا تلاش کنید" });
+        res.render("adminLogIn", {
+            error: "مشکلی پیش آمده است، مجددا تلاش کنید",
+        });
         // res.render("login",{error: error});
     }
 };

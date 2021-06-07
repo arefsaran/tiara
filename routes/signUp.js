@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User, validate } = require("../models/user");
-const { blockSubDomain } = require("../models/blockSubDomain");
+const { BlockSubDomain } = require("../models/blockSubDomain");
 const MongoClient = require("mongodb").MongoClient;
 const config = require("config");
 const serverConfig = config.get("serverConfig.config");
 const urlMongo = serverConfig.mongoDB;
+const momentJalaali = require("moment-jalaali");
 
 router.get("/", signUpView);
 router.post("/", signUpFunction);
@@ -23,7 +24,14 @@ async function signUpView(req, res, next) {
 async function signUpFunction(req, res, next) {
     try {
         const { error } = validate(req.body);
-        console.log("error", error);
+        let nowISO = new Date();
+        Date.prototype.addHours = function (h) {
+            this.setTime(this.getTime() + h * 60 * 60 * 1000);
+            return this;
+        };
+        let iranTime = nowISO.addHours(3.5);
+        momentJalaali.loadPersian({ usePersianDigits: true });
+        let paidTime = momentJalaali(iranTime).format("jYYYY/jMM/jDD HH:mm");
         let {
             userName,
             userEmail,
@@ -44,12 +52,11 @@ async function signUpFunction(req, res, next) {
                 "userStore.storeId": userStoreNameInEnglish.toLowerCase(),
             });
             let blockedUserStoreName = await BlockSubDomain.findOne({
-                blockSubDomain: userStoreName.toLowerCase(),
+                subDomain: userStoreName.toLowerCase(),
             });
-            let blockedblockSubDomain = await BlockSubDomain.findOne({
-                blockSubDomain: userStoreNameInEnglish.toLowerCase(),
+            let blockedSubDomain = await BlockSubDomain.findOne({
+                subDomain: userStoreNameInEnglish.toLowerCase(),
             });
-
             if (userWithThisEmail) {
                 // res.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
                 return res.render("signUp", {
@@ -75,6 +82,8 @@ async function signUpFunction(req, res, next) {
                         .replace(/\s+/g, "")
                         .toLowerCase(),
                     "userStore.storePlan.planType": 1,
+                    "userStore.paidTime": paidTime,
+
                     // userPicture : req.files[0].path.replace(/\\/g, "/")
                 });
                 MongoClient.connect(

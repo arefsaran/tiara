@@ -2,10 +2,17 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { Admin, validateLogin, validate } = require("../models/admin");
+const { User } = require("../models/user");
+const MongoClient = require("mongodb").MongoClient;
+const config = require("config");
+const serverConfig = config.get("serverConfig.config");
+const url = serverConfig.mongoDB;
+const { adminAuth } = require("../middlewares/adminAuth");
 
 router.get("/", adminView);
 router.post("/", adminLogin);
 router.put("/", adminSignUp);
+router.get("/dashboard", adminAuth, adminDashboardView);
 
 async function adminView(req, res, next) {
     try {
@@ -46,13 +53,7 @@ async function adminLogin(req, res, next) {
                 );
                 if (validPassword) {
                     const token = admin.generateAuthToken();
-                    // res.render("dashboard", {
-                    //     adminToken: token,
-                    // });
-                    // res.redirect(`/dashboard?adminToken=${token}`);
-                    res.render("adminLogIn", {
-                        error: token,
-                    });
+                    res.redirect(`/admin/dashboard?adminToken=${token}`);
                 } else {
                     res.render("adminLogIn", {
                         error: "نام کاربری یا رمز عبور اشتباه است",
@@ -111,4 +112,64 @@ async function adminSignUp(req, res, next) {
     }
 }
 
+async function adminDashboardView(req, res, next) {
+    try {
+        let adminToken = req.query.adminToken;
+        let collectionName = "users";
+        let dbName = "ecommerce";
+        let nowISO = new Date();
+        let lastMonthSalesTotalPrice = 0;
+        let totalPrice = 0;
+        let lastMonthISO = new Date(
+            nowISO.getFullYear(),
+            nowISO.getMonth() - 1,
+            nowISO.getDate()
+        );
+        let lastMonthSalesQuery = {
+            createdAt: { $lt: nowISO, $gt: lastMonthISO },
+        };
+        const client = await MongoClient.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        let ecommerce = client.db(dbName);
+        let lastMonthSales = await ecommerce
+            .collection(collectionName)
+            .find(lastMonthSalesQuery, { "userStore.storePlan.planPrice": 1 })
+            .toArray();
+        lastMonthSales.forEach((sale) => {
+            lastMonthSalesTotalPrice =
+                lastMonthSalesTotalPrice + sale.userStore.storePlan.planPrice;
+        });
+        let totalSales = await ecommerce
+            .collection(collectionName)
+            .find({}, { "userStore.storePlan.planPrice": 1 })
+            .toArray();
+        totalSales.forEach((sale) => {
+            totalPrice = totalPrice + sale.userStore.storePlan.planPrice;
+        });
+        client.close();
+
+        let numberOfUsers = await User.find({}).countDocuments();
+
+        let users = await User.find({}).sort({ _id: -1 }).limit(5);
+        res.render("adminDashboard", {
+            numberOfUsers: numberOfUsers,
+            users: users,
+            adminInfo: req.admin.adminName,
+            lastMonthSalesTotalPrice: lastMonthSalesTotalPrice,
+            lastMonthSalesCount: lastMonthSales.length,
+            totalPriceOfUsers: totalPrice,
+            adminToken: adminToken,
+        });
+        next();
+    } catch (error) {
+        res.json({
+            status: 400,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "POST:/admin/dashboard",
+        });
+    }
+}
 module.exports = router;

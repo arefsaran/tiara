@@ -53,6 +53,14 @@ const userSchema = new mongoose.Schema(
                     type: Number,
                     default: 30,
                 },
+                planPrice: {
+                    type: Number,
+                    default: 0,
+                },
+            },
+            paidTime: {
+                type: String,
+                default: "",
             },
             storeAddress: {
                 type: String,
