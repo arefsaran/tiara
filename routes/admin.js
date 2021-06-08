@@ -149,14 +149,12 @@ async function adminDashboardView(req, res, next) {
             totalPrice = totalPrice + sale.userStore.storePlan.planPrice;
         });
         client.close();
-
         let numberOfUsers = await User.find({}).countDocuments();
-
         let users = await User.find({}).sort({ _id: -1 }).limit(5);
         res.render("adminDashboard", {
             numberOfUsers: numberOfUsers,
             users: users,
-            adminInfo: req.admin.adminName,
+            adminInfo: req.admin.firstName,
             lastMonthSalesTotalPrice: lastMonthSalesTotalPrice,
             lastMonthSalesCount: lastMonthSales.length,
             totalPriceOfUsers: totalPrice,
