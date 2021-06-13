@@ -6,6 +6,7 @@ const routes = require("./routes");
 const config = require("config");
 const serverConfig = config.get("serverConfig.config");
 const { User } = require("./models/user");
+const path = require("path");
 // const { MongoClient } = require("mongodb");
 
 app.use((req, res, next) => {
@@ -23,7 +24,12 @@ app.use((req, res, next) => {
     next();
 });
 app.set("view engine", "ejs");
-app.set("views", "./views");
+app.set("views", [
+    path.join(__dirname, "views"),
+    path.join(__dirname, "views/shop/"),
+    path.join(__dirname, "views/admin/"),
+    path.join(__dirname, "views/user/"),
+]);
 
 app.use(express.static("static"));
 app.use(express.json());
