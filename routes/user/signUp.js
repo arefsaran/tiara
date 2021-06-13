@@ -4,9 +4,7 @@ const bcrypt = require("bcryptjs");
 const { User, validate } = require("../../models/user");
 const { BlockSubDomain } = require("../../models/blockSubDomain");
 const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const urlMongo = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 
 router.get("/", signUpView);
@@ -87,7 +85,7 @@ async function signUpFunction(req, res, next) {
                     // userPicture : req.files[0].path.replace(/\\/g, "/")
                 });
                 MongoClient.connect(
-                    urlMongo,
+                    MONGO_DB,
                     { useUnifiedTopology: true },
                     function (err, db) {
                         if (err) throw err;

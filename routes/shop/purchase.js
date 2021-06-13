@@ -3,10 +3,9 @@ const router = express.Router();
 const { Purchase } = require("../../models/purchase");
 const config = require("config");
 const { json } = require("express");
-const serverConfig = config.get("serverConfig.config");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
-const url = serverConfig.ecommerceDB;
+const { ECOMMERCE_DB } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 const { createInvoice } = require("./createInvoice.js");
 
@@ -48,73 +47,75 @@ function inStockAPI(req, res) {
         let coefficient = -1;
         if (done === 0 && purchaseId) {
             coefficient = 1;
-            MongoClient.connect(url, { useUnifiedTopology: true }, function (
-                err,
-                database
-            ) {
-                if (err) {
-                    return console.log("erroR:", err);
-                }
-                let ecommerceDatabase = database.db("ecommerce");
-                ecommerceDatabase
-                    .collection("purchases")
-                    .findOne({ purchaseId: purchaseId })
-                    .then((purchaseResult) => {
-                        let resultBasket = purchaseResult.basket;
-                        for (
-                            let index = 0;
-                            index < resultBasket.length;
-                            index++
-                        ) {
-                            let element = resultBasket[index];
-                            ecommerceDatabase
-                                .collection(storeId)
-                                .findOne({ _id: ObjectId(element.id) })
-                                .then((inStock) => {
-                                    ecommerceDatabase
-                                        .collection(storeId)
-                                        .updateOne(
-                                            {
-                                                _id: ObjectId(element.id),
-                                            },
-                                            {
-                                                $inc: {
-                                                    inStock:
-                                                        element.count *
-                                                        coefficient,
+            MongoClient.connect(
+                ECOMMERCE_DB,
+                { useUnifiedTopology: true },
+                function (err, database) {
+                    if (err) {
+                        return console.log("erroR:", err);
+                    }
+                    let ecommerceDatabase = database.db("ecommerce");
+                    ecommerceDatabase
+                        .collection("purchases")
+                        .findOne({ purchaseId: purchaseId })
+                        .then((purchaseResult) => {
+                            let resultBasket = purchaseResult.basket;
+                            for (
+                                let index = 0;
+                                index < resultBasket.length;
+                                index++
+                            ) {
+                                let element = resultBasket[index];
+                                ecommerceDatabase
+                                    .collection(storeId)
+                                    .findOne({ _id: ObjectId(element.id) })
+                                    .then((inStock) => {
+                                        ecommerceDatabase
+                                            .collection(storeId)
+                                            .updateOne(
+                                                {
+                                                    _id: ObjectId(element.id),
                                                 },
-                                            }
-                                        );
-                                });
-                        }
-                    });
-            });
-            MongoClient.connect(url, { useUnifiedTopology: true }, function (
-                err,
-                database
-            ) {
-                if (err) {
-                    return console.log("erroR:", err);
-                }
-                let ecommerceDatabase = database.db("ecommerce");
-                ecommerceDatabase
-                    .collection("purchases")
-                    .deleteOne({ purchaseId: purchaseId })
-                    .then((productInStock) => {
-                        res.json({
-                            status: 200,
-                            message:
-                                "The request has succeeded || inStock Changed and Invoices Deleted",
-                            data: "Deleted",
-                            address: "POST:/purchase",
+                                                {
+                                                    $inc: {
+                                                        inStock:
+                                                            element.count *
+                                                            coefficient,
+                                                    },
+                                                }
+                                            );
+                                    });
+                            }
                         });
-                    });
-            });
+                }
+            );
+            MongoClient.connect(
+                ECOMMERCE_DB,
+                { useUnifiedTopology: true },
+                function (err, database) {
+                    if (err) {
+                        return console.log("erroR:", err);
+                    }
+                    let ecommerceDatabase = database.db("ecommerce");
+                    ecommerceDatabase
+                        .collection("purchases")
+                        .deleteOne({ purchaseId: purchaseId })
+                        .then((productInStock) => {
+                            res.json({
+                                status: 200,
+                                message:
+                                    "The request has succeeded || inStock Changed and Invoices Deleted",
+                                data: "Deleted",
+                                address: "POST:/purchase",
+                            });
+                        });
+                }
+            );
         } else if (!purchaseId) {
             let enoughInStockProducts = [];
             let outOfOrderProducts = [];
             MongoClient.connect(
-                url,
+                ECOMMERCE_DB,
                 { useUnifiedTopology: true },
                 async (err, database) => {
                     try {
@@ -169,7 +170,7 @@ function inStockAPI(req, res) {
                             });
                             purchaseInvoice.save();
                             MongoClient.connect(
-                                url,
+                                ECOMMERCE_DB,
                                 { useUnifiedTopology: true },
                                 function (err, database) {
                                     if (err) {
@@ -253,59 +254,62 @@ function inStockAPI(req, res) {
                 }
             );
         } else if (done === 1 && purchaseId) {
-            MongoClient.connect(url, { useUnifiedTopology: true }, function (
-                err,
-                database
-            ) {
-                if (err) {
-                    return console.log("erroR:", err);
-                }
-                let ecommerceDatabase = database.db("ecommerce");
-                ecommerceDatabase
-                    .collection("purchases")
-                    .findOneAndUpdate(
-                        { purchaseId: purchaseId },
-                        { $set: { done: 1 } }
-                    )
-                    .then((purchaseForPDF) => {
-                        const invoice = {
-                            shipping: {
-                                name:
-                                    purchaseForPDF.value.customerInformations
-                                        .customerName,
-                                address:
-                                    purchaseForPDF.value.customerInformations
-                                        .customerAddress,
-                                phone:
-                                    purchaseForPDF.value.customerInformations
-                                        .customerPhone,
-                                postal_code:
-                                    purchaseForPDF.value.customerInformations
-                                        .customerPostalCode,
-                            },
-                            items: purchaseForPDF.value.basket,
-                            subtotal: purchaseForPDF.value.totalPrice,
-                            paidTime: purchaseForPDF.value.paidTime,
-                            purchaseId: purchaseForPDF.value.purchaseId,
-                        };
-                        if (!process.env.PWD) {
-                            process.env.PWD = process.cwd();
-                        }
-                        let invoicePath = `${process.env.PWD}/static/invoices/${purchaseId}.pdf`;
-                        createInvoice(invoice, invoicePath);
-                        res.json({
-                            status: 200,
-                            message:
-                                "The request has succeeded and Purchase is done",
-                            data: {
-                                succeeded: true,
-                                RefID: purchaseId,
-                                invoicePath: invoicePath,
-                            },
-                            address: "POST:/purchase",
+            MongoClient.connect(
+                ECOMMERCE_DB,
+                { useUnifiedTopology: true },
+                function (err, database) {
+                    if (err) {
+                        return console.log("erroR:", err);
+                    }
+                    let ecommerceDatabase = database.db("ecommerce");
+                    ecommerceDatabase
+                        .collection("purchases")
+                        .findOneAndUpdate(
+                            { purchaseId: purchaseId },
+                            { $set: { done: 1 } }
+                        )
+                        .then((purchaseForPDF) => {
+                            const invoice = {
+                                shipping: {
+                                    name:
+                                        purchaseForPDF.value
+                                            .customerInformations.customerName,
+                                    address:
+                                        purchaseForPDF.value
+                                            .customerInformations
+                                            .customerAddress,
+                                    phone:
+                                        purchaseForPDF.value
+                                            .customerInformations.customerPhone,
+                                    postal_code:
+                                        purchaseForPDF.value
+                                            .customerInformations
+                                            .customerPostalCode,
+                                },
+                                items: purchaseForPDF.value.basket,
+                                subtotal: purchaseForPDF.value.totalPrice,
+                                paidTime: purchaseForPDF.value.paidTime,
+                                purchaseId: purchaseForPDF.value.purchaseId,
+                            };
+                            if (!process.env.PWD) {
+                                process.env.PWD = process.cwd();
+                            }
+                            let invoicePath = `${process.env.PWD}/static/invoices/${purchaseId}.pdf`;
+                            createInvoice(invoice, invoicePath);
+                            res.json({
+                                status: 200,
+                                message:
+                                    "The request has succeeded and Purchase is done",
+                                data: {
+                                    succeeded: true,
+                                    RefID: purchaseId,
+                                    invoicePath: invoicePath,
+                                },
+                                address: "POST:/purchase",
+                            });
                         });
-                    });
-            });
+                }
+            );
         }
     } catch (error) {
         res.json({

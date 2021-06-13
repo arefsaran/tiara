@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const Joi = require("@hapi/joi");
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
+
 const customerSchema = new mongoose.Schema(
     {
         customerName: {

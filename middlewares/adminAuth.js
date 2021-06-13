@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
+const { JWT_PRIVATE_KEY } = require("../config/config");
 const { Admin } = require("../models/admin");
 
 module.exports.adminAuth = async function (req, res, next) {
@@ -11,7 +10,7 @@ module.exports.adminAuth = async function (req, res, next) {
                 error: "مشکلی پیش آمده است، مجددا تلاش کنید",
             });
         } else {
-            const decoded = jwt.verify(token, serverConfig.jwtPrivateKey);
+            const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
             req.admin = await Admin.findOne({
                 _id: decoded._id,
             });

@@ -1,8 +1,6 @@
 const { User } = require("../../models/user");
 const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const url = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 
 async function adminDashboardView(req, res, next) {
     try {
@@ -20,7 +18,7 @@ async function adminDashboardView(req, res, next) {
         let lastMonthSalesQuery = {
             createdAt: { $lt: nowISO, $gt: lastMonthISO },
         };
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

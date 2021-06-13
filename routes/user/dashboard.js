@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const url = serverConfig.mongoDB;
-const ObjectId = require("mongoose").Types.ObjectId;
 const { Purchase } = require("../../models/purchase");
+const { MONGO_DB } = require("../../config/config");
 
 router.get("/", dashboardView);
 
@@ -28,7 +25,7 @@ async function dashboardView(req, res, next) {
             storeId: storeId,
         };
 
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

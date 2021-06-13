@@ -3,10 +3,9 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const routes = require("./routes");
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
 const { User } = require("./models/user");
 const path = require("path");
+const { PORT, HOST, MONGO_DB } = require("./config/config");
 // const { MongoClient } = require("mongodb");
 
 app.use((req, res, next) => {
@@ -53,7 +52,7 @@ let job = new CronJob(
 );
 job.start();
 mongoose
-    .connect(serverConfig.mongoDB, {
+    .connect(MONGO_DB, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
     })
@@ -69,11 +68,11 @@ mongoose.set("useCreateIndex", true);
 //         //Write databse Insert/Update/Query code here..
 //     }
 // );
-const server = app.listen(serverConfig.port, serverConfig.host, function () {
-    let host = server.address().address;
-    let port = server.address().port;
+const server = app.listen(PORT, HOST, function () {
+    let HOST = server.address().address;
+    let PORT = server.address().port;
 
-    console.log("Server Running On: http://%s:%s", host, port);
+    console.log("Server Running On: http://%s:%s", HOST, PORT);
 });
 
 module.exports = mongoose.connection;

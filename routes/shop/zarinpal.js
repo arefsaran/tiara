@@ -1,8 +1,7 @@
 const request = require("request-promise");
 const express = require("express");
 const app = express.Router();
-const mongoose = require("mongoose");
-const { Purchase } = require("../../models/purchase");
+const { MERCHANT_ID } = require("../../config/config");
 const { subDomainChecker } = require("../../middlewares/subDomainChecker");
 
 function getUrlOption(url, params) {
@@ -31,7 +30,7 @@ async function pay(req, res) {
         let invoicePath = `/invoices/${purchaseId}.pdf`;
         let store = req.store.storeId;
         let params = {
-            MerchantID: "c1b685fb-429a-436f-be23-99a03900f621",
+            MerchantID: MERCHANT_ID,
             Amount: totalPrice,
             CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${totalPrice}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${store}`,
             Description: `${purchaseId}`,
@@ -74,7 +73,7 @@ async function checker(req, res, next) {
             });
         } else {
             let params = {
-                MerchantID: "c1b685fb-429a-436f-be23-99a03900f621",
+                MerchantID: MERCHANT_ID,
                 Amount: req.query.Amount,
                 Authority: req.query.Authority,
             };

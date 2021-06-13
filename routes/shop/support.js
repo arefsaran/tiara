@@ -1,9 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const url = serverConfig.mongoDB;
 
 router.get("/", supportView);
 

@@ -1,12 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
 const { Categories } = require("../../models/categories");
-const url = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 let ObjectId = require("mongodb").ObjectID;
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
@@ -33,7 +31,7 @@ async function editProduct(req, res, next) {
         let { productId } = req.query;
         let collectionName = req.user.userStore.storeId;
         let dbName = "ecommerce";
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -151,7 +149,7 @@ async function editProductAPI(req, res, next) {
             updateFunction(collectionName, query);
 
             let dbName = "ecommerce";
-            const client = await MongoClient.connect(url, {
+            const client = await MongoClient.connect(MONGO_DB, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });

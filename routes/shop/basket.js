@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const url = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 router.get("/", basketView);
@@ -36,7 +34,7 @@ async function basketFunction(req, res, next) {
         let dbName = "ecommerce";
         let { productId, quantity } = req.query;
         // console.log(quantity);
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

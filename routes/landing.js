@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const url = require("url");
 const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const urlMongo = serverConfig.mongoDB;
+const { MONGO_DB } = require("../config/config");
+
+const urlMongo = MONGO_DB;
 router.get("/", landing);
 
 async function landing(req, res, next) {

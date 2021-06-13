@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const url = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 let ObjectId = require("mongodb").ObjectID;
 
 router.get("/", deleteProduct);
@@ -15,7 +13,7 @@ async function deleteProduct(req, res, next) {
         const token = req.query.userToken || req.query.userTokenHide;
         const { deleteProductId, categoryNameForRequest } = req.query;
         let dbName = "ecommerce";
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });

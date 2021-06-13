@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { User } = require("../../models/user");
 let ObjectId = require("mongodb").ObjectID;
 const persianJs = require("persianjs");
+const { JWT_PRIVATE_KEY } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
@@ -139,7 +138,7 @@ async function settingsAPI(req, res, next) {
                 };
             }
             updateFunction(collectionName, query);
-            const decoded = jwt.verify(token, serverConfig.jwtPrivateKey);
+            const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
             let userInfo = await User.findOne({
                 _id: decoded._id,
             });

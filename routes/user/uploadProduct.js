@@ -4,9 +4,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
 const { Categories } = require("../../models/categories");
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const url = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
@@ -30,7 +28,7 @@ async function uploadProductView(req, res) {
     try {
         let storeId = "categories";
         let dbName = "ecommerce";
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -106,7 +104,7 @@ async function uploadProductFunction(req, res) {
             };
             insertFunction(storeId, query);
             let dbName = "ecommerce";
-            const client = await MongoClient.connect(url, {
+            const client = await MongoClient.connect(MONGO_DB, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });

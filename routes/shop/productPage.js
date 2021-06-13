@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-const config = require("config");
-const serverConfig = config.get("serverConfig.config");
-const url = serverConfig.mongoDB;
+const { MONGO_DB } = require("../../config/config");
 const ObjectId = require("mongoose").Types.ObjectId;
 router.get("/", productPage);
 
@@ -12,7 +10,7 @@ async function productPage(req, res, next) {
         let collectionName = req.store.storeId;
         let dbName = "ecommerce";
         let { productId } = req.query;
-        const client = await MongoClient.connect(url, {
+        const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
