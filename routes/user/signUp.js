@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const { User, validate } = require("../models/user");
-const { BlockSubDomain } = require("../models/blockSubDomain");
+const { User, validate } = require("../../models/user");
+const { BlockSubDomain } = require("../../models/blockSubDomain");
 const MongoClient = require("mongodb").MongoClient;
 const config = require("config");
 const serverConfig = config.get("serverConfig.config");
@@ -108,7 +108,7 @@ async function signUpFunction(req, res, next) {
                 // res.render("dashboard", {
                 //     userToken: token,
                 // });
-                return res.redirect(`/dashboard?userToken=${token}`);
+                return res.redirect(`/user/dashboard?userToken=${token}`);
             }
         }
         next();

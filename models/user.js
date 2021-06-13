@@ -90,6 +90,14 @@ const userSchema = new mongoose.Schema(
                 type: Number,
             },
         },
+        purchaseID: {
+            type: String,
+            default: "",
+        },
+        userPaid: {
+            type: Number,
+            default: 0,
+        },
         updateTime: {
             type: String,
             default: "",

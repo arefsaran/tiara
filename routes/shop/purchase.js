@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Purchase } = require("../models/purchase");
+const { Purchase } = require("../../models/purchase");
 const config = require("config");
 const { json } = require("express");
 const serverConfig = config.get("serverConfig.config");
@@ -8,6 +8,7 @@ const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
 const url = serverConfig.ecommerceDB;
 const momentJalaali = require("moment-jalaali");
+const { createInvoice } = require("./createInvoice.js");
 
 router.post("/", inStockAPI);
 
@@ -266,7 +267,32 @@ function inStockAPI(req, res) {
                         { purchaseId: purchaseId },
                         { $set: { done: 1 } }
                     )
-                    .then(() => {
+                    .then((purchaseForPDF) => {
+                        const invoice = {
+                            shipping: {
+                                name:
+                                    purchaseForPDF.value.customerInformations
+                                        .customerName,
+                                address:
+                                    purchaseForPDF.value.customerInformations
+                                        .customerAddress,
+                                phone:
+                                    purchaseForPDF.value.customerInformations
+                                        .customerPhone,
+                                postal_code:
+                                    purchaseForPDF.value.customerInformations
+                                        .customerPostalCode,
+                            },
+                            items: purchaseForPDF.value.basket,
+                            subtotal: purchaseForPDF.value.totalPrice,
+                            paidTime: purchaseForPDF.value.paidTime,
+                            purchaseId: purchaseForPDF.value.purchaseId,
+                        };
+                        if (!process.env.PWD) {
+                            process.env.PWD = process.cwd();
+                        }
+                        let invoicePath = `${process.env.PWD}/static/invoices/${purchaseId}.pdf`;
+                        createInvoice(invoice, invoicePath);
                         res.json({
                             status: 200,
                             message:
@@ -274,6 +300,7 @@ function inStockAPI(req, res) {
                             data: {
                                 succeeded: true,
                                 RefID: purchaseId,
+                                invoicePath: invoicePath,
                             },
                             address: "POST:/purchase",
                         });

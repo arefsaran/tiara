@@ -2,8 +2,8 @@ const request = require("request-promise");
 const express = require("express");
 const app = express.Router();
 const mongoose = require("mongoose");
-const { Purchase } = require("../models/purchase");
-const { subDomainChecker } = require("../middlewares/subDomainChecker");
+const { Purchase } = require("../../models/purchase");
+const { subDomainChecker } = require("../../middlewares/subDomainChecker");
 
 function getUrlOption(url, params) {
     return {
@@ -25,11 +25,15 @@ app.get("/checker", checker);
 async function pay(req, res) {
     try {
         let { totalPrice, purchaseId } = req.query;
+        if (!process.env.PWD) {
+            process.env.PWD = process.cwd();
+        }
+        let invoicePath = `/invoices/${purchaseId}.pdf`;
         let store = req.store.storeId;
         let params = {
             MerchantID: "c1b685fb-429a-436f-be23-99a03900f621",
             Amount: totalPrice,
-            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${totalPrice}&purchaseId=${purchaseId}&storeId=${store}`,
+            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${totalPrice}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${store}`,
             Description: `${purchaseId}`,
             Email: "tiaraplatform@gmail.com",
         };
@@ -92,6 +96,7 @@ async function checker(req, res, next) {
                         request(options).then(async (result) => {
                             return res.render("successfulPayment", {
                                 RefID: result.data.RefID,
+                                invoicePath: req.query.invoicePath,
                             });
                         });
                     } else {

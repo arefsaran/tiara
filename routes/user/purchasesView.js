@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Purchase } = require("../models/purchase");
+const { Purchase } = require("../../models/purchase");
 
 router.get("/", purchasesView);
 

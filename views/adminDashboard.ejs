@@ -87,21 +87,25 @@
                                 <table class="table table-bordernone mb-0">
                                     <thead>
                                     <tr>
-                                        <th scope="col">دامنه</th>
-                                        <th scope="col">نام فروشگاه</th>
-                                        <th scope="col">تاریخ سفارش</th>
-                                        <th scope="col">نوع پلن</th>
-                                        <th scope="col">مبلغ خرید</th>
+                                        <th>نام فروشگاه</th>
+                                        <th>آدرس</th>
+                                        <th>دامنه</th>
+                                        <th>مانده</th>
+                                        <th>پلن</th>
+                                        <th>تاریخ سفارش</th>
+                                        <th>مبلغ خرید</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                 <% users.forEach(user=> { %>
                                     <tr>
-                                        <td class="font-dark w-25"><%= user.userStore.storeId %></td>
-                                        <td class="font-dark w-25"><%= user.userStore.storeName %></td>
-                                        <td class="font-secondary"><%= user.userStore.paidTime %></td>
-                                        <td class="digits"><%= user.userStore.storePlan.planType %></td>
-                                        <td class="digits"><%= user.userStore.storePlan.planPrice %> تومان</td>
+                                        <td class="font-secondary"><%= user.userStore.storeName %></td>
+                                        <td class="font-dark w-25"><%= user.userStore.storeAddress %></td>
+                                        <td class="font-secondary"><%= user.userStore.storeId %></td>
+                                        <td class="font-dark"><%= user.userStore.storePlan.planTimeToExpiry %> روز</td>
+                                        <td class="font-secondary"><%= user.userStore.storePlan.planType %></td>
+                                        <td class="font-dark"><%= user.userStore.paidTime %></td>
+                                        <td class="font-secondary"><%= user.userPaid %></td>
                                     </tr>
                                 <% }) %>
                                     </tbody>

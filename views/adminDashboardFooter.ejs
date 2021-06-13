@@ -24,7 +24,7 @@
 <script>
     function headerFunc() {
         let token = localStorage.getItem("adminToken");
-        document.getElementById("purchasesButton").href = `admin/stores?adminToken=${token}`;
+        document.getElementById("purchasesButton").href = `admin/purchase?adminToken=${token}`;
         document.getElementById("dashboardButton").href = `admin/dashboard?adminToken=${token}`;
         document.getElementById("settingsButton").href = `admin/settings?adminToken=${token}`;
         document.getElementById("addProductButton").href = `admin/addPlan?adminToken=${token}`;

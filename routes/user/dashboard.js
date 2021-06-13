@@ -5,7 +5,7 @@ const config = require("config");
 const serverConfig = config.get("serverConfig.config");
 const url = serverConfig.mongoDB;
 const ObjectId = require("mongoose").Types.ObjectId;
-const { Purchase } = require("../models/purchase");
+const { Purchase } = require("../../models/purchase");
 
 router.get("/", dashboardView);
 

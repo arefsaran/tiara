@@ -1,0 +1,51 @@
+<%- include("adminDashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>سفارش ها</h5>
+                    </div>
+                    <div class="card-body order-datatable">
+                        <div class="user-status table-responsive products-table">
+                            <table class="table table-bordernone mb-0">
+                                <thead>
+                                <tr>
+                                    <th>نام خریدار</th>
+                                    <th>نام فروشگاه</th>
+                                    <th>آدرس</th>
+                                    <th>دامنه</th>
+                                    <th>مانده</th>
+                                    <th>پلن</th>
+                                    <th>تاریخ سفارش</th>
+                                    <th>مبلغ خرید</th>
+                                    <th>شماره سفارش</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            <% resultUsers.forEach(user=> { %>
+                                <tr>
+                                    <td class="font-dark"><%= user.userName %></td>
+                                    <td class="font-secondary"><%= user.userStore.storeName %></td>
+                                    <td class="font-dark"><%= user.userStore.storeAddress %></td>
+                                    <td class="font-secondary"><%= user.userStore.storeId %></td>
+                                    <td class="font-dark"><%= user.userStore.storePlan.planTimeToExpiry %> روز</td>
+                                    <td class="font-secondary"><%= user.userStore.storePlan.planType %></td>
+                                    <td class="font-dark"><%= user.userStore.paidTime %></td>
+                                    <td class="font-secondary"><%= user.userPaid %></td>
+                                    <td class="font-dark"><%= user.purchaseID %></td>
+                                </tr>
+                            <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include("adminDashboardFooter"); -%>

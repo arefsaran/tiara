@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User, validateLogin } = require("../models/user");
-const config = require("config");
+const { User, validateLogin } = require("../../models/user");
 const bcrypt = require("bcryptjs");
 
 router.get("/", logInView);
@@ -46,7 +45,7 @@ async function logInFunction(req, res, next) {
                     // res.render("dashboard", {
                     //     userToken: token,
                     // });
-                    res.redirect(`/dashboard?userToken=${token}`);
+                    res.redirect(`/user/dashboard?userToken=${token}`);
                 } else {
                     res.render("logIn", {
                         error: "ایمیل یا رمز عبور اشتباه است",

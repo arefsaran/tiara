@@ -6,7 +6,7 @@ const routes = require("./routes");
 const config = require("config");
 const serverConfig = config.get("serverConfig.config");
 const { User } = require("./models/user");
-const { MongoClient } = require("mongodb");
+// const { MongoClient } = require("mongodb");
 
 app.use((req, res, next) => {
     res.setHeader("Access-control-Allow-Origin", "*");
