@@ -241,7 +241,7 @@
 <script>
     function actionSet() {
         let token = localStorage.getItem("userToken");
-        document.getElementById("settingsForm").action = `settings?userToken=${token}`;;
+        document.getElementById("settingsForm").action = `user/settings?userToken=${token}`;
         document.getElementById("settingsForm").submit();
 
     }

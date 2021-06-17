@@ -16,13 +16,13 @@
 <script>
     function headerFunc() {
         let token = localStorage.getItem("userToken");
-        document.getElementById("purchasesButton").href = `purchasesView?userToken=${token}`;
-        document.getElementById("dashboardButton").href = `dashboard?userToken=${token}`;
-        document.getElementById("settingsButton").href = `settings?userToken=${token}`;
-        document.getElementById("aboutUsButton").href = `aboutUs?userToken=${token}`;
-        document.getElementById("addProductButton").href = `uploadProduct?userToken=${token}`;
-        document.getElementById("editButton").href = `editHome?userToken=${token}`;
-        document.getElementById("uploadForm").action = `/uploadProduct?userToken=${token}`;
+        document.getElementById("purchasesButton").href = `user/purchasesView?userToken=${token}`;
+        document.getElementById("dashboardButton").href = `user/dashboard?userToken=${token}`;
+        document.getElementById("settingsButton").href = `user/settings?userToken=${token}`;
+        document.getElementById("aboutUsButton").href = `https://tiaraplatform.ir`;
+        document.getElementById("addProductButton").href = `user/uploadProduct?userToken=${token}`;
+        document.getElementById("editButton").href = `user/editHome?userToken=${token}`;
+        document.getElementById("uploadForm").action = `user/uploadProduct?userToken=${token}`;
     }
     headerFunc();
 </script>

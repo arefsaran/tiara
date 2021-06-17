@@ -35,6 +35,7 @@
     "pdfkit": "^0.12.1",
     "persianjs": "^0.4.0",
     "request-promise": "^4.2.6",
+    "tailwindcss": "^2.1.4",
     "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
