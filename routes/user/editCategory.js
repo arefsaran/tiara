@@ -12,7 +12,7 @@ momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "static/uploads/products/images/");
+        cb(null, "static/uploads/categories/images/");
     },
     filename: (req, file, cb) => {
         // console.log(req.body.collectionName);
@@ -22,42 +22,48 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/", editProduct);
-router.post("/", upload.single("productPicture"), editProductAPI);
+router.get("/", editCategory);
+router.post("/", upload.single("categoryPicture"), editCategoryAPI);
 
-async function editProduct(req, res, next) {
+async function editCategory(req, res, next) {
     try {
         const token = req.query.userToken || req.query.userTokenHide;
-        let { productId } = req.query;
-        let collectionName = req.user.userStore.storeId;
+        let { categoryUniqId } = req.query;
+        let collectionName = "categories";
+        let storeId = req.user.userStore.storeId;
         let dbName = "ecommerce";
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
         let ecommerce = client.db(dbName);
-        let resultProducts = await ecommerce
+        let resultCategory = await ecommerce
             .collection(collectionName)
-            .find({ _id: ObjectId(productId) })
+            .find({ _id: ObjectId(categoryUniqId) })
             .toArray();
         let resultCategories = await ecommerce
-            .collection("category")
-            .find()
+            .collection("categories")
+            .find({ storeId: storeId })
             .toArray();
-        res.render("editProduct", {
-            product: resultProducts[0],
+        res.render("editCategory", {
+            category: resultCategory[0],
             storeInfo: req.user.userStore,
             resultCategories: resultCategories,
-            productEdited: 0,
+            categoryEdited: 0,
             token: token,
         });
         next();
     } catch (error) {
-        console.log(error);
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/user/editCategory",
+        });
     }
 }
 
-async function editProductAPI(req, res, next) {
+async function editCategoryAPI(req, res, next) {
     try {
         let {
             productId,
@@ -70,7 +76,7 @@ async function editProductAPI(req, res, next) {
             categoryName,
             inStock,
         } = req.body;
-        let category = await Category.findOne({ categoryName: categoryName });
+        let category = await Categories.findOne({ categoryName: categoryName });
         let productType = category.categoryNameForRequest;
         let collectionName = req.user.userStore.storeId;
         const token = req.query.userToken || req.query.userTokenHide;
@@ -159,7 +165,7 @@ async function editProductAPI(req, res, next) {
                 .find({ _id: ObjectId(productId) })
                 .toArray();
             let resultCategories = await ecommerce
-                .collection("category")
+                .collection("categories")
                 .find()
                 .toArray();
             res.render("editProduct", {
@@ -176,7 +182,7 @@ async function editProductAPI(req, res, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/editProduct",
+            address: "POST:/user/editCategory",
         });
     }
 }

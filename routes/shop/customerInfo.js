@@ -14,7 +14,12 @@ async function customerInfoView(req, res, next) {
         }
         next();
     } catch (error) {
-        res.render("customerInfo", { storeInfo: req.store, error: error });
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/customerInfo",
+        });
     }
 }
 

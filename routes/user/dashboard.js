@@ -67,7 +67,12 @@ async function dashboardView(req, res, next) {
         });
         next();
     } catch (error) {
-        res.json({ error: error });
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/user/dashboard",
+        });
     }
 }
 

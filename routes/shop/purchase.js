@@ -313,13 +313,10 @@ function inStockAPI(req, res) {
         }
     } catch (error) {
         res.json({
-            status: 400,
+            status: 500,
             message: "The request could not be understood by the server",
-            data: {
-                error: error,
-                succeeded: false,
-            },
-            address: "POST:/inStock",
+            data: { error: error },
+            address: "POST:/purchase",
         });
     }
 }

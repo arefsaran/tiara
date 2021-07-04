@@ -3,25 +3,27 @@ const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const { MONGO_DB } = require("../../config/config");
 
-router.get("/", productsPage);
+router.get("/", categoriesPage);
 
-async function productsPage(req, res, next) {
+async function categoriesPage(req, res, next) {
     try {
-        let collectionName = req.store.storeId;
+        let collectionName = "category";
+        let storeId = req.user.userStore.storeId;
+        const token = req.query.userToken || req.query.userTokenHide;
         let dbName = "ecommerce";
-        let { categoryNameForRequest } = req.query;
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
         let ecommerce = client.db(dbName);
-        let resultProducts = await ecommerce
+        let resultCategories = await ecommerce
             .collection(collectionName)
-            .find({ productType: categoryNameForRequest })
+            .find({ storeId: storeId })
             .toArray();
-        res.render("products", {
-            storeInfo: req.store,
-            resultProducts: resultProducts,
+        res.render("editCategories", {
+            storeInfo: req.user.userStore,
+            resultCategories: resultCategories,
+            token: token,
         });
         next();
     } catch (error) {
@@ -29,7 +31,7 @@ async function productsPage(req, res, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/productsPage",
+            address: "GET:/user/editCategories",
         });
     }
 }

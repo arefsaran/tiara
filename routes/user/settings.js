@@ -152,10 +152,10 @@ async function settingsAPI(req, res, next) {
         next();
     } catch (error) {
         res.json({
-            status: 400,
+            status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/editProducts",
+            address: "GET:/user/settings",
         });
     }
 }

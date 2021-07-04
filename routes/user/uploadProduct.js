@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { Categories } = require("../../models/categories");
+const { Category } = require("../../models/category");
 const { MONGO_DB } = require("../../config/config");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
@@ -26,7 +26,8 @@ router.post("/", upload.single("productPicture"), uploadProductFunction);
 
 async function uploadProductView(req, res) {
     try {
-        let storeId = "categories";
+        let storeId = req.user.userStore.storeId;
+        let collectionName = "category";
         let dbName = "ecommerce";
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
@@ -34,8 +35,8 @@ async function uploadProductView(req, res) {
         });
         let ecommerce = client.db(dbName);
         let resultCategories = await ecommerce
-            .collection(storeId)
-            .find()
+            .collection(collectionName)
+            .find({ storeId: storeId })
             .toArray();
         res.render("uploadProduct", {
             storeInfo: req.user.userStore,
@@ -44,10 +45,10 @@ async function uploadProductView(req, res) {
         });
     } catch (error) {
         res.json({
-            code: 500,
-            status: "failed",
-            comment: "Error!",
+            status: 500,
+            message: "The request could not be understood by the server",
             data: { error: error },
+            address: "GET:/user/uploadProduct",
         });
     }
 }
@@ -65,7 +66,7 @@ async function uploadProductFunction(req, res) {
             inStock,
             userTokenHide,
         } = req.body;
-        let category = await Categories.findOne({ categoryName: categoryName });
+        let category = await Category.findOne({ categoryName: categoryName });
         let productType = category.categoryNameForRequest;
         let storeId = req.user.userStore.storeId;
         function insertFunction(name, query) {
@@ -78,7 +79,7 @@ async function uploadProductFunction(req, res) {
             let query = {
                 productName: persianJs(productName).englishNumber().toString(),
                 productPicture: productPicture,
-                productType: productType,
+                categoryId: categoryId,
                 productTypeInPersian: categoryName,
                 productDetails: {
                     productPrice: persianJs(productPrice)
@@ -110,7 +111,7 @@ async function uploadProductFunction(req, res) {
             });
             let ecommerce = client.db(dbName);
             let resultCategories = await ecommerce
-                .collection("categories")
+                .collection("category")
                 .find()
                 .toArray();
 
@@ -123,10 +124,10 @@ async function uploadProductFunction(req, res) {
         return;
     } catch (error) {
         res.json({
-            status: 400,
+            status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/uploadProducts",
+            address: "POST:/user/uploadProduct",
         });
     }
 }

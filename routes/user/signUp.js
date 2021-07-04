@@ -15,7 +15,12 @@ async function signUpView(req, res, next) {
         res.render("signUp", { error: "" });
         next();
     } catch (error) {
-        res.json({ error });
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/user/signUp",
+        });
     }
 }
 
@@ -111,10 +116,12 @@ async function signUpFunction(req, res, next) {
         }
         next();
     } catch (error) {
-        // res.render("signUp", {
-        //     error: `${error}`,
-        // });
-        res.json({ errorCatch: `${error}` });
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "POST:/user/signUp",
+        });
     }
 }
 

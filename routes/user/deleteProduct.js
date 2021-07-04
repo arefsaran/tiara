@@ -32,7 +32,12 @@ async function deleteProduct(req, res, next) {
         });
         next();
     } catch (error) {
-        console.log(error);
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/user/deleteProduct",
+        });
     }
 }
 

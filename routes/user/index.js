@@ -11,6 +11,9 @@ const editProduct = require("./editProduct");
 const editProducts = require("./editProducts");
 const editHome = require("./editHome");
 const deleteProduct = require("./deleteProduct");
+const uploadCategory = require("./uploadCategory");
+const deleteCategory = require("./deleteCategory");
+const editCategory = require("./editCategory");
 
 router.use("/signUp", signUp);
 router.use("/logIn", logIn);
@@ -22,5 +25,8 @@ router.use("/editProduct", auth, editProduct);
 router.use("/editProducts", auth, editProducts);
 router.use("/editHome", auth, editHome);
 router.use("/deleteProduct", auth, deleteProduct);
+router.use("/uploadCategory", auth, uploadCategory);
+router.use("/deleteCategory", auth, deleteCategory);
+router.use("/editCategory", auth, editCategory);
 
 module.exports = router;

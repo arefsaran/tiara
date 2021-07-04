@@ -41,7 +41,7 @@ function sortAPI(req, res) {
         }
     } catch (error) {
         res.json({
-            status: 400,
+            status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
             address: "POST:/sort",

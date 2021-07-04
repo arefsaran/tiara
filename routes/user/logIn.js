@@ -11,8 +11,11 @@ async function logInView(req, res, next) {
         res.render("logIn", { error: "" });
         next();
     } catch (error) {
-        res.render("logIn", {
-            error: `${error}`,
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/user/logIn",
         });
     }
 }
@@ -55,8 +58,11 @@ async function logInFunction(req, res, next) {
         }
         next();
     } catch (error) {
-        res.render("logIn", {
-            error: `${error}`,
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "POST:/user/logIn",
         });
     }
 }

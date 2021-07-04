@@ -28,10 +28,10 @@ async function productsPage(req, res, next) {
         next();
     } catch (error) {
         res.json({
-            code: 500,
-            status: "failed",
-            comment: "Error!",
+            status: 500,
+            message: "The request could not be understood by the server",
             data: { error: error },
+            address: "GET:/user/editProducts",
         });
     }
 }
