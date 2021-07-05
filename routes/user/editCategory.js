@@ -14,7 +14,6 @@ const storage = multer.diskStorage({
         cb(null, "static/uploads/categories/images/");
     },
     filename: (req, file, cb) => {
-        // console.log(req.body.storeId);
         cb(null, file.originalname);
         // cb(null, req.body.storeId + req.body.categoryName + jalaliDate);
     },
@@ -59,7 +58,7 @@ async function editCategory(req, res, next) {
 
 async function editCategoryAPI(req, res, next) {
     try {
-        let { categoryId, categoryName } = req.body;
+        let { categoryId, categoryName, newCategoryName } = req.body;
         let storeId = req.user.userStore.storeId;
         let collectionName = "category";
         const token = req.query.userToken || req.query.userTokenHide;
@@ -72,6 +71,15 @@ async function editCategoryAPI(req, res, next) {
                     { _id: ObjectId(categoryId) },
                     { $set: query }
                 );
+                mongoose.connection.db.collection(storeId, function (
+                    err,
+                    collection
+                ) {
+                    collection.updateMany(
+                        { categoryName: categoryName },
+                        { $set: { categoryName: newCategoryName } }
+                    );
+                });
             });
         }
         if (storeId) {
@@ -80,7 +88,7 @@ async function editCategoryAPI(req, res, next) {
             if (req.file != undefined) {
                 categoryPicture = req.file.path.replace(/\\/g, "/").substr(7);
                 query = {
-                    categoryName: persianJs(categoryName)
+                    categoryName: persianJs(newCategoryName)
                         .englishNumber()
                         .toString(),
                     categoryPicture: categoryPicture,
@@ -89,7 +97,7 @@ async function editCategoryAPI(req, res, next) {
                 };
             } else {
                 query = {
-                    categoryName: persianJs(categoryName)
+                    categoryName: persianJs(newCategoryName)
                         .englishNumber()
                         .toString(),
                     storeId: storeId,

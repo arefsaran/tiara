@@ -13,7 +13,6 @@ function searchAPI(req, res) {
         let totalResult = [];
         searchInCollection(storeId);
         // getCollectionsName();
-        // // console.log("totalResult",totalResult)
         // function getCollectionsName(){
         //     mongoose.connection.db.listCollections().toArray(selectCollection);
         // }
@@ -27,7 +26,6 @@ function searchAPI(req, res) {
         // }
         // function searchInCollection(err, collection) {
         function searchInCollection(storeId) {
-            // console.log(typeof(storeId));
             if (productNameForSearch && !productIdForSearch) {
                 mongoose.connection.db.collection(storeId, function (
                     err,
@@ -65,7 +63,6 @@ function searchAPI(req, res) {
                             return eachResult;
                         }
                     });
-                    // console.log(totalResult);
                     let { sortBy } = req.body;
                     if (sortBy == "priceLowToHigh") {
                         sortFunctionLowToHigh(
@@ -79,7 +76,6 @@ function searchAPI(req, res) {
                         );
                     }
                     // totalResult = totalResult.flat(1);
-                    // console.log("totalResult",totalResult)
                     // res.json({
                     //     status: 200,
                     //     message: "The request has succeeded",

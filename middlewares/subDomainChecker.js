@@ -10,8 +10,6 @@ module.exports.subDomainChecker = async function (req, res, next) {
         }
         if (subDomain === "www" || subDomain == 0) {
             return res.render("landing");
-        } else if (subDomain === "admin") {
-            return res.render("admin");
         } else {
             let store = await User.findOne({
                 "userStore.storeId": subDomain,

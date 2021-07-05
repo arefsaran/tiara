@@ -131,7 +131,6 @@ return obj;
             }).then((response)=>{
                 return response.json();
             }).then((res)=>{
-                // console.log("res", res);
                 if (res.status === 200 && res.data !== "Deleted") {
                     localStorage.setItem("purchaseId",res.data.purchaseId);
                     window.location.href = `/zarinpal/payment?purchaseId=${res.data.purchaseId}&totalPrice=${res.data.totalPrice}`

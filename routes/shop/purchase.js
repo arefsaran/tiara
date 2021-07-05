@@ -13,7 +13,6 @@ router.post("/", inStockAPI);
 
 function inStockAPI(req, res) {
     try {
-        // console.log(req.body);
         let {
             customerName,
             customerPhone,

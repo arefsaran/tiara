@@ -43,7 +43,6 @@ async function basketFunction(req, res, next) {
         let collectionName = req.store.storeId;
         let dbName = "ecommerce";
         let { productId, quantity } = req.query;
-        // console.log(quantity);
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -56,7 +55,6 @@ async function basketFunction(req, res, next) {
         let totalPrice =
             basketProducts[0].productDetails.productPriceEnglishNumber *
             quantity;
-        // console.log(basketProducts);
         res.render("basket", {
             basketProducts: basketProducts,
             storeInfo: req.store,

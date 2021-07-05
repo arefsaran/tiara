@@ -12,7 +12,7 @@ async function deleteCategory(req, res, next) {
         let collectionName = "category";
         let storeId = req.user.userStore.storeId;
         const token = req.query.userToken || req.query.userTokenHide;
-        const { deleteCategoryId } = req.query;
+        const { deleteCategoryId, categoryName } = req.query;
         let dbName = "ecommerce";
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
@@ -21,6 +21,9 @@ async function deleteCategory(req, res, next) {
         let ecommerce = client.db(dbName);
         mongoose.connection.db.collection(collectionName, (err, collection) => {
             collection.deleteOne({ _id: ObjectId(deleteCategoryId) });
+            mongoose.connection.db.collection(storeId, (err, collection) => {
+                collection.deleteMany({ categoryName: categoryName });
+            });
         });
         let resultCategories = await ecommerce
             .collection(collectionName)

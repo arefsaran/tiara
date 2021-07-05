@@ -45,7 +45,7 @@
                                                 >نام دسته :</label
                                             >
                                             <input
-                                                name="categoryName"
+                                                name="newCategoryName"
                                                 class="form-control col-xl-8 col-sm-7"
                                                 id="validationCustom01"
                                                 type="text"
@@ -74,6 +74,7 @@
                                     </div>
                                     <input type="hidden" name="userTokenHide" id="userTokenHide" value="<%= token %>">
                                     <input type="hidden" name="categoryId" id="categoryId" value="<%= category._id %>">
+                                    <input type="hidden" name="categoryName" id="categoryName" value="<%= category.categoryName %>">
                                     <div class="offset-xl-3 offset-sm-4">
                                         <button
                                             onclick="actionSet()"

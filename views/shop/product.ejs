@@ -77,7 +77,6 @@
                 referrerPolicy: "no-referrer", // no-referrer, *client
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
             }).then((res) => {
-                // console.log("res.json",res.json());
                 return res.json();
             }) // expecting a json response
             .then((response)=>{

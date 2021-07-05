@@ -91,7 +91,6 @@
             }).then((response)=>{
                 return response.json();
             }).then((res)=>{
-                // console.log("res", res);
                 if (res.status === 200) {
                     localStorage.removeItem("purchaseId");
                     window.location.href = "/unsuccessfulPayment";

@@ -48,7 +48,6 @@
     function displayCart() {
         let cartArray = shoppingCart.listCart();
         document.getElementById("numberOfProductInBasket").innerHTML = shoppingCart.countCart();
-        // console.log(cartArray);
         var output = "";
         if(cartArray.length === 0){
             document.getElementById("checkout").style.visibility = 'hidden';

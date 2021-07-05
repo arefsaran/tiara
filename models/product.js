@@ -16,10 +16,6 @@ const productSchema = new mongoose.Schema(
             type: String,
             index: true,
         },
-        productNameForRequest: {
-            type: String,
-            index: true,
-        },
         productDetails: {
             productPrice: {
                 type: String,
