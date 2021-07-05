@@ -95,7 +95,13 @@ function searchAPI(req, res) {
                     });
                 }
             } catch (error) {
-                console.log("error", error);
+                res.json({
+                    status: 500,
+                    message:
+                        "The request could not be understood by the server",
+                    data: { error: error },
+                    address: "GET:/search (resultFunction)",
+                });
             }
         }
     } catch (error) {

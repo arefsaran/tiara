@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         // console.log(req.body.collectionName);
         cb(null, file.originalname);
-        // cb(null, req.body.collectionName + req.body.productType + jalaliDate);
+        // cb(null, req.body.collectionName + req.body.categoryName + jalaliDate);
     },
 });
 const upload = multer({ storage: storage });
@@ -53,7 +53,12 @@ async function editProduct(req, res, next) {
         });
         next();
     } catch (error) {
-        console.log(error);
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/editProduct",
+        });
     }
 }
 
@@ -70,8 +75,6 @@ async function editProductAPI(req, res, next) {
             categoryName,
             inStock,
         } = req.body;
-        let category = await Category.findOne({ categoryName: categoryName });
-        let productType = category.categoryNameForRequest;
         let collectionName = req.user.userStore.storeId;
         const token = req.query.userToken || req.query.userTokenHide;
         function updateFunction(name, query) {
@@ -92,8 +95,7 @@ async function editProductAPI(req, res, next) {
                         .englishNumber()
                         .toString(),
                     productPicture: productPicture,
-                    productType: productType,
-                    productTypeInPersian: categoryName,
+                    categoryName: categoryName,
                     productDetails: {
                         productPrice: persianJs(productPrice)
                             .englishNumber()
@@ -121,8 +123,7 @@ async function editProductAPI(req, res, next) {
                     productName: persianJs(productName)
                         .englishNumber()
                         .toString(),
-                    productType: productType,
-                    productTypeInPersian: categoryName,
+                    categoryName: categoryName,
                     productDetails: {
                         productPrice: persianJs(productPrice)
                             .englishNumber()
@@ -176,7 +177,7 @@ async function editProductAPI(req, res, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/editProduct",
+            address: "POST:/user/editProduct",
         });
     }
 }

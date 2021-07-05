@@ -10,7 +10,7 @@ async function productsPage(req, res, next) {
         let collectionName = req.user.userStore.storeId;
         const token = req.query.userToken || req.query.userTokenHide;
         let dbName = "ecommerce";
-        let { categoryNameForRequest } = req.query;
+        let { categoryName } = req.query;
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -18,7 +18,7 @@ async function productsPage(req, res, next) {
         let ecommerce = client.db(dbName);
         let resultProducts = await ecommerce
             .collection(collectionName)
-            .find({ productType: categoryNameForRequest })
+            .find({ categoryName: categoryName })
             .toArray();
         res.render("editProducts", {
             storeInfo: req.user.userStore,

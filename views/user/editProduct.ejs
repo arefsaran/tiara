@@ -153,12 +153,12 @@
                                                 id="exampleFormControlSelect1"
                                             >
                                             <option>
-                                                <%= product.productTypeInPersian %>
+                                                <%= product.categoryName %>
                                             </option>
                                                 <%
                                                 resultCategories.forEach(category=>
                                                 { %>
-                                                    <% if (category.categoryNameForRequest != product.productType){ %>
+                                                    <% if (category.categoryName != product.categoryName){ %>
                                                         <option>
                                                             <%=
                                                             category.categoryName

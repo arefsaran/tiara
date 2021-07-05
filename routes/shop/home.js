@@ -8,22 +8,17 @@ router.get("/", homeViewFunction);
 
 async function homeViewFunction(req, res, next) {
     try {
-        let collectionName = "categories";
+        let collectionName = "category";
         let dbName = "ecommerce";
+        let storeId = req.store.storeId;
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
         let ecommerce = client.db(dbName);
-        mongoose.connection.db.collection("purchases", function (
-            err,
-            collection
-        ) {
-            collection.updateMany({}, { $set: { done: 1 } });
-        });
         let resultCategories = await ecommerce
             .collection(collectionName)
-            .find()
+            .find({ storeId: storeId })
             .toArray();
         return res.render("home", {
             resultCategories: resultCategories,

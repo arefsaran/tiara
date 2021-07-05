@@ -21,7 +21,8 @@
         document.getElementById("settingsButton").href = `user/settings?userToken=${token}`;
         document.getElementById("aboutUsButton").href = `https://tiaraplatform.ir`;
         document.getElementById("addProductButton").href = `user/uploadProduct?userToken=${token}`;
-        document.getElementById("editButton").href = `user/editHome?userToken=${token}`;
+        document.getElementById("addCategoryButton").href = `user/uploadCategory?userToken=${token}`;
+        document.getElementById("editButton").href = `user/editCategories?userToken=${token}`;
         document.getElementById("uploadForm").action = `user/uploadProduct?userToken=${token}`;
     }
     headerFunc();

@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         // console.log(req.body.storeId);
         cb(null, file.originalname);
-        // cb(null, req.body.storeId + req.body.productType + jalaliDate);
+        // cb(null, req.body.storeId + req.body.categoryName + jalaliDate);
     },
 });
 const upload = multer({ storage: storage });
@@ -66,8 +66,6 @@ async function uploadProductFunction(req, res) {
             inStock,
             userTokenHide,
         } = req.body;
-        let category = await Category.findOne({ categoryName: categoryName });
-        let productType = category.categoryNameForRequest;
         let storeId = req.user.userStore.storeId;
         function insertFunction(name, query) {
             mongoose.connection.db.collection(name, function (err, collection) {
@@ -79,8 +77,7 @@ async function uploadProductFunction(req, res) {
             let query = {
                 productName: persianJs(productName).englishNumber().toString(),
                 productPicture: productPicture,
-                categoryId: categoryId,
-                productTypeInPersian: categoryName,
+                categoryName: categoryName,
                 productDetails: {
                     productPrice: persianJs(productPrice)
                         .englishNumber()

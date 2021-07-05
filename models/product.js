@@ -12,11 +12,7 @@ const productSchema = new mongoose.Schema(
             type: String,
             index: true,
         },
-        categoryId: {
-            type: String,
-            index: true,
-        },
-        productTypeInPersian: {
+        categoryName: {
             type: String,
             index: true,
         },

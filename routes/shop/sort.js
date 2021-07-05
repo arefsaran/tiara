@@ -18,7 +18,7 @@ function sortAPI(req, res) {
             mongoose.connection.db.collection(name, function (err, collection) {
                 collection
                     .find({
-                        productType: collectionName,
+                        categoryName: collectionName,
                         inStock: { $gt: 0 },
                     })
                     .sort(sortBy)

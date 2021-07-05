@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { Category } = require("../../models/category");
 const { MONGO_DB } = require("../../config/config");
 let ObjectId = require("mongodb").ObjectID;
 const persianJs = require("persianjs");
@@ -15,9 +14,9 @@ const storage = multer.diskStorage({
         cb(null, "static/uploads/categories/images/");
     },
     filename: (req, file, cb) => {
-        // console.log(req.body.collectionName);
+        // console.log(req.body.storeId);
         cb(null, file.originalname);
-        // cb(null, req.body.collectionName + req.body.productType + jalaliDate);
+        // cb(null, req.body.storeId + req.body.categoryName + jalaliDate);
     },
 });
 const upload = multer({ storage: storage });
@@ -28,8 +27,8 @@ router.post("/", upload.single("categoryPicture"), editCategoryAPI);
 async function editCategory(req, res, next) {
     try {
         const token = req.query.userToken || req.query.userTokenHide;
-        let { categoryUniqId } = req.query;
-        let collectionName = "categories";
+        let { categoryId } = req.query;
+        let collectionName = "category";
         let storeId = req.user.userStore.storeId;
         let dbName = "ecommerce";
         const client = await MongoClient.connect(MONGO_DB, {
@@ -39,16 +38,11 @@ async function editCategory(req, res, next) {
         let ecommerce = client.db(dbName);
         let resultCategory = await ecommerce
             .collection(collectionName)
-            .find({ _id: ObjectId(categoryUniqId) })
-            .toArray();
-        let resultCategories = await ecommerce
-            .collection("categories")
-            .find({ storeId: storeId })
+            .find({ _id: ObjectId(categoryId) })
             .toArray();
         res.render("editCategory", {
             category: resultCategory[0],
             storeInfo: req.user.userStore,
-            resultCategories: resultCategories,
             categoryEdited: 0,
             token: token,
         });
@@ -65,94 +59,44 @@ async function editCategory(req, res, next) {
 
 async function editCategoryAPI(req, res, next) {
     try {
-        let {
-            productId,
-            productName,
-            productManufacturingDate,
-            productExpirationDate,
-            productSize,
-            productPrice,
-            subType,
-            categoryName,
-            inStock,
-        } = req.body;
-        let category = await Categories.findOne({ categoryName: categoryName });
-        let productType = category.categoryNameForRequest;
-        let collectionName = req.user.userStore.storeId;
+        let { categoryId, categoryName } = req.body;
+        let storeId = req.user.userStore.storeId;
+        let collectionName = "category";
         const token = req.query.userToken || req.query.userTokenHide;
-        function updateFunction(name, query) {
-            mongoose.connection.db.collection(name, function (err, collection) {
+        function updateFunction(query) {
+            mongoose.connection.db.collection(collectionName, function (
+                err,
+                collection
+            ) {
                 collection.updateOne(
-                    { _id: ObjectId(productId) },
+                    { _id: ObjectId(categoryId) },
                     { $set: query }
                 );
             });
         }
-        if (collectionName) {
-            let productPicture = "";
+        if (storeId) {
+            let categoryPicture = "";
             let query = {};
             if (req.file != undefined) {
-                productPicture = req.file.path.replace(/\\/g, "/").substr(7);
+                categoryPicture = req.file.path.replace(/\\/g, "/").substr(7);
                 query = {
-                    productName: persianJs(productName)
+                    categoryName: persianJs(categoryName)
                         .englishNumber()
                         .toString(),
-                    productPicture: productPicture,
-                    productType: productType,
-                    productTypeInPersian: categoryName,
-                    productDetails: {
-                        productPrice: persianJs(productPrice)
-                            .englishNumber()
-                            .toString(),
-                        productManufacturingDate: persianJs(
-                            productManufacturingDate
-                        )
-                            .englishNumber()
-                            .toString(),
-                        productExpirationDate: persianJs(productExpirationDate)
-                            .englishNumber()
-                            .toString(),
-                        productSize: persianJs(productSize)
-                            .englishNumber()
-                            .toString(),
-                        productPriceEnglishNumber: Number(productPrice),
-                        subType: subType || "other",
-                    },
-                    storeId: collectionName,
-                    inStock: Number(inStock),
-                    createdAt: jalaliDate,
+                    categoryPicture: categoryPicture,
+                    storeId: storeId,
+                    editedAt: jalaliDate,
                 };
             } else {
                 query = {
-                    productName: persianJs(productName)
+                    categoryName: persianJs(categoryName)
                         .englishNumber()
                         .toString(),
-                    productType: productType,
-                    productTypeInPersian: categoryName,
-                    productDetails: {
-                        productPrice: persianJs(productPrice)
-                            .englishNumber()
-                            .toString(),
-                        productManufacturingDate: persianJs(
-                            productManufacturingDate
-                        )
-                            .englishNumber()
-                            .toString(),
-                        productExpirationDate: persianJs(productExpirationDate)
-                            .englishNumber()
-                            .toString(),
-                        productSize: persianJs(productSize)
-                            .englishNumber()
-                            .toString(),
-                        productPriceEnglishNumber: Number(productPrice),
-                        subType: subType || "other",
-                    },
-                    storeId: collectionName,
-                    inStock: Number(inStock),
-                    createdAt: jalaliDate,
+                    storeId: storeId,
+                    editedAt: jalaliDate,
                 };
             }
-            updateFunction(collectionName, query);
+            updateFunction(query);
 
             let dbName = "ecommerce";
             const client = await MongoClient.connect(MONGO_DB, {
@@ -160,19 +104,14 @@ async function editCategoryAPI(req, res, next) {
                 useUnifiedTopology: true,
             });
             let ecommerce = client.db(dbName);
-            let resultProducts = await ecommerce
+            let resultCategory = await ecommerce
                 .collection(collectionName)
-                .find({ _id: ObjectId(productId) })
+                .find({ _id: ObjectId(categoryId) })
                 .toArray();
-            let resultCategories = await ecommerce
-                .collection("categories")
-                .find()
-                .toArray();
-            res.render("editProduct", {
-                product: resultProducts[0],
+            res.render("editCategory", {
+                category: resultCategory[0],
                 storeInfo: req.user.userStore,
-                resultCategories: resultCategories,
-                productEdited: 1,
+                categoryEdited: 1,
                 token: token,
             });
         }

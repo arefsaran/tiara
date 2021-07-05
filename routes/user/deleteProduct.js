@@ -11,7 +11,7 @@ async function deleteProduct(req, res, next) {
     try {
         let collectionName = req.user.userStore.storeId;
         const token = req.query.userToken || req.query.userTokenHide;
-        const { deleteProductId, categoryNameForRequest } = req.query;
+        const { deleteProductId, categoryName } = req.query;
         let dbName = "ecommerce";
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
@@ -23,7 +23,7 @@ async function deleteProduct(req, res, next) {
         });
         let resultProducts = await ecommerce
             .collection(collectionName)
-            .find({ productType: categoryNameForRequest })
+            .find({ categoryName: categoryName })
             .toArray();
         res.render("editProducts", {
             storeInfo: req.user.userStore,

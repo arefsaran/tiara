@@ -20,7 +20,7 @@ async function homeViewFunction(req, res, next) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
-        return res.render("editHome", {
+        return res.render("editCategories", {
             storeInfo: req.user.userStore,
             resultCategories: resultCategories,
             token: token,

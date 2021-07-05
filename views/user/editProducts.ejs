@@ -35,7 +35,7 @@
                                                     </div>
                                                     <div class="card-footer">
                                                         <button name="productId" value="<%= product._id %>" class="btn btn-solid w-100" type="submit">ویرایش</button>
-                                                        <a href=user/deleteProduct?userToken=<%= token %>&deleteProductId=<%= product._id %>&categoryNameForRequest=<%= product.productType %>><button name="deleteProductId" value="<%= product._id %>" class="btn btn-solid mt-2 w-100 text-danger" type="button">حذف</button></a>
+                                                        <a href=user/deleteProduct?userToken=<%= token %>&deleteProductId=<%= product._id %>&categoryName=<%= product.categoryName %>><button name="deleteProductId" value="<%= product._id %>" class="btn btn-solid mt-2 w-100 text-danger" type="button">حذف</button></a>
                                                     </div>
                                                 </div>
                                             </form>

@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
-const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
@@ -15,7 +13,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         // console.log(req.body.storeId);
         cb(null, file.originalname);
-        // cb(null, req.body.storeId + req.body.productType + jalaliDate);
+        // cb(null, req.body.storeId + req.body.categoryName + jalaliDate);
     },
 });
 const upload = multer({ storage: storage });
@@ -62,17 +60,6 @@ async function uploadCategoryFunction(req, res) {
                 storeId: storeId,
             };
             insertFunction(collectionName, query);
-            let dbName = "ecommerce";
-            const client = await MongoClient.connect(MONGO_DB, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            });
-            let ecommerce = client.db(dbName);
-            let resultCategories = await ecommerce
-                .collection("category")
-                .find({ storeId: storeId })
-                .toArray();
-
             res.render("uploadCategory", {
                 storeInfo: req.user.userStore,
                 categoryUploaded: "1",
