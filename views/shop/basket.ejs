@@ -21,7 +21,9 @@
                                 <div id="show-cart" class="card-deck col-xl-12 col-md-12 col-sm-12">
                                 </div>
                                 <div class='card shadow-lg' style='width: 100%; height: 100%; margin-top: 35px;'>
-                                    <p class="col-xl-12 col-md-12 col-sm-12">شما <span id="count-cart">0</span> محصول در سبدتان دارید</p>
+                                    <p class="col-xl-12 col-md-12 col-sm-12">شما <span id="count-cart">0</span> محصول در سبدتان دارید.</p>
+                                    <input id="shippingCostValue" hidden value="<%= storeInfo.shippingCost %>">
+                                    <p class="col-xl-12 col-md-12 col-sm-12">مقدار  <span id="count-cart"> <%= storeInfo.shippingCost %> </span>هزار تومان هزینه ارسال درب منزل است.</p>
                                     <p class="col-xl-12 col-md-12 col-sm-12">مجموع قیمت: <span id="total-cart"></span> تومان</p>
                                     <div style="display:flex; justify-content: space-between; margin-bottom: 12px;">
                                         <button style="margin-left: 2px;" class="btn btn-solid w-50 col-lg-4" id="clear-cart">خالی کردن سبد</button>
@@ -69,10 +71,11 @@
         function deleteFunc(id){
         shoppingCart.removeItemFromCartAll(id);
         displayCart();
-    }
+        }
+        let totalForPay = shoppingCart.totalCart() + ( 1000 * parseInt(document.getElementById("shippingCostValue").value));
         $("#show-cart").html(output);
         $("#count-cart").html( shoppingCart.countCart() );
-        $("#total-cart").html( shoppingCart.totalCart() );
+        $("#total-cart").html( totalForPay );
         ConvertNumberToPersion();
     }
     $("#show-cart").on("click", ".subtract-item", function(event){

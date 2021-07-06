@@ -53,11 +53,12 @@ async function settingsAPI(req, res, next) {
             storeId,
             storeAddress,
             storePhoneNumber,
+            shippingCost,
+            MERCHANT_ID,
         } = req.body;
         let planType = req.user.userStore.storePlan.planType;
         let planTimeToExpiry = req.user.userStore.storePlan.planTimeToExpiry;
         let collectionName = "users";
-        let collection = req.user.userStore.storeId;
         let userId = req.user._id;
         const token = req.query.userToken || req.query.userTokenHide;
         async function updateFunction(name, query) {
@@ -83,6 +84,7 @@ async function settingsAPI(req, res, next) {
                     userEmail: persianJs(userEmail.toLowerCase())
                         .toEnglishNumber()
                         .toString(),
+                    MERCHANT_ID: MERCHANT_ID,
                     userStore: {
                         storePlan: {
                             planType: Number(planType),
@@ -95,6 +97,9 @@ async function settingsAPI(req, res, next) {
                         storeId: persianJs(storeId)
                             .toEnglishNumber()
                             .toString(),
+                        shippingCost: parseInt(
+                            persianJs(shippingCost).toEnglishNumber()
+                        ),
                         storeAddress:
                             persianJs(storeAddress)
                                 .englishNumber()
@@ -114,12 +119,16 @@ async function settingsAPI(req, res, next) {
                     userEmail: persianJs(userEmail.toLowerCase())
                         .toEnglishNumber()
                         .toString(),
+                    MERCHANT_ID: MERCHANT_ID,
                     userStore: {
                         storePicture: req.user.userStore.storePicture,
                         storePlan: {
                             planType: Number(planType),
                             planTimeToExpiry: Number(planTimeToExpiry),
                         },
+                        shippingCost: parseInt(
+                            persianJs(shippingCost).toEnglishNumber()
+                        ),
                         storeName: persianJs(storeName.toLowerCase())
                             .englishNumber()
                             .toString(),

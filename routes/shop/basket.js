@@ -11,7 +11,7 @@ router.post("/api", basketFunction);
 async function basketView(req, res, next) {
     try {
         res.render("basket", {
-            storeInfo: req.store,
+            storeInfo: req.store.userStore,
             error: "",
         });
     } catch (error) {
@@ -40,7 +40,7 @@ async function basketCreator(req, res, next) {
 
 async function basketFunction(req, res, next) {
     try {
-        let collectionName = req.store.storeId;
+        let collectionName = req.store.userStore.storeId;
         let dbName = "ecommerce";
         let { productId, quantity } = req.query;
         const client = await MongoClient.connect(MONGO_DB, {
@@ -57,7 +57,7 @@ async function basketFunction(req, res, next) {
             quantity;
         res.render("basket", {
             basketProducts: basketProducts,
-            storeInfo: req.store,
+            storeInfo: req.store.userStore,
             quantity: quantity,
             totalPrice: totalPrice,
         });

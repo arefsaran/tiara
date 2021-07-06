@@ -12,6 +12,14 @@
                     <strong id="errorAlert">پلتفرم تیارا :</strong> <%= error %>
                   </div>
             <% } %>
+            <% if (!MERCHANT_ID) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong id="errorAlert">پلتفرم تیارا :</strong> این فروشگاه درگاه پرداخت خود را فعال نکرده است.
+                  </div>
+            <% } %>
             <div class="card col-xl-12 col-md-12 col-sm-12">
                 <div class="card-header">
                     <h5>اطلاعات خود را وارد کنید: </h5>
@@ -45,8 +53,12 @@
                                     <input name="totalPrice" id="totalPrice" class="form-control col-xl-8 col-sm-7" type="hidden" required>
                                     <input name="paidTime" id="paidTime" class="form-control col-xl-8 col-sm-7" type="hidden" required>
                                 </div>
-                                <div class="offset-xl-3 offset-sm-4">   
-                                    <button type="button" name="purchaseButton" id="purchaseButton" class="btn btn-success">پرداخت</button>
+                                <div class="offset-xl-3 offset-sm-4">
+                                    <% if (MERCHANT_ID) { %>
+                                        <button type="button" name="purchaseButton" id="purchaseButton" class="btn btn-success">پرداخت</button>
+                                    <% }else{ %>
+                                        <button disabled class="btn btn-danger">پرداخت غیرفعال</button>
+                                    <% } %>
                                 </div>
                             </form>
                         </div>

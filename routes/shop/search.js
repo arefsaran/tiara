@@ -8,7 +8,7 @@ router.get("/", searchAPI);
 function searchAPI(req, res) {
     try {
         let { productNameForSearch, productIdForSearch } = req.query;
-        let storeId = req.store.storeId;
+        let storeId = req.store.userStore.storeId;
         let query = { _id: ObjectId(productIdForSearch) };
         let totalResult = [];
         searchInCollection(storeId);
@@ -85,7 +85,7 @@ function searchAPI(req, res) {
                     //     address: "POST:/search",
                     // });
                     res.render("products", {
-                        storeInfo: req.store,
+                        storeInfo: req.store.userStore,
                         resultProducts: totalResult,
                         error: "",
                     });

@@ -7,7 +7,7 @@ router.post("/", sortAPI);
 function sortAPI(req, res) {
     try {
         let { collectionName, sortBy } = req.body;
-        let storeId = req.store.storeId;
+        let storeId = req.store.userStore.storeId;
         if (sortBy == "priceLowToHigh") {
             sortBy = { "productDetails.productPriceEnglishNumber": 1 };
         } else if (sortBy == "priceHighToLow") {

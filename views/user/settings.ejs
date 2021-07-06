@@ -89,6 +89,7 @@
                                                 class="form-control col-xl-8 col-sm-7"
                                                 id="validationCustom03"
                                                 type="text"
+                                                placeholder="ایرانیان"
                                                 value="<%= storeDetails.userStore.storeName %>"
                                                 required
                                             />
@@ -117,6 +118,27 @@
                                                 tabindex="-1"
                                                 value="<%= storeDetails.userStore.storeId %>"
                                             />
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom07"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >کد درگاه پرداخت زرین پال:
+                                            </label>
+                                            <input
+                                                name="MERCHANT_ID"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom07"
+                                                type="text"
+                                                placeholder="مانند: e1t456fb-567u-626f-rt43-99a03987f621"
+                                                value="<%= storeDetails.MERCHANT_ID %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
                                             </div>
                                         </div>
                                         <div class="form-group mb-3 row">
@@ -154,6 +176,26 @@
                                                 tabindex="-1"
                                                 style="pointer-events: none;"
                                                 value="<%= storeDetails.userStore.storePlan.planTimeToExpiry %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom07"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >هزینه ارسال درب منزل (هزار تومان):
+                                            </label>
+                                            <input
+                                                name="shippingCost"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom07"
+                                                type="text"
+                                                value="<%= storeDetails.userStore.shippingCost %>"
                                                 required
                                             />
                                             <div

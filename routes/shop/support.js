@@ -5,7 +5,7 @@ router.get("/", supportView);
 
 async function supportView(req, res, next) {
     try {
-        res.render("support", { storeInfo: req.store });
+        res.render("support", { storeInfo: req.store.userStore });
         next();
     } catch (error) {
         res.json({

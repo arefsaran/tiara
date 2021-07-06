@@ -5,9 +5,9 @@ router.get("/", storeInfo);
 
 async function storeInfo(req, res, next) {
     try {
-        let storeInfo = req.store;
+        let storeInfo = req.store.userStore;
         res.render("storeInfo", {
-            storeInfo: req.store,
+            storeInfo: req.store.userStore,
             storeDetails: storeInfo,
         });
         next();

@@ -21,7 +21,7 @@ async function landing(req, res, next) {
             .find()
             .toArray();
         res.render("home", {
-            storeInfo: req.store,
+            storeInfo: req.store.userStore,
             resultCategories: resultCategories,
         });
         next();

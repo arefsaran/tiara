@@ -23,7 +23,7 @@ function inStockAPI(req, res) {
             basket,
             done,
         } = req.body;
-        let storeId = req.store.storeId;
+        let storeId = req.store.userStore.storeId;
         // let basket = [];
         // basketJSON = JSON.parse(basketJSON);
         // for (let inCart in basketJSON) {

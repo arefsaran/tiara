@@ -15,7 +15,7 @@ module.exports.subDomainChecker = async function (req, res, next) {
                 "userStore.storeId": subDomain,
             });
             if (store) {
-                req.store = store.userStore;
+                req.store = store;
             } else {
                 return res.render("404", {
                     error: "فروشگاه مورد نظر یافت نشد.",

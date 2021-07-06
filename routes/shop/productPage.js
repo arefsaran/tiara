@@ -7,7 +7,7 @@ router.get("/", productPage);
 
 async function productPage(req, res, next) {
     try {
-        let collectionName = req.store.storeId;
+        let collectionName = req.store.userStore.storeId;
         let dbName = "ecommerce";
         let { productId } = req.query;
         const client = await MongoClient.connect(MONGO_DB, {
@@ -20,7 +20,7 @@ async function productPage(req, res, next) {
             .find({ _id: ObjectId(productId) })
             .toArray();
         res.render("product", {
-            storeInfo: req.store,
+            storeInfo: req.store.userStore,
             resultProduct: resultProduct[0],
         });
         next();

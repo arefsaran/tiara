@@ -18,7 +18,6 @@ function getUrlOption(url, params) {
 }
 
 app.get("/payment", subDomainChecker, pay);
-
 app.get("/checker", checker);
 
 async function pay(req, res) {
@@ -28,13 +27,17 @@ async function pay(req, res) {
             process.env.PWD = process.cwd();
         }
         let invoicePath = `/invoices/${purchaseId}.pdf`;
-        let store = req.store.storeId;
+        let store = req.store.userStore.storeId;
+        let shippingCost = req.store.userStore.shippingCost * 1000 || 0;
+        let amount = parseInt(totalPrice) + shippingCost;
+        let userEmail = req.store.userEmail || "tiaraplatform@gmail.com";
+        let Zarinpal_MERCHANT_ID = req.store.MERCHANT_ID || MERCHANT_ID;
         let params = {
-            MerchantID: MERCHANT_ID,
-            Amount: totalPrice,
-            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${totalPrice}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${store}`,
+            MerchantID: Zarinpal_MERCHANT_ID,
+            Amount: amount,
+            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${store}`,
             Description: `${purchaseId}`,
-            Email: "tiaraplatform@gmail.com",
+            Email: userEmail,
         };
 
         let options = getUrlOption(
@@ -42,16 +45,16 @@ async function pay(req, res) {
             params
         );
 
-        request(options)
+        await request(options)
             .then(async (data) => {
                 return res.redirect(
                     `https://www.zarinpal.com/pg/StartPay/${data.Authority}`
                 );
             })
             .catch((err) => res.json(err.message));
-    } catch (err) {
+    } catch (error) {
         res.json({
-            status: 400,
+            status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
             address: "POST:/zarinpal/payment",
@@ -110,9 +113,9 @@ async function checker(req, res, next) {
                     });
                 });
         }
-    } catch (err) {
+    } catch (error) {
         res.json({
-            status: 400,
+            status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
             address: "POST:/zarinpal/checker",

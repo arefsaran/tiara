@@ -10,7 +10,7 @@ async function homeViewFunction(req, res, next) {
     try {
         let collectionName = "category";
         let dbName = "ecommerce";
-        let storeId = req.store.storeId;
+        let storeId = req.store.userStore.storeId;
         const client = await MongoClient.connect(MONGO_DB, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -22,7 +22,7 @@ async function homeViewFunction(req, res, next) {
             .toArray();
         return res.render("home", {
             resultCategories: resultCategories,
-            storeInfo: req.store,
+            storeInfo: req.store.userStore,
         });
         next();
     } catch (error) {

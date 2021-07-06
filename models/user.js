@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema(
             minlength: 4,
             maxlength: 1024,
         },
+        MERCHANT_ID: {
+            type: String,
+            default: "",
+        },
         userStore: {
             storeName: {
                 type: String,
@@ -43,6 +47,11 @@ const userSchema = new mongoose.Schema(
                 required: true,
                 index: true,
                 unique: true,
+            },
+            shippingCost: {
+                type: Number,
+                default: 0,
+                index: true,
             },
             storePlan: {
                 planType: {

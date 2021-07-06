@@ -7,9 +7,17 @@ async function customerInfoView(req, res, next) {
     try {
         let { error } = req.query;
         if (error) {
-            res.render("customerInfo", { storeInfo: req.store, error: error });
+            res.render("customerInfo", {
+                storeInfo: req.store.userStore,
+                MERCHANT_ID: req.store.MERCHANT_ID,
+                error: error,
+            });
         } else {
-            res.render("customerInfo", { storeInfo: req.store, error: "" });
+            res.render("customerInfo", {
+                storeInfo: req.store.userStore,
+                MERCHANT_ID: req.store.MERCHANT_ID,
+                error: "",
+            });
         }
         next();
     } catch (error) {
