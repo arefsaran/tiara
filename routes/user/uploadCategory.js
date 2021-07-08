@@ -4,6 +4,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
+const { Category } = require("../../models/category");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
@@ -41,7 +42,6 @@ async function uploadCategoryFunction(req, res) {
         let { categoryName } = req.body;
         let storeId = req.user.userStore.storeId;
         let collectionName = "category";
-        console.log("categoryNameوstoreId", categoryName, storeId);
         function insertFunction(collectionName, query) {
             mongoose.connection.db.collection(collectionName, async function (
                 err,
@@ -51,20 +51,33 @@ async function uploadCategoryFunction(req, res) {
             });
         }
         if (storeId) {
-            let categoryPicture = req.file.path.replace(/\\/g, "/").substr(7);
-            let query = {
-                categoryName: persianJs(categoryName)
-                    .englishNumber()
-                    .toString(),
-                categoryPicture: categoryPicture,
+            let categoryInStore = await Category.findOne({
+                categoryName: categoryName,
                 storeId: storeId,
-                createdAt: jalaliDate,
-            };
-            insertFunction(collectionName, query);
-            res.render("uploadCategory", {
-                storeInfo: req.user.userStore,
-                categoryUploaded: "1",
             });
+            if (!categoryInStore) {
+                let categoryPicture = req.file.path
+                    .replace(/\\/g, "/")
+                    .substr(7);
+                let query = {
+                    categoryName: persianJs(categoryName)
+                        .englishNumber()
+                        .toString(),
+                    categoryPicture: categoryPicture,
+                    storeId: storeId,
+                    createdAt: jalaliDate,
+                };
+                insertFunction(collectionName, query);
+                res.render("uploadCategory", {
+                    storeInfo: req.user.userStore,
+                    categoryUploaded: "1",
+                });
+            } else {
+                res.render("uploadCategory", {
+                    storeInfo: req.user.userStore,
+                    categoryUploaded: "2",
+                });
+            }
         }
         return;
     } catch (error) {

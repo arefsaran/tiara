@@ -22,12 +22,25 @@ async function mergeCategoriesView(req, res, next) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
+        let originCategory = "";
+        let destinationCategory = "";
+        let errorType = 0;
+        if (resultCategories.length > 1) {
+            originCategory = resultCategories[0].categoryName;
+            destinationCategory = resultCategories[0].categoryName;
+        } else if (resultCategories.length < 1) {
+            errorType = 2;
+        } else if (resultCategories.length == 1) {
+            errorType = 0;
+            originCategory = resultCategories[0].categoryName;
+            destinationCategory = resultCategories[0].categoryName;
+        }
         res.render("mergeCategories", {
             storeInfo: req.user.userStore,
             mergeCategories: 0,
-            error: 0,
-            originCategory: resultCategories[0].categoryName,
-            destinationCategory: resultCategories[1].categoryName,
+            error: errorType,
+            originCategory: originCategory,
+            destinationCategory: destinationCategory,
             resultCategories: resultCategories,
             token: token,
         });
@@ -52,13 +65,15 @@ async function mergeCategories(req, res, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log("req.query", req.query);
-        console.log("req.body", req.body);
-        if (originCategory !== destinationCategory) {
+        if (
+            originCategory &&
+            destinationCategory &&
+            originCategory !== destinationCategory
+        ) {
             let ecommerce = client.db(dbName);
             mongoose.connection.db.collection(storeId, (err, collection) => {
                 collection.updateMany(
-                    { categoryName: originCategory, storeId: storeId },
+                    { categoryName: originCategory },
                     { $set: { categoryName: destinationCategory } }
                 );
                 mongoose.connection.db.collection(
@@ -79,8 +94,8 @@ async function mergeCategories(req, res, next) {
                 storeInfo: req.user.userStore,
                 mergeCategories: 1,
                 error: 0,
-                originCategory: destinationCategory,
-                destinationCategory: resultCategories[0].categoryName,
+                originCategory: originCategory,
+                destinationCategory: destinationCategory,
                 resultCategories: resultCategories,
                 token: token,
             });
@@ -89,6 +104,13 @@ async function mergeCategories(req, res, next) {
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
+            console.log(
+                "storeInfo, originCategory,destinationCategory,resultCategories",
+                req.user.userStore,
+                originCategory,
+                destinationCategory,
+                resultCategories
+            );
             res.render("mergeCategories", {
                 storeInfo: req.user.userStore,
                 mergeCategories: 0,

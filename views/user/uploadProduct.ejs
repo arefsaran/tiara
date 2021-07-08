@@ -12,6 +12,13 @@
                         </button>
                         <strong>پلتفرم تیارا :</strong> محصول شما با موفقیت اضافه شد
                       </div>
+                <% } else if (productUploaded === "2") { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>پلتفرم تیارا :</strong> دسته ای موجود نیست، ابتدا در قسمت اضافه کردن دسته جدید، محصولات خود را دسته بندی کنید. 
+                      </div>
                 <% } %>
                 <div class="card">
                     <div class="card-header">
@@ -72,8 +79,12 @@
                                         </div>
                                         <input type="hidden" name="userTokenHide" id="userTokenHide" value="">
                                     </div>
-                                    <div class="offset-xl-3 offset-sm-4">   
+                                    <div class="offset-xl-3 offset-sm-4">
+                                        <% if (productUploaded === "2") { %>
+                                        <button disabled type="submit" class="btn btn-success">اضافه کردن</button>
+                                        <% } else { %>
                                         <button type="submit" class="btn btn-success">اضافه کردن</button>
+                                        <% } %>
                                     </div>
                                 </form>
                             </div>

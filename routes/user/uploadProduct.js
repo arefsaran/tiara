@@ -37,10 +37,14 @@ async function uploadProductView(req, res) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
+        let productUploaded = 0;
+        if (resultCategories.length == 0) {
+            productUploaded = "2";
+        }
         res.render("uploadProduct", {
             storeInfo: req.user.userStore,
             resultCategories: resultCategories,
-            productUploaded: "0",
+            productUploaded: productUploaded,
         });
     } catch (error) {
         res.json({
@@ -63,7 +67,6 @@ async function uploadProductFunction(req, res) {
             subType,
             categoryName,
             inStock,
-            userTokenHide,
         } = req.body;
         let storeId = req.user.userStore.storeId;
         function insertFunction(name, query) {
@@ -71,7 +74,7 @@ async function uploadProductFunction(req, res) {
                 collection.insertOne(query);
             });
         }
-        if (storeId) {
+        if (storeId && categoryName) {
             let productPicture = req.file.path.replace(/\\/g, "/").substr(7);
             let query = {
                 productName: persianJs(productName).englishNumber().toString(),
@@ -110,11 +113,16 @@ async function uploadProductFunction(req, res) {
                 .collection("category")
                 .find()
                 .toArray();
-
             res.render("uploadProduct", {
                 storeInfo: req.user.userStore,
                 resultCategories: resultCategories,
                 productUploaded: "1",
+            });
+        } else if (!categoryName && storeId) {
+            res.render("uploadProduct", {
+                storeInfo: req.user.userStore,
+                resultCategories: [],
+                productUploaded: "2",
             });
         }
         return;
