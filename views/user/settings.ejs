@@ -64,19 +64,12 @@
                                                 class="col-xl-3 col-sm-4 mb-0"
                                                 >ایمیل صاحب فروشگاه :</label
                                             >
-                                            <input
-                                                name="userEmail"
-                                                class="form-control col-xl-8 col-sm-7"
-                                                id="validationCustom02"
-                                                type="text"
-                                                value="<%= storeDetails.userEmail %>"
-                                                required
-                                            />
-                                            <div
-                                                class="invalid-feedback offset-sm-4 offset-xl-3"
-                                            >
-                                                لطفا مقدار معتبر وارد کنید
-                                            </div>
+                                            <strong
+                                            name="userEmail"
+                                            class="form-control col-xl-8 col-sm-7"
+                                            id="validationCustom02" class="ml-2">
+                                                <%= storeDetails.userEmail %>
+                                            </strong>
                                         </div>
                                         <div class="form-group mb-3 row">
                                             <label
@@ -109,27 +102,24 @@
                                                 TiaraPlatform.ir.
                                             </strong>
                                             <div class="w-50 col-md-5">
-                                            <input
+                                                <strong
                                                 name="storeId"
-                                                class="form-control w-25"
-                                                id="validationCustom04"
-                                                type="text"
-                                                style="pointer-events: none;"
-                                                tabindex="-1"
-                                                value="<%= storeDetails.userStore.storeId %>"
-                                            />
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom03" class="ml-2">
+                                                    <%= storeDetails.userStore.storeId %>
+                                                </strong>
                                             </div>
                                         </div>
                                         <div class="form-group mb-3 row">
                                             <label
-                                                for="validationCustom07"
+                                                for="validationCustom10"
                                                 class="col-xl-3 col-sm-4 mb-0"
                                                 >کد درگاه پرداخت زرین پال:
                                             </label>
                                             <input
                                                 name="MERCHANT_ID"
                                                 class="form-control col-xl-8 col-sm-7"
-                                                id="validationCustom07"
+                                                id="validationCustom10"
                                                 type="text"
                                                 placeholder="مانند: e1t456fb-567u-626f-rt43-99a03987f621"
                                                 value="<%= storeDetails.MERCHANT_ID %>"
@@ -147,20 +137,12 @@
                                                 class="col-xl-3 col-sm-4 mb-0"
                                                 >نوع اشتراک فروشگاه :</label
                                             >
-                                            <input
-                                                name="planType"
-                                                class="form-control col-xl-8 col-sm-7"
-                                                id="validationCustom05"
-                                                type="text"
-                                                tabindex="-1"
-                                                style="pointer-events: none;"
-                                                value="<%= storeDetails.userStore.storePlan.planType %>"
-                                            />
-                                            <div
-                                                class="invalid-feedback offset-sm-4 offset-xl-3"
-                                            >
-                                                لطفا مقدار معتبر وارد کنید
-                                            </div>
+                                            <strong
+                                            name="planType"
+                                            class="form-control col-xl-8 col-sm-7"
+                                            id="validationCustom05" class="ml-2">
+                                                <%= storeDetails.userStore.storePlan.planType %>
+                                            </strong>
                                         </div>
                                         <div class="form-group mb-3 row">
                                             <label
@@ -168,21 +150,12 @@
                                                 class="col-xl-3 col-sm-4 mb-0"
                                                 >تاریخ پایان اشتراک فروشگاه :</label
                                             >
-                                            <input
-                                                name="planTimeToExpiry"
-                                                class="form-control col-xl-8 col-sm-7"
-                                                id="validationCustom06"
-                                                type="text"
-                                                tabindex="-1"
-                                                style="pointer-events: none;"
-                                                value="<%= storeDetails.userStore.storePlan.planTimeToExpiry %>"
-                                                required
-                                            />
-                                            <div
-                                                class="invalid-feedback offset-sm-4 offset-xl-3"
-                                            >
-                                                لطفا مقدار معتبر وارد کنید
-                                            </div>
+                                            <strong
+                                            name="planTimeToExpiry"
+                                            class="form-control col-xl-8 col-sm-7"
+                                            id="validationCustom06" class="ml-2">
+                                                <%= storeDetails.userStore.storePlan.planTimeToExpiry %>
+                                            </strong>
                                         </div>
                                         <div class="form-group mb-3 row">
                                             <label
@@ -206,14 +179,14 @@
                                         </div>
                                         <div class="form-group mb-3 row">
                                             <label
-                                                for="validationCustom07"
+                                                for="validationCustom08"
                                                 class="col-xl-3 col-sm-4 mb-0"
                                                 >آدرس فروشگاه :</label
                                             >
                                             <input
                                                 name="storeAddress"
                                                 class="form-control col-xl-8 col-sm-7"
-                                                id="validationCustom07"
+                                                id="validationCustom08"
                                                 type="text"
                                                 value="<%= storeDetails.userStore.storeAddress %>"
                                                 required
@@ -228,14 +201,14 @@
                                     <div class="form">
                                         <div class="form-group row">
                                             <label
-                                                for="validationCustom08"
+                                                for="validationCustom09"
                                                 class="col-xl-3 col-sm-4 mb-0"
                                                 >شماره تماس فروشگاه:</label
                                             >
                                             <input
                                                 name="storePhoneNumber"
                                                 class="form-control col-xl-8 col-sm-7"
-                                                id="validationCustom08"
+                                                id="validationCustom09"
                                                 type="text"
                                                 value="<%= storeDetails.userStore.storePhoneNumber %>"
                                                 required

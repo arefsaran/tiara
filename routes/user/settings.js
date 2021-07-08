@@ -48,7 +48,7 @@ async function settingsAPI(req, res, next) {
     try {
         let {
             userName,
-            userEmail,
+            // userEmail,
             storeName,
             storeId,
             storeAddress,
@@ -72,91 +72,84 @@ async function settingsAPI(req, res, next) {
                 );
             });
         }
-        if (collectionName) {
-            let storePicture = "";
-            let query = {};
-            if (req.file != undefined) {
-                storePicture = req.file.path.replace(/\\/g, "/").substr(7);
-                query = {
-                    userName: persianJs(userName.toLowerCase())
+        let storePicture = "";
+        let query = {};
+        if (req.file != undefined) {
+            storePicture = req.file.path.replace(/\\/g, "/").substr(7);
+            query = {
+                userName: persianJs(userName.toLowerCase())
+                    .englishNumber()
+                    .toString(),
+                // userEmail: persianJs(userEmail.toLowerCase())
+                //     .toEnglishNumber()
+                //     .toString(),
+                MERCHANT_ID: MERCHANT_ID,
+                userStore: {
+                    storePlan: {
+                        planType: Number(planType),
+                        planTimeToExpiry: Number(planTimeToExpiry),
+                    },
+                    storePicture: storePicture,
+                    storeName: persianJs(storeName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    userEmail: persianJs(userEmail.toLowerCase())
-                        .toEnglishNumber()
-                        .toString(),
-                    MERCHANT_ID: MERCHANT_ID,
-                    userStore: {
-                        storePlan: {
-                            planType: Number(planType),
-                            planTimeToExpiry: Number(planTimeToExpiry),
-                        },
-                        storePicture: storePicture,
-                        storeName: persianJs(storeName.toLowerCase())
-                            .englishNumber()
-                            .toString(),
-                        storeId: persianJs(storeId)
+                    storeId: persianJs(storeId).toEnglishNumber().toString(),
+                    shippingCost: parseInt(
+                        persianJs(shippingCost).toEnglishNumber()
+                    ),
+                    storeAddress:
+                        persianJs(storeAddress).englishNumber().toString() ||
+                        "",
+                    storePhoneNumber:
+                        persianJs(storePhoneNumber)
                             .toEnglishNumber()
-                            .toString(),
-                        shippingCost: parseInt(
-                            persianJs(shippingCost).toEnglishNumber()
-                        ),
-                        storeAddress:
-                            persianJs(storeAddress)
-                                .englishNumber()
-                                .toString() || "",
-                        storePhoneNumber:
-                            persianJs(storePhoneNumber)
-                                .toEnglishNumber()
-                                .toString() || "",
+                            .toString() || "",
+                },
+                updateTime: jalaliDate,
+            };
+        } else {
+            query = {
+                userName: persianJs(userName.toLowerCase())
+                    .englishNumber()
+                    .toString(),
+                // userEmail: persianJs(userEmail.toLowerCase())
+                //     .toEnglishNumber()
+                //     .toString(),
+                MERCHANT_ID: MERCHANT_ID,
+                userStore: {
+                    storePicture: req.user.userStore.storePicture,
+                    storePlan: {
+                        planType: Number(planType),
+                        planTimeToExpiry: Number(planTimeToExpiry),
                     },
-                    updateTime: jalaliDate,
-                };
-            } else {
-                query = {
-                    userName: persianJs(userName.toLowerCase())
+                    shippingCost: parseInt(
+                        persianJs(shippingCost).toEnglishNumber()
+                    ),
+                    storeName: persianJs(storeName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    userEmail: persianJs(userEmail.toLowerCase())
+                    storeId: persianJs(storeId).toEnglishNumber().toString(),
+                    storeAddress: persianJs(storeAddress)
+                        .englishNumber()
+                        .toString(),
+                    storePhoneNumber: persianJs(storePhoneNumber)
                         .toEnglishNumber()
                         .toString(),
-                    MERCHANT_ID: MERCHANT_ID,
-                    userStore: {
-                        storePicture: req.user.userStore.storePicture,
-                        storePlan: {
-                            planType: Number(planType),
-                            planTimeToExpiry: Number(planTimeToExpiry),
-                        },
-                        shippingCost: parseInt(
-                            persianJs(shippingCost).toEnglishNumber()
-                        ),
-                        storeName: persianJs(storeName.toLowerCase())
-                            .englishNumber()
-                            .toString(),
-                        storeId: persianJs(storeId)
-                            .toEnglishNumber()
-                            .toString(),
-                        storeAddress: persianJs(storeAddress)
-                            .englishNumber()
-                            .toString(),
-                        storePhoneNumber: persianJs(storePhoneNumber)
-                            .toEnglishNumber()
-                            .toString(),
-                    },
-                    updateTime: jalaliDate,
-                };
-            }
-            updateFunction(collectionName, query);
-            const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
-            let userInfo = await User.findOne({
-                _id: decoded._id,
-            });
-            res.render("settings", {
-                storeInfo: req.user.userStore,
-                storeDetails: userInfo,
-                token: token,
-                edit: 1,
-            });
+                },
+                updateTime: jalaliDate,
+            };
         }
+        updateFunction(collectionName, query);
+        const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
+        let userInfo = await User.findOne({
+            _id: decoded._id,
+        });
+        res.render("settings", {
+            storeInfo: req.user.userStore,
+            storeDetails: userInfo,
+            token: token,
+            edit: 1,
+        });
         next();
     } catch (error) {
         res.json({
