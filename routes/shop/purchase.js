@@ -294,7 +294,7 @@ function inStockAPI(req, res) {
                                 process.env.PWD = process.cwd();
                             }
                             let invoicePath = `${process.env.PWD}/static/invoices/${purchaseId}.pdf`;
-                            createInvoice(invoice, invoicePath);
+                            // createInvoice(invoice, invoicePath);
                             res.json({
                                 status: 200,
                                 message:
@@ -302,7 +302,7 @@ function inStockAPI(req, res) {
                                 data: {
                                     succeeded: true,
                                     RefID: purchaseId,
-                                    invoicePath: invoicePath,
+                                    // invoicePath: invoicePath,
                                 },
                                 address: "POST:/purchase",
                             });

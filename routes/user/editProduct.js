@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { Category } = require("../../models/category");
 const { MONGO_DB } = require("../../config/config");
 let ObjectId = require("mongodb").ObjectID;
 const persianJs = require("persianjs");

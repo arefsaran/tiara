@@ -3,6 +3,7 @@ const router = express.Router();
 const { auth } = require("../../middlewares/auth");
 const signUp = require("./signUp");
 const logIn = require("./logIn");
+const changePassword = require("./changePassword");
 const dashboard = require("./dashboard");
 const settings = require("./settings");
 const purchasesView = require("./purchasesView");
@@ -14,9 +15,11 @@ const deleteProduct = require("./deleteProduct");
 const uploadCategory = require("./uploadCategory");
 const deleteCategory = require("./deleteCategory");
 const editCategory = require("./editCategory");
+const mergeCategories = require("./mergeCategories");
 
 router.use("/signUp", signUp);
 router.use("/logIn", logIn);
+router.use("/changePassword", auth, changePassword);
 router.use("/dashboard", auth, dashboard);
 router.use("/settings", auth, settings);
 router.use("/purchasesView", auth, purchasesView);
@@ -28,5 +31,6 @@ router.use("/deleteProduct", auth, deleteProduct);
 router.use("/uploadCategory", auth, uploadCategory);
 router.use("/deleteCategory", auth, deleteCategory);
 router.use("/editCategory", auth, editCategory);
+router.use("/mergeCategories", auth, mergeCategories);
 
 module.exports = router;

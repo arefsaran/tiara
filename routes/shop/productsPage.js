@@ -17,7 +17,7 @@ async function productsPage(req, res, next) {
         let ecommerce = client.db(dbName);
         let resultProducts = await ecommerce
             .collection(collectionName)
-            .find({ categoryName: categoryName })
+            .find({ categoryName: categoryName, inStock: { $gt: 0 } })
             .toArray();
         res.render("products", {
             storeInfo: req.store.userStore,

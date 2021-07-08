@@ -32,7 +32,8 @@ async function signUpFunction(req, res, next) {
             this.setTime(this.getTime() + h * 60 * 60 * 1000);
             return this;
         };
-        let iranTime = nowISO.addHours(3.5);
+        // let iranTime = nowISO.addHours(3.5);
+        let iranTime = nowISO.addHours(0);
         momentJalaali.loadPersian({ usePersianDigits: true });
         let paidTime = momentJalaali(iranTime).format("jYYYY/jMM/jDD HH:mm");
         let {

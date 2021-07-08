@@ -1,0 +1,159 @@
+<%- include("dashboardHeader"); -%>
+
+<div class="page-body">
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-t-45">
+        <div class="row">
+            <div class="col-sm-12">
+                <% if (mergeCategories === 1 ) { %>
+                <div
+                    class="alert alert-success alert-dismissible fade show"
+                    role="alert"
+                    style="text-align: right"
+                >
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>پلتفرم تیارا :</strong> محصولات دسته <strong><%= originCategory %></strong> با موفقیت به دسته <strong><%= destinationCategory %></strong> اضافه شدند.
+                </div>
+                <% }else if(error === 0 && mergeCategories === 0 ){ %>
+                    <div
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                    style="text-align: right"
+                >
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>پلتفرم تیارا :</strong> دسته مبدا و مقصد را متفاوت از هم انتخاب کنید.
+                </div>
+                <% }else if(error === 1){ %>
+                    <div
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                    style="text-align: right"
+                >
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>پلتفرم تیارا :</strong> متاسفانه ترکیب دسته ها با مشکل مواجه شد، مجدد تلاش فرمایید.
+                </div>
+                <% } %>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>انتقال همه محصولات از دسته مبدا به دسته مقصد: </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row category-adding">
+                            <div class="col-xl-7">
+                                <form
+                                    class="needs-validation add-category-form"
+                                    action="/user/mergeCategories"
+                                    method="POST"
+                                    enctype="application/x-www-form-urlencoded"
+                                    id="mergeCategoriesForm"
+                                >
+                                    <div class="form">
+                                        <div class="form-group row">
+                                            <label
+                                                for="exampleFormControlSelect1"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >دسته مبدا: 
+                                            </label
+                                            >
+                                            <select
+                                                name="originCategory"
+                                                class="form-control digits col-xl-8 col-sm-7"
+                                                id="exampleFormControlSelect1"
+                                            >
+                                            <option>
+                                                <%= originCategory %>
+                                            </option>
+                                                <%
+                                                resultCategories.forEach(category=>
+                                                { %>
+                                                    <% if (category.categoryName != originCategory){ %>
+                                                        <option>
+                                                            <%=
+                                                            category.categoryName
+                                                            %>
+                                                        </option>
+                                                    <% }else{ %>
+                                                        <% } %>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label
+                                                for="formControlSelect2"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >دسته مقصد:
+                                            </label
+                                            >
+                                            <select
+                                                name="destinationCategory"
+                                                class="form-control digits col-xl-8 col-sm-7"
+                                                id="formControlSelect2"
+                                            >
+                                            <option>
+                                                <%= destinationCategory %>
+                                            </option>
+                                                <%
+                                                resultCategories.forEach(category=>
+                                                { %>
+                                                    <% if (category.categoryName != destinationCategory){ %>
+                                                        <option>
+                                                            <%=
+                                                            category.categoryName
+                                                            %>
+                                                        </option>
+                                                    <% }else{ %>
+                                                        <% } %>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="userTokenHide" id="userTokenHide" value="<%= token %>">
+                                    <div class="offset-xl-3 offset-sm-4">
+                                        <button
+                                            onclick="actionSet()"
+                                            type="submit"
+                                            class="btn btn-success"
+                                        >
+                                            ترکیب
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+<script>
+    function actionSet() {
+        let token = localStorage.getItem("userToken");
+        document.getElementById("mergeCategoriesForm").action = `user/mergeCategories?userToken=${token}`;
+        document.getElementById("mergeCategoriesForm").submit();
+
+    }
+</script>
+<%- include("dashboardFooter"); -%>

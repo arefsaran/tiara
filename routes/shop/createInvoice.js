@@ -19,6 +19,7 @@ function generateHeader(doc) {
     doc.image(`${process.env.PWD}/static/assets/images/تیارا.jpg`, 50, 45, {
         width: 50,
     })
+        .font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`)
         .fillColor("#444444")
         .fontSize(20)
         .text("شماره ثبت: 14506 - کد اقتصادی و شناسه ملی: 14009437830", 110, 57)
@@ -32,30 +33,30 @@ function generateCustomerInformation(doc, invoice) {
 
     generateHr(doc, 185);
 
-    const customerInformationTop = 200;
+    const customerInformationTop = 300;
 
     doc.fontSize(10)
         .text("شماره پیگیری:", 50, customerInformationTop)
-        .font("Courier-Bold")
+        .font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`)
         .text(invoice.purchaseId, 150, customerInformationTop)
-        .font("Courier")
-        .text("تاریخ ثبت سفارش:", 50, customerInformationTop + 15)
-        .text(invoice.paidTime, 150, customerInformationTop + 15)
-        .text("قیمت کل:", 50, customerInformationTop + 30)
+        .font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`)
+        .text("تاریخ ثبت سفارش:", 50, customerInformationTop + 25)
+        .text(invoice.paidTime, 150, customerInformationTop + 25)
+        .text("قیمت کل:", 50, customerInformationTop + 50)
         .text(
             formatCurrency(invoice.subtotal),
             150,
-            customerInformationTop + 30
+            customerInformationTop + 50
         )
 
-        .font("Courier-Bold")
-        .text(invoice.shipping.name, 300, customerInformationTop)
-        .font("Courier")
-        .text(invoice.shipping.address, 300, customerInformationTop + 15)
+        .font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`)
+        .text(invoice.shipping.name, 400, customerInformationTop)
+        .font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`)
+        .text(invoice.shipping.address, 400, customerInformationTop + 35)
         .text(
             invoice.shipping.phone + ", " + invoice.shipping.postal_code,
             300,
-            customerInformationTop + 30
+            customerInformationTop + 50
         )
         .moveDown();
 
@@ -66,17 +67,17 @@ function generateInvoiceTable(doc, invoice) {
     let i;
     const invoiceTableTop = 330;
 
-    doc.font("Courier-Bold");
+    doc.font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`);
     generateTableRow(
         doc,
         invoiceTableTop,
         "کالا",
-        "قیمت واحد",
+        "قیمت واحد (تومان)",
         "تعداد",
-        "قیمت"
+        "قیمت (تومان)"
     );
     generateHr(doc, invoiceTableTop + 20);
-    doc.font("Courier");
+    doc.font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`);
 
     for (i = 0; i < invoice.items.length; i++) {
         const item = invoice.items[i];
@@ -99,7 +100,7 @@ function generateInvoiceTable(doc, invoice) {
         subtotalPosition,
         "",
         "",
-        "قیمت کل",
+        "قیمت کل (تومان)",
         "",
         formatCurrency(invoice.subtotal)
     );
@@ -114,19 +115,6 @@ function generateInvoiceTable(doc, invoice) {
         "",
         invoice.paidTime
     );
-
-    const duePosition = paidToDatePosition + 25;
-    doc.font("Courier-Bold");
-    generateTableRow(
-        doc,
-        duePosition,
-        "",
-        "",
-        "Balance Due",
-        "",
-        formatCurrency(invoice.subtotal)
-    );
-    doc.font("Courier");
 }
 
 function generateFooter(doc) {
@@ -162,7 +150,7 @@ function generateHr(doc, y) {
 }
 
 function formatCurrency(totalPrice) {
-    return "تومان" + totalPrice;
+    return totalPrice;
 }
 
 module.exports = {
