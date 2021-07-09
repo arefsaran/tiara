@@ -36,10 +36,10 @@ async function settingsFunction(req, res, next) {
         next();
     } catch (error) {
         res.json({
-            code: 500,
-            status: "failed",
-            comment: "Error!",
+            status: 500,
+            message: "The request could not be understood by the server",
             data: { error: error },
+            address: "GET:/user/settings",
         });
     }
 }
@@ -48,14 +48,14 @@ async function settingsAPI(req, res, next) {
     try {
         let {
             userName,
-            // userEmail,
             storeName,
-            storeId,
             storeAddress,
             storePhoneNumber,
             shippingCost,
             MERCHANT_ID,
         } = req.body;
+        let userEmail = req.user.userEmail;
+        let storeId = req.user.userStore.storeId;
         let planType = req.user.userStore.storePlan.planType;
         let planTimeToExpiry = req.user.userStore.storePlan.planTimeToExpiry;
         let collectionName = "users";
@@ -72,91 +72,98 @@ async function settingsAPI(req, res, next) {
                 );
             });
         }
-        let storePicture = "";
-        let query = {};
-        if (req.file != undefined) {
-            storePicture = req.file.path.replace(/\\/g, "/").substr(7);
-            query = {
-                userName: persianJs(userName.toLowerCase())
-                    .englishNumber()
-                    .toString(),
-                // userEmail: persianJs(userEmail.toLowerCase())
-                //     .toEnglishNumber()
-                //     .toString(),
-                MERCHANT_ID: MERCHANT_ID,
-                userStore: {
-                    storePlan: {
-                        planType: Number(planType),
-                        planTimeToExpiry: Number(planTimeToExpiry),
-                    },
-                    storePicture: storePicture,
-                    storeName: persianJs(storeName.toLowerCase())
+        if (collectionName) {
+            let storePicture = "";
+            let query = {};
+            if (req.file != undefined) {
+                storePicture = req.file.path.replace(/\\/g, "/").substr(7);
+                query = {
+                    userName: persianJs(userName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    storeId: persianJs(storeId).toEnglishNumber().toString(),
-                    shippingCost: parseInt(
-                        persianJs(shippingCost).toEnglishNumber()
-                    ),
-                    storeAddress:
-                        persianJs(storeAddress).englishNumber().toString() ||
-                        "",
-                    storePhoneNumber:
-                        persianJs(storePhoneNumber)
-                            .toEnglishNumber()
-                            .toString() || "",
-                },
-                updateTime: jalaliDate,
-            };
-        } else {
-            query = {
-                userName: persianJs(userName.toLowerCase())
-                    .englishNumber()
-                    .toString(),
-                // userEmail: persianJs(userEmail.toLowerCase())
-                //     .toEnglishNumber()
-                //     .toString(),
-                MERCHANT_ID: MERCHANT_ID,
-                userStore: {
-                    storePicture: req.user.userStore.storePicture,
-                    storePlan: {
-                        planType: Number(planType),
-                        planTimeToExpiry: Number(planTimeToExpiry),
-                    },
-                    shippingCost: parseInt(
-                        persianJs(shippingCost).toEnglishNumber()
-                    ),
-                    storeName: persianJs(storeName.toLowerCase())
-                        .englishNumber()
-                        .toString(),
-                    storeId: persianJs(storeId).toEnglishNumber().toString(),
-                    storeAddress: persianJs(storeAddress)
-                        .englishNumber()
-                        .toString(),
-                    storePhoneNumber: persianJs(storePhoneNumber)
+                    userEmail: persianJs(userEmail.toLowerCase())
                         .toEnglishNumber()
                         .toString(),
-                },
-                updateTime: jalaliDate,
-            };
+                    MERCHANT_ID: MERCHANT_ID,
+                    userStore: {
+                        storePlan: {
+                            planType: Number(planType),
+                            planTimeToExpiry: Number(planTimeToExpiry),
+                        },
+                        storePicture: storePicture,
+                        storeName: persianJs(storeName.toLowerCase())
+                            .englishNumber()
+                            .toString(),
+                        storeId: persianJs(storeId)
+                            .toEnglishNumber()
+                            .toString(),
+                        shippingCost: parseInt(
+                            persianJs(shippingCost).toEnglishNumber()
+                        ),
+                        storeAddress:
+                            persianJs(storeAddress)
+                                .englishNumber()
+                                .toString() || "",
+                        storePhoneNumber:
+                            persianJs(storePhoneNumber)
+                                .toEnglishNumber()
+                                .toString() || "",
+                    },
+                    updateTime: jalaliDate,
+                };
+            } else {
+                query = {
+                    userName: persianJs(userName.toLowerCase())
+                        .englishNumber()
+                        .toString(),
+                    userEmail: persianJs(userEmail.toLowerCase())
+                        .toEnglishNumber()
+                        .toString(),
+                    MERCHANT_ID: MERCHANT_ID,
+                    userStore: {
+                        storePicture: req.user.userStore.storePicture,
+                        storePlan: {
+                            planType: Number(planType),
+                            planTimeToExpiry: Number(planTimeToExpiry),
+                        },
+                        shippingCost: parseInt(
+                            persianJs(shippingCost).toEnglishNumber()
+                        ),
+                        storeName: persianJs(storeName.toLowerCase())
+                            .englishNumber()
+                            .toString(),
+                        storeId: persianJs(storeId)
+                            .toEnglishNumber()
+                            .toString(),
+                        storeAddress: persianJs(storeAddress)
+                            .englishNumber()
+                            .toString(),
+                        storePhoneNumber: persianJs(storePhoneNumber)
+                            .toEnglishNumber()
+                            .toString(),
+                    },
+                    updateTime: jalaliDate,
+                };
+            }
+            updateFunction(collectionName, query);
+            const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
+            let userInfo = await User.findOne({
+                _id: decoded._id,
+            });
+            res.render("settings", {
+                storeInfo: req.user.userStore,
+                storeDetails: userInfo,
+                token: token,
+                edit: 1,
+            });
         }
-        updateFunction(collectionName, query);
-        const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
-        let userInfo = await User.findOne({
-            _id: decoded._id,
-        });
-        res.render("settings", {
-            storeInfo: req.user.userStore,
-            storeDetails: userInfo,
-            token: token,
-            edit: 1,
-        });
         next();
     } catch (error) {
         res.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/settings",
+            address: "POST:/user/settings",
         });
     }
 }
