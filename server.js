@@ -55,6 +55,7 @@ mongoose
     .connect(MONGO_DB, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        useFindAndModify: false,
     })
     .then(() => console.log("connected to MongoDB/mongoose"))
     .catch((err) => console.log("could not connect to MongoDB", err));

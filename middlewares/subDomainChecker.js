@@ -9,7 +9,15 @@ module.exports.subDomainChecker = async function (req, res, next) {
             subDomain = localSubDomain;
         }
         if (subDomain === "www" || subDomain == 0) {
-            return res.render("landing");
+            if (req.originalUrl === "/contactUs") {
+                return res.render("contactUs");
+            } else if (req.originalUrl === "/aboutUs") {
+                return res.render("aboutUs");
+            } else if (req.originalUrl === "/terms") {
+                return res.render("terms");
+            } else {
+                return res.render("landing");
+            }
         } else {
             let store = await User.findOne({
                 "userStore.storeId": subDomain,

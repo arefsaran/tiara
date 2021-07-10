@@ -22,10 +22,11 @@
         document.getElementById("aboutUsButton").href = `https://tiaraplatform.ir`;
         document.getElementById("addProductButton").href = `user/uploadProduct?userToken=${token}`;
         document.getElementById("addCategoryButton").href = `user/uploadCategory?userToken=${token}`;
-        document.getElementById("changePasswordButton").href = `user/changePassword?userToken=${token}`;
         document.getElementById("editButton").href = `user/editCategories?userToken=${token}`;
+        document.getElementById("changePasswordButton").href = `user/changePassword?userToken=${token}`;
         document.getElementById("mergeCategoriesButton").href = `user/mergeCategories?userToken=${token}`;
         document.getElementById("uploadProductForm").action = `user/uploadProduct?userToken=${token}`;
+        document.getElementById("changePasswordForm").action = `user/changePassword?userToken=${token}`;
     }
     headerFunc();
 </script>

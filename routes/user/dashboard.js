@@ -23,6 +23,7 @@ async function dashboardView(req, res, next) {
         let lastMonthSalesQuery = {
             createdAt: { $lt: nowISO, $gt: lastMonthISO },
             storeId: storeId,
+            done: 1,
         };
 
         const client = await MongoClient.connect(MONGO_DB, {
@@ -42,7 +43,7 @@ async function dashboardView(req, res, next) {
 
         let totalSales = await ecommerce
             .collection(collectionName)
-            .find({ storeId: storeId }, { totalPrice: 1 })
+            .find({ storeId: storeId, done: 1 }, { totalPrice: 1 })
             .toArray();
         totalSales.forEach((sale) => {
             totalPrice = totalPrice + sale.totalPrice;
@@ -51,9 +52,10 @@ async function dashboardView(req, res, next) {
 
         let numberOfPurchases = await Purchase.find({
             storeId: storeId,
+            done: 1,
         }).countDocuments();
 
-        let purchases = await Purchase.find({ storeId: storeId })
+        let purchases = await Purchase.find({ storeId: storeId, done: 1 })
             .sort({ _id: -1 })
             .limit(5);
 
