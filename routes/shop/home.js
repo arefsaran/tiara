@@ -11,16 +11,22 @@ const fetch = require("node-fetch");
 const { stringify } = require("querystring");
 
 router.get("/", homeViewFunction);
+router.get("/contactUs", contactUs);
 router.post("/", sendEmail);
-router.get("/aboutUs", (req, res) => {
-    res.render("aboutUs");
-});
-router.get("/terms", (req, res) => {
-    res.render("terms");
-});
-router.get("/contactUs", (req, res) => {
-    res.render("contactUs");
-});
+
+async function contactUs(req, res, next) {
+    try {
+        res.render("contactUs");
+        next();
+    } catch (error) {
+        res.json({
+            status: 500,
+            message: "The request could not be understood by the server",
+            data: { error: error },
+            address: "GET:/landing",
+        });
+    }
+}
 async function homeViewFunction(req, res, next) {
     try {
         let collectionName = "category";
@@ -52,6 +58,8 @@ async function homeViewFunction(req, res, next) {
 
 async function sendEmail(req, res, next) {
     try {
+        console.log("req.body", req.body);
+        console.log("req.query", req.query);
         if (!req.body.captcha) {
             return res.json({
                 success: false,
@@ -81,6 +89,7 @@ async function sendEmail(req, res, next) {
             customerSubject,
             customerMessage,
         } = req.body;
+
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
             service: "Gmail",
@@ -102,7 +111,7 @@ async function sendEmail(req, res, next) {
         let replyMessage = {
             from: "tiaraplatform@gmail.com", // sender address
             to: customerEmail, // list of receivers
-            subject: "فروشگاه آنلاین وارک", // Subject line
+            subject: "پلتفرم تیارا", // Subject line
             text: ``, // plain text body
             html: `<p>سلام <strong> ${customerName}</strong> ممنون بابت ارسال پیام، به زودی پاسخ خواهیم داد</p>`, // html body
         };

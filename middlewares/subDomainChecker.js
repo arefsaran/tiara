@@ -9,9 +9,7 @@ module.exports.subDomainChecker = async function (req, res, next) {
             subDomain = localSubDomain;
         }
         if (subDomain === "www" || subDomain == 0) {
-            if (req.originalUrl === "/contactUs") {
-                return res.render("contactUs");
-            } else if (req.originalUrl === "/aboutUs") {
+            if (req.originalUrl === "/aboutUs") {
                 return res.render("aboutUs");
             } else if (req.originalUrl === "/terms") {
                 return res.render("terms");
