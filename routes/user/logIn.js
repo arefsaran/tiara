@@ -22,6 +22,9 @@ async function logInView(req, res, next) {
 
 async function logInFunction(req, res, next) {
     try {
+        if (req.body.userEmail === "enamad") {
+            req.body.userEmail = "enamad@gmail.com";
+        }
         const { error } = validateLogin({
             userEmail: req.body.userEmail.toLowerCase(),
             userPassword: req.body.userPassword,
