@@ -97,6 +97,7 @@ async function searchAPI(req, res) {
                     //     address: "POST:/search",
                     // });
                     res.render("products", {
+                        sort: 0,
                         storeInfo: req.store.userStore,
                         resultCategories: resultCategories,
                         resultProducts: totalResult,
