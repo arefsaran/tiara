@@ -15,11 +15,16 @@ async function productPage(req, res, next) {
             useUnifiedTopology: true,
         });
         let ecommerce = client.db(dbName);
+        let resultCategories = await ecommerce
+            .collection("category")
+            .find({ storeId: collectionName })
+            .toArray();
         let resultProduct = await ecommerce
             .collection(collectionName)
             .find({ _id: ObjectId(productId) })
             .toArray();
         res.render("product", {
+            resultCategories: resultCategories,
             storeInfo: req.store.userStore,
             resultProduct: resultProduct[0],
         });

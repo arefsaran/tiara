@@ -2,13 +2,25 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const ObjectId = require("mongoose").Types.ObjectId;
+const MongoClient = require("mongodb").MongoClient;
+const { MONGO_DB } = require("../../config/config");
 
 router.get("/", searchAPI);
 
-function searchAPI(req, res) {
+async function searchAPI(req, res) {
     try {
-        let { productNameForSearch, productIdForSearch } = req.query;
         let storeId = req.store.userStore.storeId;
+        let dbName = "ecommerce";
+        const client = await MongoClient.connect(MONGO_DB, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        let ecommerce = client.db(dbName);
+        let resultCategories = await ecommerce
+            .collection("category")
+            .find({ storeId: storeId })
+            .toArray();
+        let { productNameForSearch, productIdForSearch } = req.query;
         let query = { _id: ObjectId(productIdForSearch) };
         let totalResult = [];
         searchInCollection(storeId);
@@ -86,6 +98,7 @@ function searchAPI(req, res) {
                     // });
                     res.render("products", {
                         storeInfo: req.store.userStore,
+                        resultCategories: resultCategories,
                         resultProducts: totalResult,
                         error: "",
                     });

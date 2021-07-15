@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -97,9 +97,21 @@
                             </li>
                         </ul> -->
                     <!-- </li> -->
+                    <li><p class="sidebar-header" href="#">
+                        <i data-feather="shopping-bag"></i>
+                        <span>دسته ها</span>
+                        </p>
+                        <ul>
+                        <% resultCategories.forEach(category=> { %>
+                            <form method="GET" action="/productsPage">
+                                <li class="m-1 shadow-sm"><input class="w-100 bg-white border-0" name="categoryName" value="<%= category.categoryName %>" type="submit"></li>
+                            </form>
+                            <% }) %>
+                        </ul>
+                    </li>
                     <li><a class="sidebar-header" href="/storeInfo"><i data-feather="info"></i><span>مشخصات فروشگاه</span></a></li>
                     <!-- <li><a class="sidebar-header" href="/support"><i data-feather="message-square"></i><span>ارتباط با ما</span></a></li> -->
-                    <li><a class="sidebar-header" href="https://tiaraplatform.ir"><i data-feather="code" ></i><span>درباره ما</span></a></li>
+                    <!-- <li><a class="sidebar-header" href="https://tiaraplatform.ir"><i data-feather="code" ></i><span>درباره ما</span></a></li> -->
                         <!-- <ul class="sidebar-submenu">
                             <li><a href="profile"><i class="fa fa-circle"></i>مشخصات فروشگاه</a></li>
                         </ul> -->
