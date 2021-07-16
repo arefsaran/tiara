@@ -16,6 +16,7 @@
 <script>
     function headerFunc() {
         let token = localStorage.getItem("userToken");
+        document.getElementById("mergeButton").href = `user/mergeCategories?userToken=${token}`;
         document.getElementById("purchasesButton").href = `user/purchasesView?userToken=${token}`;
         document.getElementById("dashboardButton").href = `user/dashboard?userToken=${token}`;
         document.getElementById("settingsButton").href = `user/settings?userToken=${token}`;
@@ -24,7 +25,6 @@
         document.getElementById("addCategoryButton").href = `user/uploadCategory?userToken=${token}`;
         document.getElementById("editButton").href = `user/editCategories?userToken=${token}`;
         document.getElementById("changePasswordButton").href = `user/changePassword?userToken=${token}`;
-        document.getElementById("mergeCategoriesButton").href = `user/mergeCategories?userToken=${token}`;
         document.getElementById("uploadProductForm").action = `user/uploadProduct?userToken=${token}`;
         document.getElementById("changePasswordForm").action = `user/changePassword?userToken=${token}`;
     }

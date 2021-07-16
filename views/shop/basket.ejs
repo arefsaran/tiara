@@ -56,16 +56,16 @@
         }
         for (var i in cartArray) {
             output +=
-                "<div class='card col-xl-4 col-md-6 col-sm-8 xl-50 shadow-lg' style='width: 100%; height: 100%; margin-top: 25px; margin-bottom: 25px;'>"+
-                "<img src='"+cartArray[i].picture+"' class='card-img-top w-75' style='margin-top: 10px; margin-bottom: 10px;'>"
+                "<div class='card col-xl-3 col-md-3 col-sm-8 shadow-lg' style='width: 100%; height: 250px; margin-top: 25px; margin-bottom: 25px;'>"+
+                "<img src='"+cartArray[i].picture+"' class='card-img-top w-75' style='width: 100%; height: 100px; margin-top: 5px; margin-bottom: 5px;'>"
                 +" <h6>نام: "+ cartArray[i].name
                 +" </h6><h6>تعداد: "+cartArray[i].count
-                +" </h6><h6>قیمت: "+cartArray[i].total
-                +" </h6><div class='d-flex' style='justify-content: space-around;'><button class='plus-item btn btn-solid' style='width: 25%; display:inline; margin-bottom: 12px;' data-id='"
+                +"  ,  قیمت: "+cartArray[i].total
+                +" </h6><div class='d-flex m-1' style='justify-content: space-around;'><button class='plus-item btn btn-solid' style='width: 25%; display:inline; margin-bottom: 3px;' data-id='"
                 +cartArray[i].id+"'>+</button>"
-                +" <button class='subtract-item btn btn-solid' style='width: 25%; display:flex; margin-bottom: 12px;' data-id='"
+                +" <button class='subtract-item btn btn-solid m-1' style='width: 25%; display:flex; margin-bottom: 3px;' data-id='"
                 +cartArray[i].id+"'>-</button>"
-                +" <button class='delete-item btn btn-solid' style='width: 25%; color: red; display:flex; margin-bottom: 12px;' data-id='"
+                +" <button class='delete-item btn btn-solid m-1' style='width: 25%; color: red; display:flex; margin-bottom: 3px;' data-id='"
                 +cartArray[i].id+"'>حذف</button>"+ "</div></div>"
         }
         function deleteFunc(id){

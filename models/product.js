@@ -17,6 +17,11 @@ const productSchema = new mongoose.Schema(
             index: true,
         },
         productDetails: {
+            productDetail: {
+                type: String,
+                index: true,
+                default: "",
+            },
             productPrice: {
                 type: String,
                 index: true,

@@ -5,6 +5,34 @@
     <div class="container-fluid p-t-45">
         <div class="row">
             <div class="col-sm-12">
+
+                <div id="carouselExample" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                      <li data-target="#carouselExample" data-slide-to="0" class="active"></li>
+                      <li data-target="#carouselExample" data-slide-to="1"></li>
+                      <li data-target="#carouselExample" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img style="height: 300px; width: 98%; margin-right: 1%; border-radius: 25px; border-width: 1px;" class="d-block p-2 shadow-md" src="<%= resultCategories[0].categoryPicture %>" alt="First slide">
+                      </div>
+                      <div class="carousel-item">
+                        <img style="height: 300px; width: 98%; margin-right: 1%; border-radius: 25px; border-width: 1px;" class="d-block p-2 shadow-md" src="<%= resultCategories[1].categoryPicture %>" alt="Second slide">
+                      </div>
+                      <div class="carousel-item">
+                        <img style="height: 300px; width: 98%; margin-right: 1%; border-radius: 25px; border-width: 1px;" class="d-block p-2 shadow-md" src="<%= resultCategories[2].categoryPicture %>" alt="Third slide">
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExample" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+
                 <div class="card" style="background-color: rgb(234, 235, 238);">
                     <div class="card-body">
                         <div class="container-fluid">
@@ -16,18 +44,19 @@
                                                 <% }else{ %>
                                             <div class="col-xl-3 col-md-3 col-sm-5">
                                                 <% } %>
-                                            <form method="GET" action="/productsPage">
-                                                <div class="card shadow-lg" style="width: 100%; height: 100%; margin-top: 25px;">
+                                            <a href="productsPage?categoryName=<%= category.categoryName %>" id="categoryCard">
+                                                <div class="card shadow-lg" style="margin-top: 25px;">
                                                     <img src="<%= category.categoryPicture %>" class="card-img-top" style="width: 100%; height: 250px;" alt="...">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title"><%= category.categoryName%></h5>
-                                                    </div>
-                                                    <div class="card-footer">
+                                                    <div class="card-img-overlay shadow-lg" style="display: inline-block; margin-top: 170px;">
                                                         <input type="hidden" value="1" name="editProduct" id="editProduct">
-                                                        <button name="categoryName" value="<%= category.categoryName %>" class="btn btn-solid w-100" type="submit">مشاهده</button>
+                                                        <% if (category.categoryName.length <= 12) { %>
+                                                        <strong class="btn btn-solid w-100" type="submit"><%= category.categoryName%></strong>
+                                                        <% } else{ %>
+                                                        <strong class="btn btn-solid w-100" type="submit" style="font-size: small;"><%= category.categoryName%></strong>
+                                                        <% } %>
                                                     </div>
                                                 </div>
-                                            </form>
+                                            </a>
                                         </div>
                                     <% }) %>
                                 </div>
@@ -39,5 +68,12 @@
         </div>
     </div>
 </div>
-
+<script>
+    function actionSet() {
+        let categoryName = document.getElementById("categoryName").value;
+        let sortBy = document.getElementById("sortBy").value;
+        document.getElementById("sort").action = `sort?categoryName=${categoryName}&sortBy=${sortBy}`;
+        document.getElementById("sort").submit();
+    }
+</script>
 <%- include("footer"); -%>

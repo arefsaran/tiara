@@ -67,6 +67,7 @@ async function uploadProductFunction(req, res) {
             subType,
             categoryName,
             inStock,
+            productDetail,
         } = req.body;
         let storeId = req.user.userStore.storeId;
         function insertFunction(name, query) {
@@ -81,6 +82,7 @@ async function uploadProductFunction(req, res) {
                 productPicture: productPicture,
                 categoryName: categoryName,
                 productDetails: {
+                    productDetail: productDetail,
                     productPrice: persianJs(productPrice)
                         .englishNumber()
                         .toString(),

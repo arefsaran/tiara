@@ -72,6 +72,7 @@ async function editProductAPI(req, res, next) {
             subType,
             categoryName,
             inStock,
+            productDetail,
         } = req.body;
         let collectionName = req.user.userStore.storeId;
         const token = req.query.userToken || req.query.userTokenHide;
@@ -95,6 +96,7 @@ async function editProductAPI(req, res, next) {
                     productPicture: productPicture,
                     categoryName: categoryName,
                     productDetails: {
+                        productDetail: productDetail,
                         productPrice: persianJs(productPrice)
                             .englishNumber()
                             .toString(),
@@ -123,6 +125,7 @@ async function editProductAPI(req, res, next) {
                         .toString(),
                     categoryName: categoryName,
                     productDetails: {
+                        productDetail: productDetail,
                         productPrice: persianJs(productPrice)
                             .englishNumber()
                             .toString(),
