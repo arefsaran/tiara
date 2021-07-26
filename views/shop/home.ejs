@@ -31,35 +31,29 @@
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
                       <span class="sr-only">Next</span>
                     </a>
-                  </div>
+                </div>
 
                 <div class="card" style="background-color: rgb(234, 235, 238);">
                     <div class="card-body">
                         <div class="container-fluid">
-                            <div class="row">
-                                <div class="card-deck">
-                                    <% resultCategories.forEach(category=> { %>
-                                        <% if (resultCategories.length === 1) { %>
-                                            <div class="col-xl-6 col-md-3 col-sm-5">
-                                                <% }else{ %>
-                                            <div class="col-xl-3 col-md-3 col-sm-5">
-                                                <% } %>
-                                            <a href="productsPage?categoryName=<%= category.categoryName %>" id="categoryCard">
-                                                <div class="card shadow-lg" style="margin-top: 25px;">
-                                                    <img src="<%= category.categoryPicture %>" class="card-img-top" style="width: 100%; height: 250px;" alt="...">
-                                                    <div class="card-img-overlay shadow-lg" style="display: inline-block; margin-top: 170px;">
-                                                        <input type="hidden" value="1" name="editProduct" id="editProduct">
-                                                        <% if (category.categoryName.length <= 12) { %>
-                                                        <strong class="btn btn-solid w-100" type="submit"><%= category.categoryName%></strong>
-                                                        <% } else{ %>
-                                                        <strong class="btn btn-solid w-100" type="submit" style="font-size: small;"><%= category.categoryName%></strong>
-                                                        <% } %>
-                                                    </div>
+                            <div class="row" style="height: 100vh">
+                                <% resultCategories.forEach(category=> { %>
+                                    <div class="col-6 col-sm-4 col-md-3 my-3">
+                                        <a href="productsPage?categoryName=<%= category.categoryName %>" id="categoryCard">
+                                            <div class="card shadow-lg" style="margin-top: 10px;">
+                                                <img src="<%= category.categoryPicture %>" class="card-img-top" style="width: 100%; height: 150px;" alt="...">
+                                                <div class="card-img-overlay shadow-lg" style="display: inline-block; margin-top: 40px;">
+                                                    <input type="hidden" value="1" name="editProduct" id="editProduct">
+                                                    <% if (category.categoryName.length <= 6) { %>
+                                                    <strong class="btn btn-solid w-100 text-wrap" type="submit"><%= category.categoryName%></strong>
+                                                    <% } else{ %>
+                                                    <strong class="btn btn-solid w-100 text-wrap" type="submit" style="font-size: small;"><%= category.categoryName%></strong>
+                                                    <% } %>
                                                 </div>
-                                            </a>
-                                        </div>
-                                    <% }) %>
-                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <% }) %>
                             </div>
                         </div>
                     </div>
