@@ -12,8 +12,15 @@ const storage = multer.diskStorage({
         cb(null, "static/uploads/products/images/");
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
-        // cb(null, req.body.storeId + req.body.categoryName + jalaliDate);
+        // cb(null, file.originalname);
+        cb(
+            null,
+            req.user.userStore.storeId +
+                "_" +
+                Math.random() +
+                "_" +
+                file.originalname
+        );
     },
 });
 const upload = multer({ storage: storage });

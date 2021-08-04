@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <div class="container-fluid">
                             <div class="row">
-                                <div id="show-cart" class="card-deck col-xl-12 col-md-12 col-sm-12">
+                                <div id="show-cart" class="card-deck col-lg-12">
                                 </div>
                                 <div class='card shadow-lg' style='width: 100%; height: 100%; margin-top: 35px;'>
                                     <p class="col-xl-12 col-md-12 col-sm-12">شما <span id="count-cart">0</span> محصول در سبدتان دارید.</p>
@@ -56,7 +56,7 @@
         }
         for (var i in cartArray) {
             output +=
-                "<div class='card col-xl-3 col-md-3 col-sm-8 shadow-lg' style='width: 100%; height: 250px; margin-top: 25px; margin-bottom: 25px;'>"+
+                "<div class='card shadow-lg col-lg-3' style='height: 250px; margin-top: 25px; margin-bottom: 25px;'>"+
                 "<img src='"+cartArray[i].picture+"' class='card-img-top w-75' style='width: 100%; height: 100px; margin-top: 5px; margin-bottom: 5px;'>"
                 +" <h6>نام: "+ cartArray[i].name
                 +" </h6><h6>تعداد: "+cartArray[i].count

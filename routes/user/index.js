@@ -16,6 +16,7 @@ const uploadCategory = require("./uploadCategory");
 const deleteCategory = require("./deleteCategory");
 const editCategory = require("./editCategory");
 const mergeCategories = require("./mergeCategories");
+const banner = require("./banner");
 
 router.use("/signUp", signUp);
 router.use("/logIn", logIn);
@@ -32,5 +33,6 @@ router.use("/uploadCategory", auth, uploadCategory);
 router.use("/deleteCategory", auth, deleteCategory);
 router.use("/editCategory", auth, editCategory);
 router.use("/mergeCategories", auth, mergeCategories);
+router.use("/banner", auth, banner);
 
 module.exports = router;

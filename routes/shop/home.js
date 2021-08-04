@@ -41,8 +41,13 @@ async function homeViewFunction(req, res, next) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
+        let resultBanner = await ecommerce
+            .collection("banner")
+            .find({ storeId: storeId })
+            .toArray();
         return res.render("home", {
             resultCategories: resultCategories,
+            resultBanner: resultBanner,
             storeInfo: req.store.userStore,
         });
         next();
