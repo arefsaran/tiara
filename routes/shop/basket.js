@@ -24,6 +24,7 @@ async function basketView(request, response, next) {
             resultCategories: resultCategories,
             error: "",
         });
+        next();
     } catch (error) {
         response.json({
             status: 500,

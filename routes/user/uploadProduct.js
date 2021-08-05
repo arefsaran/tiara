@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 router.get("/", uploadProductView);
 router.post("/", upload.single("productPicture"), uploadProductFunction);
 
-async function uploadProductView(request, res) {
+async function uploadProductView(request, response, next) {
     try {
         let storeId = request.user.userStore.storeId;
         let collectionName = "category";
@@ -47,13 +47,14 @@ async function uploadProductView(request, res) {
         if (resultCategories.length == 0) {
             productUploaded = "2";
         }
-        res.render("uploadProduct", {
+        response.render("uploadProduct", {
             storeInfo: request.user.userStore,
             resultCategories: resultCategories,
             productUploaded: productUploaded,
         });
+        next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -62,7 +63,7 @@ async function uploadProductView(request, res) {
     }
 }
 
-async function uploadProductFunction(request, res) {
+async function uploadProductFunction(request, response, next) {
     try {
         let {
             productName,
@@ -122,21 +123,22 @@ async function uploadProductFunction(request, res) {
                 .collection("category")
                 .find()
                 .toArray();
-            res.render("uploadProduct", {
+            response.render("uploadProduct", {
                 storeInfo: request.user.userStore,
                 resultCategories: resultCategories,
                 productUploaded: "1",
             });
         } else if (!categoryName && storeId) {
-            res.render("uploadProduct", {
+            response.render("uploadProduct", {
                 storeInfo: request.user.userStore,
                 resultCategories: [],
                 productUploaded: "2",
             });
         }
         return;
+        next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

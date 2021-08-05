@@ -28,12 +28,13 @@ const upload = multer({ storage: storage });
 router.get("/", uploadCategoryView);
 router.post("/", upload.single("categoryPicture"), uploadCategoryFunction);
 
-async function uploadCategoryView(request, response) {
+async function uploadCategoryView(request, response, next) {
     try {
         response.render("uploadCategory", {
             storeInfo: request.user.userStore,
             categoryUploaded: "0",
         });
+        next();
     } catch (error) {
         response.json({
             status: 500,
@@ -44,7 +45,7 @@ async function uploadCategoryView(request, response) {
     }
 }
 
-async function uploadCategoryFunction(request, response) {
+async function uploadCategoryFunction(request, response, next) {
     try {
         let { categoryName } = request.body;
         let storeId = request.user.userStore.storeId;
@@ -87,6 +88,7 @@ async function uploadCategoryFunction(request, response) {
             }
         }
         return;
+        next();
     } catch (error) {
         response.json({
             status: 500,

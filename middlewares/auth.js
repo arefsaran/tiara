@@ -10,9 +10,9 @@ module.exports.auth = async function (request, response, next) {
                 error: "مشکلی پیش آمده است، مجددا تلاش کنید",
             });
         } else {
-            const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
+            const decodedToken = jwt.verify(token, JWT_PRIVATE_KEY);
             request.user = await User.findOne({
-                _id: decoded._id,
+                _id: decodedToken._id,
             });
         }
         next();
@@ -20,6 +20,5 @@ module.exports.auth = async function (request, response, next) {
         response.render("logIn", {
             error: "مشکلی پیش آمده است، مجددا تلاش کنید",
         });
-        // response.render("login",{error: error});
     }
 };

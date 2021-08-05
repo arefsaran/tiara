@@ -31,7 +31,7 @@ router.get("/", uploadBannerView);
 router.post("/", upload.array("bannerPictures", 3), uploadBannerFunction);
 router.get("/delete", deleteBanner);
 
-async function uploadBannerView(request, response) {
+async function uploadBannerView(request, response, next) {
     try {
         let storeId = request.user.userStore.storeId;
         let token = request.query.userToken;
@@ -55,6 +55,7 @@ async function uploadBannerView(request, response) {
             bannerUploaded: bannerUploaded,
             token: token,
         });
+        next();
     } catch (error) {
         response.json({
             status: 500,
@@ -81,9 +82,8 @@ async function uploadBannerFunction(request, response, next) {
         }
         if (storeId && pictures) {
             pictures.forEach((picture) => {
-                let bannerPicture = picture.path.replace(/\\/g, "/").substr(7);
                 let query = {
-                    bannerPicture: bannerPicture,
+                    picture: picture.path.replace(/\\/g, "/").substr(7),
                     storeId: storeId,
                 };
                 insertFunction(collectionName, query);

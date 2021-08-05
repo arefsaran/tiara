@@ -20,7 +20,7 @@ function getUrlOption(url, params) {
 app.get("/payment", subDomainChecker, pay);
 app.get("/checker", checker);
 
-async function pay(request, response) {
+async function pay(request, response, next) {
     try {
         let { totalPrice, purchaseId } = request.query;
         if (!process.env.PWD) {
@@ -52,6 +52,7 @@ async function pay(request, response) {
                 );
             })
             .catch((err) => response.json(err.message));
+        next();
     } catch (error) {
         response.json({
             status: 500,
@@ -113,6 +114,7 @@ async function checker(request, response, next) {
                     });
                 });
         }
+        next();
     } catch (error) {
         response.json({
             status: 500,

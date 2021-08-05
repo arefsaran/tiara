@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { User, validate } = require("../../models/user");
-const { BlockSubDomain } = require("../../models/blockSubDomain");
+const { BlockedSubDomain } = require("../../models/blockedSubDomain");
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
@@ -55,10 +55,10 @@ async function signUpFunction(request, response, next) {
             let subDomainWithThisStoreName = await User.findOne({
                 "userStore.storeId": userStoreNameInEnglish.toLowerCase(),
             });
-            let blockedUserStoreName = await BlockSubDomain.findOne({
+            let blockedUserStoreName = await BlockedSubDomain.findOne({
                 subDomain: userStoreName.toLowerCase(),
             });
-            let blockedSubDomain = await BlockSubDomain.findOne({
+            let blockedSubDomain = await BlockedSubDomain.findOne({
                 subDomain: userStoreNameInEnglish.toLowerCase(),
             });
             if (userWithThisEmail) {

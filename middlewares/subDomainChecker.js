@@ -1,4 +1,3 @@
-const { render } = require("ejs");
 const { User } = require("../models/user");
 
 module.exports.subDomainChecker = async function (request, response, next) {
@@ -31,6 +30,5 @@ module.exports.subDomainChecker = async function (request, response, next) {
         next();
     } catch (error) {
         response.render("404");
-        // response.render("login",{error: error});
     }
 };

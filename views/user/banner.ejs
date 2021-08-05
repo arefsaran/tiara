@@ -43,7 +43,7 @@
                                     <% resultBanners.forEach(banner => { %>
                                         <div class="col-xl-3 col-md-6 col-sm-4">
                                             <div class="card shadow-lg" style="width: 100%; height: 100px; margin-top: 25px;">
-                                                <img src="<%= banner.bannerPicture %>" class="card-img-top" style="width: 100%; height: 100px;">
+                                                <img src="<%= banner.picture %>" class="card-img-top" style="width: 100%; height: 100px;">
                                                 <a href="user/banner/delete?deleteBannerId=<%= banner._id %>&userToken=<%= token %>" ><button class="btn" style="background-color: red; color: white;">حذف</button></a>
                                             </div>
                                         </div>

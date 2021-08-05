@@ -7,7 +7,7 @@ const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
 router.get("/", searchAPI);
 
-async function searchAPI(request, response) {
+async function searchAPI(request, response, next) {
     try {
         let storeId = request.store.userStore.storeId;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
@@ -113,6 +113,7 @@ async function searchAPI(request, response) {
                 });
             }
         }
+        next();
     } catch (error) {
         response.json({
             status: 500,
