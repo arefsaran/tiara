@@ -5,21 +5,21 @@ const bodyParser = require("body-parser");
 const routes = require("./routes");
 const { User } = require("./models/user");
 const path = require("path");
-const { PORT, HOST, MONGO_DB } = require("./config/config");
+const { PORT, HOST, DATABASE_ADDRESS } = require("./config/config");
 // const { MongoClient } = require("mongodb");
 
-app.use((req, res, next) => {
-    res.setHeader("Access-control-Allow-Origin", "*");
-    res.setHeader("Access-control-Allow-Credentials", "true");
-    res.setHeader(
+app.use((request, response, next) => {
+    response.setHeader("Access-control-Allow-Origin", "*");
+    response.setHeader("Access-control-Allow-Credentials", "true");
+    response.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, OPTIONS, PUT, PATCH, DELETE"
     );
-    res.setHeader(
+    response.setHeader(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Autherization, X-Subdomain"
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Subdomain"
     );
-    res.setHeader("Access-Control-Expose-Headers", "*");
+    response.setHeader("Access-Control-Expose-Headers", "*");
     next();
 });
 app.set("view engine", "ejs");
@@ -52,7 +52,7 @@ let job = new CronJob(
 );
 job.start();
 mongoose
-    .connect(MONGO_DB, {
+    .connect(DATABASE_ADDRESS, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useFindAndModify: false,

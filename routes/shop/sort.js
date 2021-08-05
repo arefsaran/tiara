@@ -2,14 +2,14 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
 router.get("/", sortAPI);
 
-function sortAPI(req, res) {
+function sortAPI(request, response) {
     try {
-        let { categoryName, sortBy } = req.query;
-        let storeId = req.store.userStore.storeId;
+        let { categoryName, sortBy } = request.query;
+        let storeId = request.store.userStore.storeId;
         if (sortBy == "priceLowToHigh") {
             sortBy = { "productDetails.productPriceEnglishNumber": 1 };
         } else if (sortBy == "priceHighToLow") {
@@ -34,26 +34,25 @@ function sortAPI(req, res) {
             if (err) {
                 console.log(err);
             } else {
-                let dbName = "ecommerce";
-                const client = await MongoClient.connect(MONGO_DB, {
+                const client = await MongoClient.connect(DATABASE_ADDRESS, {
                     useNewUrlParser: true,
                     useUnifiedTopology: true,
                 });
-                let ecommerce = client.db(dbName);
+                let ecommerce = client.db(DATABASE_NAME);
                 let resultCategories = await ecommerce
                     .collection("category")
                     .find({ storeId: storeId })
                     .toArray();
-                res.render("products", {
+                response.render("products", {
                     sort: 1,
                     resultCategories: resultCategories,
-                    storeInfo: req.store.userStore,
+                    storeInfo: request.store.userStore,
                     resultProducts: sortedResult,
                 });
             }
         }
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

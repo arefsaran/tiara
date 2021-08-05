@@ -3,24 +3,23 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const ObjectId = require("mongoose").Types.ObjectId;
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
 router.get("/", searchAPI);
 
-async function searchAPI(req, res) {
+async function searchAPI(request, response) {
     try {
-        let storeId = req.store.userStore.storeId;
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        let storeId = request.store.userStore.storeId;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection("category")
             .find({ storeId: storeId })
             .toArray();
-        let { productNameForSearch, productIdForSearch } = req.query;
+        let { productNameForSearch, productIdForSearch } = request.query;
         let query = { _id: ObjectId(productIdForSearch) };
         let totalResult = [];
         searchInCollection(storeId);
@@ -75,7 +74,7 @@ async function searchAPI(req, res) {
                             return eachResult;
                         }
                     });
-                    let { sortBy } = req.body;
+                    let { sortBy } = request.body;
                     if (sortBy == "priceLowToHigh") {
                         sortFunctionLowToHigh(
                             "productDetails.productPriceEnglishNumber",
@@ -88,7 +87,7 @@ async function searchAPI(req, res) {
                         );
                     }
                     // totalResult = totalResult.flat(1);
-                    // res.json({
+                    // response.json({
                     //     status: 200,
                     //     message: "The request has succeeded",
                     //     data: {
@@ -96,16 +95,16 @@ async function searchAPI(req, res) {
                     //     },
                     //     address: "POST:/search",
                     // });
-                    res.render("products", {
+                    response.render("products", {
                         sort: 0,
-                        storeInfo: req.store.userStore,
+                        storeInfo: request.store.userStore,
                         resultCategories: resultCategories,
                         resultProducts: totalResult,
                         error: "",
                     });
                 }
             } catch (error) {
-                res.json({
+                response.json({
                     status: 500,
                     message:
                         "The request could not be understood by the server",
@@ -115,7 +114,7 @@ async function searchAPI(req, res) {
             }
         }
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

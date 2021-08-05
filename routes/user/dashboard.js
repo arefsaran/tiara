@@ -2,16 +2,15 @@ const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const { Purchase } = require("../../models/purchase");
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
 router.get("/", dashboardView);
 
-async function dashboardView(req, res, next) {
+async function dashboardView(request, response, next) {
     try {
-        let userToken = req.query.userToken;
-        let storeId = req.user.userStore.storeId;
+        let userToken = request.query.userToken;
+        let storeId = request.user.userStore.storeId;
         let collectionName = "purchases";
-        let dbName = "ecommerce";
         let nowISO = new Date();
         let lastMonthSalesTotalPrice = 0;
         let totalPrice = 0;
@@ -26,11 +25,11 @@ async function dashboardView(req, res, next) {
             done: 1,
         };
 
-        const client = await MongoClient.connect(MONGO_DB, {
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
 
         let lastMonthSales = await ecommerce
             .collection(collectionName)
@@ -59,9 +58,9 @@ async function dashboardView(req, res, next) {
             .sort({ _id: -1 })
             .limit(5);
 
-        res.render("dashboard", {
+        response.render("dashboard", {
             numberOfPurchases: numberOfPurchases,
-            storeInfo: req.user.userStore,
+            storeInfo: request.user.userStore,
             purchases: purchases,
             lastMonthSalesTotalPrice: lastMonthSalesTotalPrice,
             totalPriceOfPurchases: totalPrice,
@@ -69,7 +68,7 @@ async function dashboardView(req, res, next) {
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

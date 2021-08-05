@@ -1,33 +1,32 @@
 const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
 router.get("/", homeViewFunction);
 
-async function homeViewFunction(req, res, next) {
+async function homeViewFunction(request, response, next) {
     try {
         let collectionName = "category";
-        let dbName = "ecommerce";
-        let storeId = req.user.userStore.storeId;
-        const client = await MongoClient.connect(MONGO_DB, {
+        let storeId = request.user.userStore.storeId;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        const token = req.query.userToken || req.query.userTokenHide;
-        let ecommerce = client.db(dbName);
+        const token = request.query.userToken || request.query.userTokenHide;
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
-        return res.render("editCategories", {
-            storeInfo: req.user.userStore,
+        return response.render("editCategories", {
+            storeInfo: request.user.userStore,
             resultCategories: resultCategories,
             token: token,
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

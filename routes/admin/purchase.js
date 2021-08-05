@@ -1,14 +1,14 @@
 const { User } = require("../../models/user");
 
-async function usersView(req, res, next) {
+async function usersView(request, response, next) {
     try {
         let resultUsers = await User.find({}).sort({ _id: -1 });
-        res.render("usersView", {
+        response.render("usersView", {
             resultUsers: resultUsers,
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

@@ -1,32 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 router.get("/", basketView);
 router.post("/", basketCreator);
 router.post("/api", basketFunction);
 
-async function basketView(req, res, next) {
+async function basketView(request, response, next) {
     try {
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection("category")
-            .find({ storeId: req.store.userStore.storeId })
+            .find({ storeId: request.store.userStore.storeId })
             .toArray();
-        res.render("basket", {
-            storeInfo: req.store.userStore,
+        response.render("basket", {
+            storeInfo: request.store.userStore,
             resultCategories: resultCategories,
             error: "",
         });
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -35,12 +34,12 @@ async function basketView(req, res, next) {
     }
 }
 
-async function basketCreator(req, res, next) {
+async function basketCreator(request, response, next) {
     try {
-        res.json({ Ok });
+        response.json({ Ok });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -49,16 +48,15 @@ async function basketCreator(req, res, next) {
     }
 }
 
-async function basketFunction(req, res, next) {
+async function basketFunction(request, response, next) {
     try {
-        let collectionName = req.store.userStore.storeId;
-        let { productId, quantity } = req.query;
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        let collectionName = request.store.userStore.storeId;
+        let { productId, quantity } = request.query;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection("category")
             .find({ storeId: collectionName })
@@ -70,17 +68,17 @@ async function basketFunction(req, res, next) {
         let totalPrice =
             basketProducts[0].productDetails.productPriceEnglishNumber *
             quantity;
-        res.render("basket", {
+        response.render("basket", {
             resultCategories: resultCategories,
             basketProducts: basketProducts,
-            storeInfo: req.store.userStore,
+            storeInfo: request.store.userStore,
             quantity: quantity,
             totalPrice: totalPrice,
         });
-        // res.json({basketProducts:basketProducts});
+        // response.json({basketProducts:basketProducts});
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

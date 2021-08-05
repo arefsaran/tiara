@@ -1,0 +1,132 @@
+
+
+CLEAN CODE:
+
+
+ -----------------------------------------------------------
+| Naming - Assigning Names to Variables, Functions, Classes |
+ -----------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+
+Variables & Constants =>
+    Data containers
+    examples:  user input data, validation results, a list of products
+    choose name:  use nouns or short phrases with adjectives
+
+
+Functions & Methods =>
+    Commands or calculated values
+    examples: send data to server, check if user input is valid
+    choose name: use verbs or short phrases with adjectives
+
+
+Classes =>
+    use Classes to create "things"
+    examples: a use, a product, a http request body
+    choose name: use nouns or short phrases with nouns
+
+-------------------------------------------------------------------------------------------------------------------------
+
+snake_case =>   python           =>  Variables, Functions, Methods
+
+camelCase  =>   java, js         =>  Variables, Functions, Methods
+
+PascalCase =>   python, java, js =>  Classes
+
+kebab-case =>   HTML             =>  HTML Elements
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Variables           |   Constants             |      Properties
+describe the value  |   describe the value    |      Answer a true/false question
+sqlDatabase, user   |   firstName, age        |      isActiveUser, isLoggedIn
+
+-------------------------------------------------------------------------------------------------------------------------
+
+What is stored?        |     bad names      |     okay names        |  Good names
+                       |                    |                       |
+A user Object          |     u, data        |     userData, person  |  user, customer
+                       |                    |                       |
+User input validation  |     v, val         |     validatedInput    |  isCorrect, isValid
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Naming Functions & Methods:
+
+Functions performs an operation: (describe the operation)
+    getUser()
+    response.send()
+    getUserByEmail()
+
+Functions computes a Boolean: (Answer a true/false question)
+    isValid()
+    purchase.isPaid()
+    emailIsValid()
+
+-------------------------------------------------------------------------------------------------------------------------
+
+What does the Function do?      |     bad names             |     okay names                |  Good names
+                                |                           |                               |
+Save user data to a DB          |     process(), handle()   |     save(), storeData()       |  saveUser(), user.store()
+                                |                           |                               |
+validate the user input         |     process(), save()     |     validateSave(), check()   |  validate(), isValid()
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Naming Classes: 
+
+describe the Object:                                    User, product       (okay)
+Provide more details without introducing redundancy:    Customer, Course    (good)
+Avoid redundant suffixes:                               DatabaseManager     (bad)
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Which Object is described?      |     bad names             |     okay names                |  Good names
+                                |                           |                               |
+A User                          |     UEntity, ObjA         |     UserObj, AppUser          |  User, Admin
+                                |                           |                               |
+A Database                      |     Data, DataStorage     |     Db, Data                  |  Database, SQLDatabase
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Don't Include Redundant Information In Names:
+
+userWithNameAndAge = User("Aref", 23);      ==>         newUser, loggedInUser, user
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Avoid Slang, Unclear Abbreviations & Disinformation:
+
+Slang:      product.diePlease()         ==>         product.remove()
+            user.facePalm()             ==>         user.sendErrorMessage()
+
+Unclear Abbreviations:  message(n)              ==>         message(newUser)
+                        ymdt = "20210131CET"    ==>         dateWithTimeZone = "20210131CET"
+
+Disinformation:         userList = {ul:.. , u2:..}         ==>      userMap = {ul:.. , u2:..}
+                        allAccounts = accounts.filter()    ==>      filteredAccounts = accounts.filter()
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Choose Distinctive Names:
+
+analytics.getDailyData(day)        ==>         analytics.getDailyReport(day)
+analytics.getDayData()             ==>         analytics.getDataForToday()
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Be Consistent:
+
+getUsers(), fetchUsers(), retrieveUsers()
+You can go either of these options but stick with it throughout your entire program
+
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+ ---------------------------------------
+| Code Structure, Comments & Formatting |
+ ---------------------------------------
+ -------------------------------------------------------------------------------------------------------------------------
+
+ 

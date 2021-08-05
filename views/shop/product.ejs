@@ -77,8 +77,8 @@
                 redirect: "follow", // manual, *follow, error
                 referrerPolicy: "no-referrer", // no-referrer, *client
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
-            }).then((res) => {
-                return res.json();
+            }).then((response) => {
+                return response.json();
             }) // expecting a json response
             .then((response)=>{
                 window.location.href = "/basket";

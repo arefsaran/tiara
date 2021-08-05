@@ -20,18 +20,18 @@ function getUrlOption(url, params) {
 app.get("/payment", subDomainChecker, pay);
 app.get("/checker", checker);
 
-async function pay(req, res) {
+async function pay(request, response) {
     try {
-        let { totalPrice, purchaseId } = req.query;
+        let { totalPrice, purchaseId } = request.query;
         if (!process.env.PWD) {
             process.env.PWD = process.cwd();
         }
         let invoicePath = `/invoices/${purchaseId}.pdf`;
-        let store = req.store.userStore.storeId;
-        let shippingCost = req.store.userStore.shippingCost * 1000 || 0;
+        let store = request.store.userStore.storeId;
+        let shippingCost = request.store.userStore.shippingCost * 1000 || 0;
         let amount = parseInt(totalPrice) + shippingCost;
-        let userEmail = req.store.userEmail || "tiaraplatform@gmail.com";
-        let Zarinpal_MERCHANT_ID = req.store.MERCHANT_ID || MERCHANT_ID;
+        let userEmail = request.store.userEmail || "tiaraplatform@gmail.com";
+        let Zarinpal_MERCHANT_ID = request.store.MERCHANT_ID || MERCHANT_ID;
         let params = {
             MerchantID: Zarinpal_MERCHANT_ID,
             Amount: amount,
@@ -47,13 +47,13 @@ async function pay(req, res) {
 
         await request(options)
             .then(async (data) => {
-                return res.redirect(
+                return response.redirect(
                     `https://www.zarinpal.com/pg/StartPay/${data.Authority}`
                 );
             })
-            .catch((err) => res.json(err.message));
+            .catch((err) => response.json(err.message));
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -62,23 +62,23 @@ async function pay(req, res) {
     }
 }
 
-async function checker(req, res, next) {
+async function checker(request, response, next) {
     try {
         let paramsPuchase = {
             done: 0,
-            purchaseId: req.query.purchaseId,
+            purchaseId: request.query.purchaseId,
         };
-        let requestURL = `https://${req.query.storeId}.tiaraplatform.ir/purchase`;
+        let requestURL = `https://${request.query.storeId}.tiaraplatform.ir/purchase`;
         let optionsPurchase = getUrlOption(requestURL, paramsPuchase);
-        if (req.query.Status !== "OK") {
+        if (request.query.Status !== "OK") {
             request(optionsPurchase).then(async (data) => {
-                return res.render("unsuccessfulPayment");
+                return response.render("unsuccessfulPayment");
             });
         } else {
             let params = {
                 MerchantID: MERCHANT_ID,
-                Amount: req.query.Amount,
-                Authority: req.query.Authority,
+                Amount: request.query.Amount,
+                Authority: request.query.Authority,
             };
 
             let options = getUrlOption(
@@ -91,30 +91,30 @@ async function checker(req, res, next) {
                     if (data.Status == 100) {
                         let params = {
                             done: 1,
-                            purchaseId: req.query.purchaseId,
+                            purchaseId: request.query.purchaseId,
                         };
-                        let requestURL = `https://${req.query.storeId}.tiaraplatform.ir/purchase`;
+                        let requestURL = `https://${request.query.storeId}.tiaraplatform.ir/purchase`;
                         let options = getUrlOption(requestURL, params);
                         request(options).then(async (result) => {
-                            return res.render("successfulPayment", {
+                            return response.render("successfulPayment", {
                                 RefID: result.data.RefID,
-                                invoicePath: req.query.invoicePath,
+                                invoicePath: request.query.invoicePath,
                             });
                         });
                     } else {
                         request(optionsPurchase).then(async (data) => {
-                            return res.render("unsuccessfulPayment");
+                            return response.render("unsuccessfulPayment");
                         });
                     }
                 })
                 .catch((err) => {
                     request(optionsPurchase).then(async (data) => {
-                        return res.render("unsuccessfulPayment");
+                        return response.render("unsuccessfulPayment");
                     });
                 });
         }
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

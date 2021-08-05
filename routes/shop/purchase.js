@@ -5,13 +5,13 @@ const config = require("config");
 const { json } = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
-const { ECOMMERCE_DB } = require("../../config/config");
+const { DATABASE_ADDRESS } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 const { createInvoice } = require("./createInvoice.js");
 
 router.post("/", inStockAPI);
 
-function inStockAPI(req, res) {
+function inStockAPI(request, response) {
     try {
         let {
             customerName,
@@ -22,8 +22,8 @@ function inStockAPI(req, res) {
             totalPrice,
             basket,
             done,
-        } = req.body;
-        let storeId = req.store.userStore.storeId;
+        } = request.body;
+        let storeId = request.store.userStore.storeId;
         // let basket = [];
         // basketJSON = JSON.parse(basketJSON);
         // for (let inCart in basketJSON) {
@@ -47,13 +47,13 @@ function inStockAPI(req, res) {
         if (done === 0 && purchaseId) {
             coefficient = 1;
             MongoClient.connect(
-                ECOMMERCE_DB,
+                DATABASE_ADDRESS,
                 { useUnifiedTopology: true },
                 function (err, database) {
                     if (err) {
                         return console.log("erroR:", err);
                     }
-                    let ecommerceDatabase = database.db("ecommerce");
+                    let ecommerceDatabase = database.db(DATABASE_NAME);
                     ecommerceDatabase
                         .collection("purchases")
                         .findOne({ purchaseId: purchaseId })
@@ -89,18 +89,18 @@ function inStockAPI(req, res) {
                 }
             );
             MongoClient.connect(
-                ECOMMERCE_DB,
+                DATABASE_ADDRESS,
                 { useUnifiedTopology: true },
                 function (err, database) {
                     if (err) {
                         return console.log("erroR:", err);
                     }
-                    let ecommerceDatabase = database.db("ecommerce");
+                    let ecommerceDatabase = database.db(DATABASE_NAME);
                     ecommerceDatabase
                         .collection("purchases")
                         .deleteOne({ purchaseId: purchaseId })
                         .then((productInStock) => {
-                            res.json({
+                            response.json({
                                 status: 200,
                                 message:
                                     "The request has succeeded || inStock Changed and Invoices Deleted",
@@ -114,14 +114,14 @@ function inStockAPI(req, res) {
             let enoughInStockProducts = [];
             let outOfOrderProducts = [];
             MongoClient.connect(
-                ECOMMERCE_DB,
+                DATABASE_ADDRESS,
                 { useUnifiedTopology: true },
                 async (err, database) => {
                     try {
                         if (err) {
                             return console.log("erroR:", err);
                         }
-                        let ecommerceDatabase = database.db("ecommerce");
+                        let ecommerceDatabase = database.db(DATABASE_NAME);
                         for (let index = 0; index < basket.length; index++) {
                             let element = basket[index];
                             await ecommerceDatabase
@@ -137,7 +137,7 @@ function inStockAPI(req, res) {
                                     ) {
                                         outOfOrderProducts.push(element);
                                     } else {
-                                        res.json({
+                                        response.json({
                                             status: 403,
                                             message:
                                                 "The server understood the request, but is refusing to fulfill it. || productId incorrect",
@@ -169,14 +169,14 @@ function inStockAPI(req, res) {
                             });
                             purchaseInvoice.save();
                             MongoClient.connect(
-                                ECOMMERCE_DB,
+                                DATABASE_ADDRESS,
                                 { useUnifiedTopology: true },
                                 function (err, database) {
                                     if (err) {
                                         return console.log("erroR:", err);
                                     }
                                     let ecommerceDatabase = database.db(
-                                        "ecommerce"
+                                        DATABASE_NAME
                                     );
                                     for (
                                         let index = 0;
@@ -214,7 +214,7 @@ function inStockAPI(req, res) {
                                 .collection("purchases")
                                 .findOne({ _id: purchaseInvoice._id })
                                 .then(() => {
-                                    res.json({
+                                    response.json({
                                         status: 200,
                                         message: "The request has succeeded",
                                         data: {
@@ -226,7 +226,7 @@ function inStockAPI(req, res) {
                                     });
                                 });
                         } else if (outOfOrderProducts.length >= 1) {
-                            res.json({
+                            response.json({
                                 status: 403,
                                 message:
                                     "The server understood the request, but is refusing to fulfill it. || inStock < count",
@@ -237,7 +237,7 @@ function inStockAPI(req, res) {
                                 address: "POST:/inStock",
                             });
                         } else {
-                            res.json({
+                            response.json({
                                 status: 403,
                                 message:
                                     "The server understood the request, but is refusing to fulfill it. || Database Error",
@@ -254,13 +254,13 @@ function inStockAPI(req, res) {
             );
         } else if (done === 1 && purchaseId) {
             MongoClient.connect(
-                ECOMMERCE_DB,
+                DATABASE_ADDRESS,
                 { useUnifiedTopology: true },
                 function (err, database) {
                     if (err) {
                         return console.log("erroR:", err);
                     }
-                    let ecommerceDatabase = database.db("ecommerce");
+                    let ecommerceDatabase = database.db(DATABASE_NAME);
                     ecommerceDatabase
                         .collection("purchases")
                         .findOneAndUpdate(
@@ -295,7 +295,7 @@ function inStockAPI(req, res) {
                             }
                             let invoicePath = `${process.env.PWD}/static/invoices/${purchaseId}.pdf`;
                             // createInvoice(invoice, invoicePath);
-                            res.json({
+                            response.json({
                                 status: 200,
                                 message:
                                     "The request has succeeded and Purchase is done",
@@ -311,7 +311,7 @@ function inStockAPI(req, res) {
             );
         }
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

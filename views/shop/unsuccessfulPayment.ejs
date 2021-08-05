@@ -90,8 +90,8 @@
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
             }).then((response)=>{
                 return response.json();
-            }).then((res)=>{
-                if (res.status === 200) {
+            }).then((response)=>{
+                if (response.status === 200) {
                     localStorage.removeItem("purchaseId");
                     window.location.href = "/unsuccessfulPayment";
                 }

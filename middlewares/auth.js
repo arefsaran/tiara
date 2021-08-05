@@ -2,22 +2,24 @@ const jwt = require("jsonwebtoken");
 const { JWT_PRIVATE_KEY } = require("../config/config");
 const { User } = require("../models/user");
 
-module.exports.auth = async function (req, res, next) {
+module.exports.auth = async function (request, response, next) {
     try {
-        const token = req.query.userToken || req.query.userTokenHide;
+        const token = request.query.userToken || request.query.userTokenHide;
         if (!token) {
-            return res.render("logIn", {
+            return response.render("logIn", {
                 error: "مشکلی پیش آمده است، مجددا تلاش کنید",
             });
         } else {
             const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
-            req.user = await User.findOne({
+            request.user = await User.findOne({
                 _id: decoded._id,
             });
         }
         next();
     } catch (error) {
-        res.render("logIn", { error: "مشکلی پیش آمده است، مجددا تلاش کنید" });
-        // res.render("login",{error: error});
+        response.render("logIn", {
+            error: "مشکلی پیش آمده است، مجددا تلاش کنید",
+        });
+        // response.render("login",{error: error});
     }
 };

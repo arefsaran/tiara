@@ -11,12 +11,12 @@ const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (request, file, cb) => {
         cb(null, "static/uploads/storesLogo/images/");
     },
-    filename: (req, file, cb) => {
+    filename: (request, file, cb) => {
         cb(null, file.originalname);
-        // cb(null, req.body.collectionName + req.body.categoryName + jalaliDate);
+        // cb(null, request.body.collectionName + request.body.categoryName + jalaliDate);
     },
 });
 const upload = multer({ storage: storage });
@@ -24,18 +24,18 @@ const upload = multer({ storage: storage });
 router.get("/", settingsFunction);
 router.post("/", upload.single("storePicture"), settingsAPI);
 
-async function settingsFunction(req, res, next) {
+async function settingsFunction(request, response, next) {
     try {
-        let userToken = req.query.userToken;
-        res.render("settings", {
-            storeInfo: req.user.userStore,
-            storeDetails: req.user,
+        let userToken = request.query.userToken;
+        response.render("settings", {
+            storeInfo: request.user.userStore,
+            storeDetails: request.user,
             token: userToken,
             edit: 0,
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -44,7 +44,7 @@ async function settingsFunction(req, res, next) {
     }
 }
 
-async function settingsAPI(req, res, next) {
+async function settingsAPI(request, response, next) {
     try {
         let {
             userName,
@@ -53,14 +53,15 @@ async function settingsAPI(req, res, next) {
             storePhoneNumber,
             shippingCost,
             MERCHANT_ID,
-        } = req.body;
-        let userEmail = req.user.userEmail;
-        let storeId = req.user.userStore.storeId;
-        let planType = req.user.userStore.storePlan.planType;
-        let planTimeToExpiry = req.user.userStore.storePlan.planTimeToExpiry;
+        } = request.body;
+        let userEmail = request.user.userEmail;
+        let storeId = request.user.userStore.storeId;
+        let planType = request.user.userStore.storePlan.planType;
+        let planTimeToExpiry =
+            request.user.userStore.storePlan.planTimeToExpiry;
         let collectionName = "users";
-        let userId = req.user._id;
-        const token = req.query.userToken || req.query.userTokenHide;
+        let userId = request.user._id;
+        const token = request.query.userToken || request.query.userTokenHide;
         async function updateFunction(name, query) {
             // await mongoose.connection.db
             //     .collection(`${collection}`)
@@ -75,8 +76,8 @@ async function settingsAPI(req, res, next) {
         if (collectionName) {
             let storePicture = "";
             let query = {};
-            if (req.file != undefined) {
-                storePicture = req.file.path.replace(/\\/g, "/").substr(7);
+            if (request.file != undefined) {
+                storePicture = request.file.path.replace(/\\/g, "/").substr(7);
                 query = {
                     userName: persianJs(userName.toLowerCase())
                         .englishNumber()
@@ -121,7 +122,7 @@ async function settingsAPI(req, res, next) {
                         .toString(),
                     MERCHANT_ID: MERCHANT_ID,
                     userStore: {
-                        storePicture: req.user.userStore.storePicture,
+                        storePicture: request.user.userStore.storePicture,
                         storePlan: {
                             planType: Number(planType),
                             planTimeToExpiry: Number(planTimeToExpiry),
@@ -150,8 +151,8 @@ async function settingsAPI(req, res, next) {
             let userInfo = await User.findOne({
                 _id: decoded._id,
             });
-            res.render("settings", {
-                storeInfo: req.user.userStore,
+            response.render("settings", {
+                storeInfo: request.user.userStore,
                 storeDetails: userInfo,
                 token: token,
                 edit: 1,
@@ -159,7 +160,7 @@ async function settingsAPI(req, res, next) {
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

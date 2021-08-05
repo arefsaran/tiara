@@ -4,20 +4,20 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
 const { Category } = require("../../models/category");
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (request, file, cb) => {
         cb(null, "static/uploads/products/images/");
     },
-    filename: (req, file, cb) => {
+    filename: (request, file, cb) => {
         // cb(null, file.originalname);
         cb(
             null,
-            req.user.userStore.storeId +
+            request.user.userStore.storeId +
                 "_" +
                 Math.random() +
                 "_" +
@@ -30,16 +30,15 @@ const upload = multer({ storage: storage });
 router.get("/", uploadProductView);
 router.post("/", upload.single("productPicture"), uploadProductFunction);
 
-async function uploadProductView(req, res) {
+async function uploadProductView(request, res) {
     try {
-        let storeId = req.user.userStore.storeId;
+        let storeId = request.user.userStore.storeId;
         let collectionName = "category";
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection(collectionName)
             .find({ storeId: storeId })
@@ -49,7 +48,7 @@ async function uploadProductView(req, res) {
             productUploaded = "2";
         }
         res.render("uploadProduct", {
-            storeInfo: req.user.userStore,
+            storeInfo: request.user.userStore,
             resultCategories: resultCategories,
             productUploaded: productUploaded,
         });
@@ -63,7 +62,7 @@ async function uploadProductView(req, res) {
     }
 }
 
-async function uploadProductFunction(req, res) {
+async function uploadProductFunction(request, res) {
     try {
         let {
             productName,
@@ -75,15 +74,17 @@ async function uploadProductFunction(req, res) {
             categoryName,
             inStock,
             productDetail,
-        } = req.body;
-        let storeId = req.user.userStore.storeId;
+        } = request.body;
+        let storeId = request.user.userStore.storeId;
         function insertFunction(name, query) {
             mongoose.connection.db.collection(name, function (err, collection) {
                 collection.insertOne(query);
             });
         }
         if (storeId && categoryName) {
-            let productPicture = req.file.path.replace(/\\/g, "/").substr(7);
+            let productPicture = request.file.path
+                .replace(/\\/g, "/")
+                .substr(7);
             let query = {
                 productName: persianJs(productName).englishNumber().toString(),
                 productPicture: productPicture,
@@ -112,24 +113,23 @@ async function uploadProductFunction(req, res) {
                 createdAt: jalaliDate,
             };
             insertFunction(storeId, query);
-            let dbName = "ecommerce";
-            const client = await MongoClient.connect(MONGO_DB, {
+            const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            let ecommerce = client.db(dbName);
+            let ecommerce = client.db(DATABASE_NAME);
             let resultCategories = await ecommerce
                 .collection("category")
                 .find()
                 .toArray();
             res.render("uploadProduct", {
-                storeInfo: req.user.userStore,
+                storeInfo: request.user.userStore,
                 resultCategories: resultCategories,
                 productUploaded: "1",
             });
         } else if (!categoryName && storeId) {
             res.render("uploadProduct", {
-                storeInfo: req.user.userStore,
+                storeInfo: request.user.userStore,
                 resultCategories: [],
                 productUploaded: "2",
             });

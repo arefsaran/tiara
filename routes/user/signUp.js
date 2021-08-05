@@ -4,18 +4,18 @@ const bcrypt = require("bcryptjs");
 const { User, validate } = require("../../models/user");
 const { BlockSubDomain } = require("../../models/blockSubDomain");
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 
 router.get("/", signUpView);
 router.post("/", signUpFunction);
 
-async function signUpView(req, res, next) {
+async function signUpView(request, response, next) {
     try {
-        res.render("signUp", { error: "" });
+        response.render("signUp", { error: "" });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -24,9 +24,9 @@ async function signUpView(req, res, next) {
     }
 }
 
-async function signUpFunction(req, res, next) {
+async function signUpFunction(request, response, next) {
     try {
-        const { error } = validate(req.body);
+        const { error } = validate(request.body);
         let nowISO = new Date();
         Date.prototype.addHours = function (h) {
             this.setTime(this.getTime() + h * 60 * 60 * 1000);
@@ -42,12 +42,12 @@ async function signUpFunction(req, res, next) {
             userPassword,
             userStoreName,
             userStoreNameInEnglish,
-        } = req.body;
+        } = request.body;
         if (error) {
-            res.render("signUp", {
+            response.render("signUp", {
                 error: `${error}`,
             });
-            // res.json({ error: `${error}` });
+            // response.json({ error: `${error}` });
         } else {
             let userWithThisEmail = await User.findOne({
                 userEmail: userEmail.toLowerCase(),
@@ -62,16 +62,16 @@ async function signUpFunction(req, res, next) {
                 subDomain: userStoreNameInEnglish.toLowerCase(),
             });
             if (userWithThisEmail) {
-                // res.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
-                return res.render("signUp", {
+                // response.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
+                return response.render("signUp", {
                     error: "با این ایمیل قبلا ثبت نام شده است",
                 });
             } else if (subDomainWithThisStoreName) {
-                return res.render("signUp", {
+                return response.render("signUp", {
                     error: "با این آدرس قبلا ثبت نام شده است",
                 });
             } else if (blockedUserStoreName || blockedSubDomain) {
-                return res.render("signUp", {
+                return response.render("signUp", {
                     error:
                         "نام فروشگاه یا آدرس اینترنتی فروشگاه شما نامناسب تشخیص داده شد، . در صورت مناسب بودن نام یا آدرس پیشنهادی به پشتیبانی پیام دهید. ",
                 });
@@ -88,17 +88,17 @@ async function signUpFunction(req, res, next) {
                     "userStore.storePlan.planType": 1,
                     "userStore.paidTime": paidTime,
 
-                    // userPicture : req.files[0].path.replace(/\\/g, "/")
+                    // userPicture : request.files[0].path.replace(/\\/g, "/")
                 });
                 MongoClient.connect(
-                    MONGO_DB,
+                    DATABASE_ADDRESS,
                     { useUnifiedTopology: true },
                     function (err, db) {
                         if (err) throw err;
-                        let dbo = db.db("ecommerce");
+                        let dbo = db.db(DATABASE_NAME);
                         dbo.createCollection(
                             userStoreNameInEnglish.toLowerCase(),
-                            function (err, res) {
+                            function (err, response) {
                                 if (err) throw err;
                                 db.close();
                             }
@@ -109,15 +109,15 @@ async function signUpFunction(req, res, next) {
                 user.userPassword = await bcrypt.hash(user.userPassword, salt);
                 await user.save();
                 const token = user.generateAuthToken();
-                // res.render("dashboard", {
+                // response.render("dashboard", {
                 //     userToken: token,
                 // });
-                return res.redirect(`/user/dashboard?userToken=${token}`);
+                return response.redirect(`/user/dashboard?userToken=${token}`);
             }
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

@@ -1,12 +1,12 @@
 const bcrypt = require("bcryptjs");
 const { Admin, validate } = require("../../models/admin");
 
-async function adminSignUp(req, res, next) {
+async function adminSignUp(request, response, next) {
     try {
-        const { error } = validate(req.body);
-        let { firstName, lastName, email, password } = req.body;
+        const { error } = validate(request.body);
+        let { firstName, lastName, email, password } = request.body;
         if (error) {
-            return res.json({
+            return response.json({
                 error: `${error}`,
             });
         } else {
@@ -14,7 +14,7 @@ async function adminSignUp(req, res, next) {
                 email: email.toLowerCase(),
             });
             if (AdminWithThisEmail) {
-                return res.json({
+                return response.json({
                     error: "با این ایمیل قبلا ثبت نام شده است",
                 });
             } else {
@@ -28,14 +28,14 @@ async function adminSignUp(req, res, next) {
                 admin.password = await bcrypt.hash(admin.password, salt);
                 await admin.save();
                 const token = admin.generateAuthToken();
-                return res.json({
+                return response.json({
                     adminToken: token,
                 });
             }
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

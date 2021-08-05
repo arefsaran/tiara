@@ -8,14 +8,14 @@ const { Category } = require("../../models/category");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (request, file, cb) => {
         cb(null, "static/uploads/products/images/");
     },
-    filename: (req, file, cb) => {
+    filename: (request, file, cb) => {
         // cb(null, file.originalname);
         cb(
             null,
-            req.user.userStore.storeId +
+            request.user.userStore.storeId +
                 "_" +
                 Math.random() +
                 "_" +
@@ -28,14 +28,14 @@ const upload = multer({ storage: storage });
 router.get("/", uploadCategoryView);
 router.post("/", upload.single("categoryPicture"), uploadCategoryFunction);
 
-async function uploadCategoryView(req, res) {
+async function uploadCategoryView(request, response) {
     try {
-        res.render("uploadCategory", {
-            storeInfo: req.user.userStore,
+        response.render("uploadCategory", {
+            storeInfo: request.user.userStore,
             categoryUploaded: "0",
         });
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -44,10 +44,10 @@ async function uploadCategoryView(req, res) {
     }
 }
 
-async function uploadCategoryFunction(req, res) {
+async function uploadCategoryFunction(request, response) {
     try {
-        let { categoryName } = req.body;
-        let storeId = req.user.userStore.storeId;
+        let { categoryName } = request.body;
+        let storeId = request.user.userStore.storeId;
         let collectionName = "category";
         function insertFunction(collectionName, query) {
             mongoose.connection.db.collection(collectionName, async function (
@@ -63,7 +63,7 @@ async function uploadCategoryFunction(req, res) {
                 storeId: storeId,
             });
             if (!categoryInStore) {
-                let categoryPicture = req.file.path
+                let categoryPicture = request.file.path
                     .replace(/\\/g, "/")
                     .substr(7);
                 let query = {
@@ -75,20 +75,20 @@ async function uploadCategoryFunction(req, res) {
                     createdAt: jalaliDate,
                 };
                 insertFunction(collectionName, query);
-                res.render("uploadCategory", {
-                    storeInfo: req.user.userStore,
+                response.render("uploadCategory", {
+                    storeInfo: request.user.userStore,
                     categoryUploaded: "1",
                 });
             } else {
-                res.render("uploadCategory", {
-                    storeInfo: req.user.userStore,
+                response.render("uploadCategory", {
+                    storeInfo: request.user.userStore,
                     categoryUploaded: "2",
                 });
             }
         }
         return;
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

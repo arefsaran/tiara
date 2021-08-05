@@ -4,20 +4,20 @@ const { Purchase } = require("../../models/purchase");
 
 router.get("/", purchasesView);
 
-async function purchasesView(req, res, next) {
+async function purchasesView(request, response, next) {
     try {
-        let storeId = req.user.userStore.storeId;
+        let storeId = request.user.userStore.storeId;
         let resultPurchases = await Purchase.find({
             storeId: storeId,
             done: 1,
         }).sort({ _id: -1 });
-        res.render("purchasesView", {
-            storeInfo: req.user.userStore,
+        response.render("purchasesView", {
+            storeInfo: request.user.userStore,
             resultPurchases: resultPurchases,
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

@@ -6,8 +6,8 @@ if (result.error) {
 module.exports = {
     HOST: process.env.HOST,
     PORT: process.env.PORT,
-    MONGO_DB: process.env.MONGO_DB,
-    ECOMMERCE_DB: process.env.ECOMMERCE_DB,
+    DATABASE_NAME: process.env.DATABASE_NAME,
+    DATABASE_ADDRESS: process.env.DATABASE_ADDRESS,
     JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY,
     MERCHANT_ID: process.env.MERCHANT_ID,
     SITE_KEY_RECAPTCHA: process.env.SITE_KEY_RECAPTCHA,

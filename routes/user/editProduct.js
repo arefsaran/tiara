@@ -3,21 +3,21 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 let ObjectId = require("mongodb").ObjectID;
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (request, file, cb) => {
         cb(null, "static/uploads/products/images/");
     },
-    filename: (req, file, cb) => {
+    filename: (request, file, cb) => {
         // cb(null, file.originalname);
         cb(
             null,
-            req.user.userStore.storeId +
+            request.user.userStore.storeId +
                 "_" +
                 Math.random() +
                 "_" +
@@ -30,17 +30,16 @@ const upload = multer({ storage: storage });
 router.get("/", editProduct);
 router.post("/", upload.single("productPicture"), editProductAPI);
 
-async function editProduct(req, res, next) {
+async function editProduct(request, response, next) {
     try {
-        const token = req.query.userToken || req.query.userTokenHide;
-        let { productId } = req.query;
-        let collectionName = req.user.userStore.storeId;
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        const token = request.query.userToken || request.query.userTokenHide;
+        let { productId } = request.query;
+        let collectionName = request.user.userStore.storeId;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultProducts = await ecommerce
             .collection(collectionName)
             .find({ _id: ObjectId(productId) })
@@ -49,16 +48,16 @@ async function editProduct(req, res, next) {
             .collection("category")
             .find()
             .toArray();
-        res.render("editProduct", {
+        response.render("editProduct", {
             product: resultProducts[0],
-            storeInfo: req.user.userStore,
+            storeInfo: request.user.userStore,
             resultCategories: resultCategories,
             productEdited: 0,
             token: token,
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -67,7 +66,7 @@ async function editProduct(req, res, next) {
     }
 }
 
-async function editProductAPI(req, res, next) {
+async function editProductAPI(request, response, next) {
     try {
         let {
             productId,
@@ -80,9 +79,9 @@ async function editProductAPI(req, res, next) {
             categoryName,
             inStock,
             productDetail,
-        } = req.body;
-        let collectionName = req.user.userStore.storeId;
-        const token = req.query.userToken || req.query.userTokenHide;
+        } = request.body;
+        let collectionName = request.user.userStore.storeId;
+        const token = request.query.userToken || request.query.userTokenHide;
         function updateFunction(name, query) {
             mongoose.connection.db.collection(name, function (err, collection) {
                 collection.updateOne(
@@ -94,8 +93,10 @@ async function editProductAPI(req, res, next) {
         if (collectionName) {
             let productPicture = "";
             let query = {};
-            if (req.file != undefined) {
-                productPicture = req.file.path.replace(/\\/g, "/").substr(7);
+            if (request.file != undefined) {
+                productPicture = request.file.path
+                    .replace(/\\/g, "/")
+                    .substr(7);
                 query = {
                     productName: persianJs(productName)
                         .englishNumber()
@@ -156,13 +157,11 @@ async function editProductAPI(req, res, next) {
                 };
             }
             updateFunction(collectionName, query);
-
-            let dbName = "ecommerce";
-            const client = await MongoClient.connect(MONGO_DB, {
+            const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            let ecommerce = client.db(dbName);
+            let ecommerce = client.db(DATABASE_NAME);
             let resultProducts = await ecommerce
                 .collection(collectionName)
                 .find({ _id: ObjectId(productId) })
@@ -171,9 +170,9 @@ async function editProductAPI(req, res, next) {
                 .collection("category")
                 .find()
                 .toArray();
-            res.render("editProduct", {
+            response.render("editProduct", {
                 product: resultProducts[0],
-                storeInfo: req.user.userStore,
+                storeInfo: request.user.userStore,
                 resultCategories: resultCategories,
                 productEdited: 1,
                 token: token,
@@ -181,7 +180,7 @@ async function editProductAPI(req, res, next) {
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

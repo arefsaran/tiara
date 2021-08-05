@@ -1,20 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const ObjectId = require("mongoose").Types.ObjectId;
 router.get("/", productPage);
 
-async function productPage(req, res, next) {
+async function productPage(request, response, next) {
     try {
-        let collectionName = req.store.userStore.storeId;
-        let dbName = "ecommerce";
-        let { productId } = req.query;
-        const client = await MongoClient.connect(MONGO_DB, {
+        let collectionName = request.store.userStore.storeId;
+        let { productId } = request.query;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection("category")
             .find({ storeId: collectionName })
@@ -23,14 +22,14 @@ async function productPage(req, res, next) {
             .collection(collectionName)
             .find({ _id: ObjectId(productId) })
             .toArray();
-        res.render("product", {
+        response.render("product", {
             resultCategories: resultCategories,
-            storeInfo: req.store.userStore,
+            storeInfo: request.store.userStore,
             resultProduct: resultProduct[0],
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

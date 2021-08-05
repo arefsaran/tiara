@@ -12,10 +12,10 @@ const apiToken = "{api-token-given-by-BotFather}";
 
 router.post("/", telegramBot);
 
-async function telegramBot(req, res, next) {
+async function telegramBot(request, response, next) {
     try {
-        const chatId = req.body.message.chat.id;
-        const sentMessage = req.body.message.text;
+        const chatId = request.body.message.chat.id;
+        const sentMessage = request.body.message.text;
         // Regex for hello
         if (sentMessage.match(/hello/gi)) {
             axios
@@ -29,14 +29,14 @@ async function telegramBot(req, res, next) {
                     }
                 )
                 .then((response) => {
-                    res.status(200).send(response);
+                    response.status(200).send(response);
                 })
                 .catch((error) => {
-                    res.send(error);
+                    response.send(error);
                 });
         } else {
             // if no hello present, just respond with 200
-            res.status(200).send({});
+            response.status(200).send({});
         }
         next();
     } catch (error) {

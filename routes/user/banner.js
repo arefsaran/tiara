@@ -3,21 +3,21 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
-    destination: (req, file, cb) => {
+    destination: (request, file, cb) => {
         cb(null, "static/uploads/banners/");
     },
-    filename: (req, file, cb) => {
+    filename: (request, file, cb) => {
         // cb(null, file.originalname);
         cb(
             null,
-            req.user.userStore.storeId +
+            request.user.userStore.storeId +
                 "_" +
                 Math.random() +
                 "_" +
@@ -31,17 +31,16 @@ router.get("/", uploadBannerView);
 router.post("/", upload.array("bannerPictures", 3), uploadBannerFunction);
 router.get("/delete", deleteBanner);
 
-async function uploadBannerView(req, res) {
+async function uploadBannerView(request, response) {
     try {
-        let storeId = req.user.userStore.storeId;
-        let token = req.query.userToken;
+        let storeId = request.user.userStore.storeId;
+        let token = request.query.userToken;
         let collectionName = "banner";
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultBanners = await ecommerce
             .collection(collectionName)
             .find({ storeId: storeId })
@@ -50,14 +49,14 @@ async function uploadBannerView(req, res) {
         if (resultBanners.length == 0) {
             bannerUploaded = "2";
         }
-        res.render("banner", {
-            storeInfo: req.user.userStore,
+        response.render("banner", {
+            storeInfo: request.user.userStore,
             resultBanners: resultBanners,
             bannerUploaded: bannerUploaded,
             token: token,
         });
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -66,12 +65,12 @@ async function uploadBannerView(req, res) {
     }
 }
 
-async function uploadBannerFunction(req, res, next) {
+async function uploadBannerFunction(request, response, next) {
     try {
-        let pictures = req.files;
-        let token = req.query.userToken;
+        let pictures = request.files;
+        let token = request.query.userToken;
         let collectionName = "banner";
-        let storeId = req.user.userStore.storeId;
+        let storeId = request.user.userStore.storeId;
         function insertFunction(collectionName, query) {
             mongoose.connection.db.collection(collectionName, function (
                 err,
@@ -89,25 +88,24 @@ async function uploadBannerFunction(req, res, next) {
                 };
                 insertFunction(collectionName, query);
             });
-            let dbName = "ecommerce";
-            const client = await MongoClient.connect(MONGO_DB, {
+            const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            let ecommerce = client.db(dbName);
+            let ecommerce = client.db(DATABASE_NAME);
             let resultBanners = await ecommerce
                 .collection("banner")
                 .find()
                 .toArray();
-            res.render("banner", {
-                storeInfo: req.user.userStore,
+            response.render("banner", {
+                storeInfo: request.user.userStore,
                 resultBanners: resultBanners,
                 bannerUploaded: "1",
                 token: token,
             });
         } else if (!bannerName && storeId) {
-            res.render("banner", {
-                storeInfo: req.user.userStore,
+            response.render("banner", {
+                storeInfo: request.user.userStore,
                 resultBanners: [],
                 bannerUploaded: "2",
                 token: token,
@@ -116,7 +114,7 @@ async function uploadBannerFunction(req, res, next) {
         return;
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -125,18 +123,17 @@ async function uploadBannerFunction(req, res, next) {
     }
 }
 
-async function deleteBanner(req, res, next) {
+async function deleteBanner(request, response, next) {
     try {
         let collectionName = "banner";
-        let storeId = req.user.userStore.storeId;
-        const token = req.query.userToken || req.query.userTokenHide;
-        const { deleteBannerId } = req.query;
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        let storeId = request.user.userStore.storeId;
+        const token = request.query.userToken || request.query.userTokenHide;
+        const { deleteBannerId } = request.query;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         mongoose.connection.db.collection(collectionName, (err, collection) => {
             collection.deleteOne({ _id: ObjectId(deleteBannerId) });
         });
@@ -144,15 +141,15 @@ async function deleteBanner(req, res, next) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
-        res.render("banner", {
-            storeInfo: req.user.userStore,
+        response.render("banner", {
+            storeInfo: request.user.userStore,
             resultBanners: resultBanners,
             token: token,
             bannerUploaded: "1",
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

@@ -1,12 +1,11 @@
 const { User } = require("../../models/user");
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
-async function adminDashboardView(req, res, next) {
+async function adminDashboardView(request, response, next) {
     try {
-        let adminToken = req.query.adminToken;
+        let adminToken = request.query.adminToken;
         let collectionName = "users";
-        let dbName = "ecommerce";
         let nowISO = new Date();
         let lastMonthSalesTotalPrice = 0;
         let totalPrice = 0;
@@ -18,11 +17,11 @@ async function adminDashboardView(req, res, next) {
         let lastMonthSalesQuery = {
             createdAt: { $lt: nowISO, $gt: lastMonthISO },
         };
-        const client = await MongoClient.connect(MONGO_DB, {
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let lastMonthSales = await ecommerce
             .collection(collectionName)
             .find(lastMonthSalesQuery)
@@ -40,10 +39,10 @@ async function adminDashboardView(req, res, next) {
         client.close();
         let numberOfUsers = await User.find({}).countDocuments();
         let users = await User.find({}).sort({ _id: -1 }).limit(5);
-        res.render("adminDashboard", {
+        response.render("adminDashboard", {
             numberOfUsers: numberOfUsers,
             users: users,
-            adminInfo: req.admin.firstName,
+            adminInfo: request.admin.firstName,
             lastMonthSalesTotalPrice: lastMonthSalesTotalPrice,
             lastMonthSalesCount: lastMonthSales.length,
             totalPriceOfUsers: totalPrice,
@@ -51,7 +50,7 @@ async function adminDashboardView(req, res, next) {
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

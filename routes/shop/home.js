@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const {
-    MONGO_DB,
+    DATABASE_ADDRESS,
     SECRET_KEY_RECAPTCHA,
-    TIARA_EMAIL_PASSWORD,
+    EMAIL_PASSWORD,
+    DATABASE_NAME,
 } = require("../../config/config");
 const nodemailer = require("nodemailer");
 const fetch = require("node-fetch");
@@ -14,12 +15,12 @@ router.get("/", homeViewFunction);
 router.get("/contactUs", contactUs);
 router.post("/", sendEmail);
 
-async function contactUs(req, res, next) {
+async function contactUs(request, response, next) {
     try {
-        res.render("contactUs");
+        response.render("contactUs");
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -27,16 +28,15 @@ async function contactUs(req, res, next) {
         });
     }
 }
-async function homeViewFunction(req, res, next) {
+async function homeViewFunction(request, response, next) {
     try {
         let collectionName = "category";
-        let dbName = "ecommerce";
-        let storeId = req.store.userStore.storeId;
-        const client = await MongoClient.connect(MONGO_DB, {
+        let storeId = request.store.userStore.storeId;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection(collectionName)
             .find({ storeId: storeId })
@@ -45,14 +45,14 @@ async function homeViewFunction(req, res, next) {
             .collection("banner")
             .find({ storeId: storeId })
             .toArray();
-        return res.render("home", {
+        return response.render("home", {
             resultCategories: resultCategories,
             resultBanner: resultBanner,
-            storeInfo: req.store.userStore,
+            storeInfo: request.store.userStore,
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -61,12 +61,12 @@ async function homeViewFunction(req, res, next) {
     }
 }
 
-async function sendEmail(req, res, next) {
+async function sendEmail(request, response, next) {
     try {
-        console.log("req.body", req.body);
-        console.log("req.query", req.query);
-        if (!req.body.captcha) {
-            return res.json({
+        console.log("request.body", request.body);
+        console.log("request.query", request.query);
+        if (!request.body.captcha) {
+            return response.json({
                 success: false,
                 msg: "لطفا تیک من ربات نیستم را بزنید",
             });
@@ -74,16 +74,16 @@ async function sendEmail(req, res, next) {
         // Verify URL
         const query = stringify({
             secret: SECRET_KEY_RECAPTCHA,
-            response: req.body.captcha,
-            remoteip: req.connection.remoteAddress,
+            response: request.body.captcha,
+            remoteip: request.connection.remoteAddress,
         });
         const verifyURL = `https://google.com/recaptcha/api/siteverify?${query}`;
 
         // Make a request to verifyURL
-        const body = fetch(verifyURL).then((res) => res.json());
+        const body = fetch(verifyURL).then((response) => response.json());
         // If not successful
         if (body.success !== undefined && !body.success) {
-            return res.json({
+            return response.json({
                 success: false,
                 msg: "Failed captcha verification",
             });
@@ -93,7 +93,7 @@ async function sendEmail(req, res, next) {
             customerEmail,
             customerSubject,
             customerMessage,
-        } = req.body;
+        } = request.body;
 
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
@@ -101,7 +101,7 @@ async function sendEmail(req, res, next) {
             secure: false, // true for 465, false for other ports
             auth: {
                 user: "tiaraplatform@gmail.com", // generated ethereal user
-                pass: TIARA_EMAIL_PASSWORD, // generated ethereal password
+                pass: EMAIL_PASSWORD, // generated ethereal password
             },
         });
 
@@ -143,10 +143,10 @@ async function sendEmail(req, res, next) {
             transporter.close();
         });
         let msgSend = "پیام شما با موفقیت ارسال شد";
-        return res.json({ success: false, msg: msgSend });
+        return response.json({ success: false, msg: msgSend });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

@@ -6,12 +6,12 @@ const bcrypt = require("bcryptjs");
 router.get("/", logInView);
 router.post("/", logInFunction);
 
-async function logInView(req, res, next) {
+async function logInView(request, response, next) {
     try {
-        res.render("logIn", { error: "" });
+        response.render("logIn", { error: "" });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -20,40 +20,40 @@ async function logInView(req, res, next) {
     }
 }
 
-async function logInFunction(req, res, next) {
+async function logInFunction(request, response, next) {
     try {
-        if (req.body.userEmail === "enamad") {
-            req.body.userEmail = "enamad@gmail.com";
+        if (request.body.userEmail === "enamad") {
+            request.body.userEmail = "enamad@gmail.com";
         }
         const { error } = validateLogin({
-            userEmail: req.body.userEmail.toLowerCase(),
-            userPassword: req.body.userPassword,
+            userEmail: request.body.userEmail.toLowerCase(),
+            userPassword: request.body.userPassword,
         });
         if (error) {
-            res.render("logIn", {
+            response.render("logIn", {
                 error: `${error}`,
             });
         } else {
             let user = await User.findOne({
-                userEmail: req.body.userEmail.toLowerCase(),
+                userEmail: request.body.userEmail.toLowerCase(),
             });
             if (!user) {
-                res.render("logIn", {
+                response.render("logIn", {
                     error: "ایمیل یا رمز عبور اشتباه است",
                 });
             } else {
                 const validPassword = await bcrypt.compare(
-                    req.body.userPassword,
+                    request.body.userPassword,
                     user.userPassword
                 );
                 if (validPassword) {
                     const token = user.generateAuthToken();
-                    // res.render("dashboard", {
+                    // response.render("dashboard", {
                     //     userToken: token,
                     // });
-                    res.redirect(`/user/dashboard?userToken=${token}`);
+                    response.redirect(`/user/dashboard?userToken=${token}`);
                 } else {
-                    res.render("logIn", {
+                    response.render("logIn", {
                         error: "ایمیل یا رمز عبور اشتباه است",
                     });
                 }
@@ -61,7 +61,7 @@ async function logInFunction(req, res, next) {
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

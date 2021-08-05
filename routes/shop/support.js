@@ -3,12 +3,12 @@ const router = express.Router();
 
 router.get("/", supportView);
 
-async function supportView(req, res, next) {
+async function supportView(request, response, next) {
     try {
-        res.render("support", { storeInfo: req.store.userStore });
+        response.render("support", { storeInfo: request.store.userStore });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

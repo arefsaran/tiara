@@ -1,36 +1,36 @@
 const { render } = require("ejs");
 const { User } = require("../models/user");
 
-module.exports.subDomainChecker = async function (req, res, next) {
+module.exports.subDomainChecker = async function (request, response, next) {
     try {
-        let subDomain = req.headers["x-subdomain"];
-        let localSubDomain = req.header("host").split(".").slice(-2)[0];
+        let subDomain = request.headers["x-subdomain"];
+        let localSubDomain = request.header("host").split(".").slice(-2)[0];
         if (!subDomain) {
             subDomain = localSubDomain;
         }
         if (subDomain === "www" || subDomain == 0) {
-            if (req.originalUrl === "/aboutUs") {
-                return res.render("aboutUs");
-            } else if (req.originalUrl === "/terms") {
-                return res.render("terms");
+            if (request.originalUrl === "/aboutUs") {
+                return response.render("aboutUs");
+            } else if (request.originalUrl === "/terms") {
+                return response.render("terms");
             } else {
-                return res.render("landing");
+                return response.render("landing");
             }
         } else {
             let store = await User.findOne({
                 "userStore.storeId": subDomain,
             });
             if (store) {
-                req.store = store;
+                request.store = store;
             } else {
-                return res.render("404", {
+                return response.render("404", {
                     error: "فروشگاه مورد نظر یافت نشد.",
                 });
             }
         }
         next();
     } catch (error) {
-        res.render("404");
-        // res.render("login",{error: error});
+        response.render("404");
+        // response.render("login",{error: error});
     }
 };

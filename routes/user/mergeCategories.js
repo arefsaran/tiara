@@ -2,22 +2,21 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { MONGO_DB } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
 router.get("/", mergeCategoriesView);
 router.post("/", mergeCategories);
 
-async function mergeCategoriesView(req, res, next) {
+async function mergeCategoriesView(request, response, next) {
     try {
-        const token = req.query.userToken || req.query.userTokenHide;
+        const token = request.query.userToken || request.query.userTokenHide;
         let collectionName = "category";
-        let storeId = req.user.userStore.storeId;
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        let storeId = request.user.userStore.storeId;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(dbName);
+        let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
             .collection(collectionName)
             .find({ storeId: storeId })
@@ -35,8 +34,8 @@ async function mergeCategoriesView(req, res, next) {
             originCategory = resultCategories[0].categoryName;
             destinationCategory = resultCategories[0].categoryName;
         }
-        res.render("mergeCategories", {
-            storeInfo: req.user.userStore,
+        response.render("mergeCategories", {
+            storeInfo: request.user.userStore,
             mergeCategories: 0,
             error: errorType,
             originCategory: originCategory,
@@ -46,7 +45,7 @@ async function mergeCategoriesView(req, res, next) {
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -54,14 +53,13 @@ async function mergeCategoriesView(req, res, next) {
         });
     }
 }
-async function mergeCategories(req, res, next) {
+async function mergeCategories(request, response, next) {
     try {
         let collectionName = "category";
-        let storeId = req.user.userStore.storeId;
-        const token = req.query.userToken || req.query.userTokenHide;
-        const { originCategory, destinationCategory } = req.body;
-        let dbName = "ecommerce";
-        const client = await MongoClient.connect(MONGO_DB, {
+        let storeId = request.user.userStore.storeId;
+        const token = request.query.userToken || request.query.userTokenHide;
+        const { originCategory, destinationCategory } = request.body;
+        const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -70,7 +68,7 @@ async function mergeCategories(req, res, next) {
             destinationCategory &&
             originCategory !== destinationCategory
         ) {
-            let ecommerce = client.db(dbName);
+            let ecommerce = client.db(DATABASE_NAME);
             mongoose.connection.db.collection(storeId, (err, collection) => {
                 collection.updateMany(
                     { categoryName: originCategory },
@@ -90,8 +88,8 @@ async function mergeCategories(req, res, next) {
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
-            res.render("mergeCategories", {
-                storeInfo: req.user.userStore,
+            response.render("mergeCategories", {
+                storeInfo: request.user.userStore,
                 mergeCategories: 1,
                 error: 0,
                 originCategory: originCategory,
@@ -106,13 +104,13 @@ async function mergeCategories(req, res, next) {
                 .toArray();
             console.log(
                 "storeInfo, originCategory,destinationCategory,resultCategories",
-                req.user.userStore,
+                request.user.userStore,
                 originCategory,
                 destinationCategory,
                 resultCategories
             );
-            res.render("mergeCategories", {
-                storeInfo: req.user.userStore,
+            response.render("mergeCategories", {
+                storeInfo: request.user.userStore,
                 mergeCategories: 0,
                 error: 1,
                 originCategory: originCategory,
@@ -123,7 +121,7 @@ async function mergeCategories(req, res, next) {
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },

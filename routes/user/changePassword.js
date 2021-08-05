@@ -8,11 +8,11 @@ const { User } = require("../../models/user");
 router.get("/", changePasswordView);
 router.post("/", changePassword);
 
-async function changePasswordView(req, res, next) {
+async function changePasswordView(request, response, next) {
     try {
-        let storeInfo = req.user.userStore;
-        const token = req.query.userToken || req.query.userTokenHide;
-        res.render("changePassword", {
+        let storeInfo = request.user.userStore;
+        const token = request.query.userToken || request.query.userTokenHide;
+        response.render("changePassword", {
             error: "",
             passwordChanged: 0,
             token: token,
@@ -20,7 +20,7 @@ async function changePasswordView(req, res, next) {
         });
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
@@ -28,13 +28,13 @@ async function changePasswordView(req, res, next) {
         });
     }
 }
-async function changePassword(req, res, next) {
+async function changePassword(request, response, next) {
     try {
-        let { oldPassword, newPassword, newPassword2 } = req.body;
-        const token = req.query.userToken;
+        let { oldPassword, newPassword, newPassword2 } = request.body;
+        const token = request.query.userToken;
         if (newPassword === newPassword2) {
             if (newPassword.length > 3) {
-                let user = req.user;
+                let user = request.user;
                 if (user.userPassword.length > 0) {
                     const validPassword = await bcrypt.compare(
                         oldPassword,
@@ -47,14 +47,14 @@ async function changePassword(req, res, next) {
                             { _id: ObjectId(user._id) },
                             { $set: { userPassword: newHash } }
                         );
-                        res.render("changePassword", {
+                        response.render("changePassword", {
                             error: "",
                             passwordChanged: 1,
                             token: token,
                             storeInfo: storeInfo,
                         });
                     } else {
-                        res.render("changePassword", {
+                        response.render("changePassword", {
                             error: "رمز عبور قدیمی اشتباه است.",
                             passwordChanged: 0,
                             token: token,
@@ -63,7 +63,7 @@ async function changePassword(req, res, next) {
                     }
                 }
             } else {
-                res.render("changePassword", {
+                response.render("changePassword", {
                     error: "رمزعبور باید حداقل 4 کاراکتر باشد.",
                     passwordChanged: 0,
                     token: token,
@@ -71,7 +71,7 @@ async function changePassword(req, res, next) {
                 });
             }
         } else {
-            res.render("changePassword", {
+            response.render("changePassword", {
                 error: "رمزعبور جدید را درست تکرار کنید.",
                 passwordChanged: 0,
                 token: token,
@@ -80,7 +80,7 @@ async function changePassword(req, res, next) {
         }
         next();
     } catch (error) {
-        res.json({
+        response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
