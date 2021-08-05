@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
             null,
             request.user.userStore.storeId +
                 "_" +
-                Math.random() +
+                Math.random() * 900000 +
                 "_" +
                 file.originalname
         );
@@ -45,7 +45,7 @@ async function editProduct(request, response, next) {
             .find({ _id: ObjectId(productId) })
             .toArray();
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find()
             .toArray();
         response.render("editProduct", {
@@ -167,7 +167,7 @@ async function editProductAPI(request, response, next) {
                 .find({ _id: ObjectId(productId) })
                 .toArray();
             let resultCategories = await ecommerce
-                .collection("category")
+                .collection("categories")
                 .find()
                 .toArray();
             response.render("editProduct", {

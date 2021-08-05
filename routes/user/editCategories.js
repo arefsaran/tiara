@@ -7,7 +7,7 @@ router.get("/", categoriesPage);
 
 async function categoriesPage(request, response, next) {
     try {
-        let collectionName = "category";
+        let collectionName = "categories";
         let storeId = request.user.userStore.storeId;
         const token = request.query.userToken || request.query.userTokenHide;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {

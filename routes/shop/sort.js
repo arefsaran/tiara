@@ -40,7 +40,7 @@ function sortAPI(request, response) {
                 });
                 let ecommerce = client.db(DATABASE_NAME);
                 let resultCategories = await ecommerce
-                    .collection("category")
+                    .collection("categories")
                     .find({ storeId: storeId })
                     .toArray();
                 response.render("products", {

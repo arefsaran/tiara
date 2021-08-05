@@ -19,7 +19,7 @@ async function productsPage(request, response, next) {
             .find({ categoryName: categoryName, inStock: { $gt: 0 } })
             .toArray();
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
         response.render("products", {

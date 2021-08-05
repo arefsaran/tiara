@@ -14,7 +14,7 @@ async function customerInfoView(request, response, next) {
         });
         let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
         if (error) {

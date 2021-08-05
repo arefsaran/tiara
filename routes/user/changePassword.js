@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 let ObjectId = require("mongodb").ObjectID;
-const mongoose = require("mongoose");
 const { User } = require("../../models/user");
 
 router.get("/", changePasswordView);

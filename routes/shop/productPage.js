@@ -15,7 +15,7 @@ async function productPage(request, response, next) {
         });
         let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
         let resultProduct = await ecommerce

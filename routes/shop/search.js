@@ -16,7 +16,7 @@ async function searchAPI(request, response, next) {
         });
         let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find({ storeId: storeId })
             .toArray();
         let { productNameForSearch, productIdForSearch } = request.query;
@@ -86,15 +86,6 @@ async function searchAPI(request, response, next) {
                             totalResult
                         );
                     }
-                    // totalResult = totalResult.flat(1);
-                    // response.json({
-                    //     status: 200,
-                    //     message: "The request has succeeded",
-                    //     data: {
-                    //         listOfProducts: totalResult,
-                    //     },
-                    //     address: "POST:/search",
-                    // });
                     response.render("products", {
                         sort: 0,
                         storeInfo: request.store.userStore,

@@ -6,7 +6,6 @@ const routes = require("./routes");
 const { User } = require("./models/user");
 const path = require("path");
 const { PORT, HOST, DATABASE_ADDRESS } = require("./config/config");
-// const { MongoClient } = require("mongodb");
 
 app.use((request, response, next) => {
     response.setHeader("Access-control-Allow-Origin", "*");
@@ -39,7 +38,6 @@ let CronJob = require("cron").CronJob;
 let job = new CronJob(
     "30 11 * * *",
     function () {
-        // console.log("You will see this message every second");
         User.updateMany(
             { "userStore.storePlan.planTimeToExpiry": { $gte: 1 } },
             { $inc: { "userStore.storePlan.planTimeToExpiry": -1 } },
@@ -60,15 +58,7 @@ mongoose
     .then(() => console.log("connected to MongoDB/mongoose"))
     .catch((err) => console.log("could not connect to MongoDB", err));
 mongoose.set("useCreateIndex", true);
-// MongoClient.connect(
-//     "mongodb://localhost:27017/ecommerce",
-//     { useUnifiedTopology: true },
-//     function (err, db) {
-//         if (err) throw err;
-//         console.log("connected to MongoDB");
-//         //Write databse Insert/Update/Query code here..
-//     }
-// );
+
 const server = app.listen(PORT, HOST, function () {
     let HOST = server.address().address;
     let PORT = server.address().port;

@@ -10,7 +10,7 @@ router.post("/", mergeCategories);
 async function mergeCategoriesView(request, response, next) {
     try {
         const token = request.query.userToken || request.query.userTokenHide;
-        let collectionName = "category";
+        let collectionName = "categories";
         let storeId = request.user.userStore.storeId;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
@@ -55,7 +55,7 @@ async function mergeCategoriesView(request, response, next) {
 }
 async function mergeCategories(request, response, next) {
     try {
-        let collectionName = "category";
+        let collectionName = "categories";
         let storeId = request.user.userStore.storeId;
         const token = request.query.userToken || request.query.userTokenHide;
         const { originCategory, destinationCategory } = request.body;

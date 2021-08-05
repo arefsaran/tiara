@@ -4,7 +4,6 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
-const { Category } = require("../../models/category");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
@@ -17,7 +16,7 @@ const storage = multer.diskStorage({
             null,
             request.user.userStore.storeId +
                 "_" +
-                Math.random() +
+                Math.random() * 900000 +
                 "_" +
                 file.originalname
         );
@@ -49,7 +48,7 @@ async function uploadCategoryFunction(request, response, next) {
     try {
         let { categoryName } = request.body;
         let storeId = request.user.userStore.storeId;
-        let collectionName = "category";
+        let collectionName = "categories";
         function insertFunction(collectionName, query) {
             mongoose.connection.db.collection(collectionName, async function (
                 err,

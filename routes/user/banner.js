@@ -4,7 +4,6 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
-const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
@@ -19,7 +18,7 @@ const storage = multer.diskStorage({
             null,
             request.user.userStore.storeId +
                 "_" +
-                Math.random() +
+                Math.random() * 900000 +
                 "_" +
                 file.originalname
         );
@@ -35,7 +34,7 @@ async function uploadBannerView(request, response, next) {
     try {
         let storeId = request.user.userStore.storeId;
         let token = request.query.userToken;
-        let collectionName = "banner";
+        let collectionName = "banners";
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -49,7 +48,7 @@ async function uploadBannerView(request, response, next) {
         if (resultBanners.length == 0) {
             bannerUploaded = "2";
         }
-        response.render("banner", {
+        response.render("banners", {
             storeInfo: request.user.userStore,
             resultBanners: resultBanners,
             bannerUploaded: bannerUploaded,
@@ -70,7 +69,7 @@ async function uploadBannerFunction(request, response, next) {
     try {
         let pictures = request.files;
         let token = request.query.userToken;
-        let collectionName = "banner";
+        let collectionName = "banners";
         let storeId = request.user.userStore.storeId;
         function insertFunction(collectionName, query) {
             mongoose.connection.db.collection(collectionName, function (
@@ -94,17 +93,17 @@ async function uploadBannerFunction(request, response, next) {
             });
             let ecommerce = client.db(DATABASE_NAME);
             let resultBanners = await ecommerce
-                .collection("banner")
+                .collection("banners")
                 .find()
                 .toArray();
-            response.render("banner", {
+            response.render("banners", {
                 storeInfo: request.user.userStore,
                 resultBanners: resultBanners,
                 bannerUploaded: "1",
                 token: token,
             });
         } else if (!bannerName && storeId) {
-            response.render("banner", {
+            response.render("banners", {
                 storeInfo: request.user.userStore,
                 resultBanners: [],
                 bannerUploaded: "2",
@@ -125,7 +124,7 @@ async function uploadBannerFunction(request, response, next) {
 
 async function deleteBanner(request, response, next) {
     try {
-        let collectionName = "banner";
+        let collectionName = "banners";
         let storeId = request.user.userStore.storeId;
         const token = request.query.userToken || request.query.userTokenHide;
         const { deleteBannerId } = request.query;
@@ -141,7 +140,7 @@ async function deleteBanner(request, response, next) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
-        response.render("banner", {
+        response.render("banners", {
             storeInfo: request.user.userStore,
             resultBanners: resultBanners,
             token: token,

@@ -9,7 +9,7 @@ router.get("/", deleteCategory);
 
 async function deleteCategory(request, response, next) {
     try {
-        let collectionName = "category";
+        let collectionName = "categories";
         let storeId = request.user.userStore.storeId;
         const token = request.query.userToken || request.query.userTokenHide;
         const { deleteCategoryId, categoryName } = request.query;

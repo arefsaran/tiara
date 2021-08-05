@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
-const { Category } = require("../../models/category");
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
@@ -19,7 +18,7 @@ const storage = multer.diskStorage({
             null,
             request.user.userStore.storeId +
                 "_" +
-                Math.random() +
+                Math.random() * 900000 +
                 "_" +
                 file.originalname
         );
@@ -33,7 +32,7 @@ router.post("/", upload.single("productPicture"), uploadProductFunction);
 async function uploadProductView(request, response, next) {
     try {
         let storeId = request.user.userStore.storeId;
-        let collectionName = "category";
+        let collectionName = "categories";
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -120,7 +119,7 @@ async function uploadProductFunction(request, response, next) {
             });
             let ecommerce = client.db(DATABASE_NAME);
             let resultCategories = await ecommerce
-                .collection("category")
+                .collection("categories")
                 .find()
                 .toArray();
             response.render("uploadProduct", {

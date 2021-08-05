@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
             null,
             request.user.userStore.storeId +
                 "_" +
-                Math.random() +
+                Math.random() * 900000 +
                 "_" +
                 file.originalname
         );
@@ -34,7 +34,7 @@ async function editCategory(request, response, next) {
     try {
         const token = request.query.userToken || request.query.userTokenHide;
         let { categoryId } = request.query;
-        let collectionName = "category";
+        let collectionName = "categories";
         let storeId = request.user.userStore.storeId;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
@@ -46,7 +46,7 @@ async function editCategory(request, response, next) {
             .find({ _id: ObjectId(categoryId) })
             .toArray();
         response.render("editCategory", {
-            category: resultCategory[0],
+            categories: resultCategory[0],
             storeInfo: request.user.userStore,
             categoryEdited: 0,
             token: token,
@@ -66,7 +66,7 @@ async function editCategoryAPI(request, response, next) {
     try {
         let { categoryId, categoryName, newCategoryName } = request.body;
         let storeId = request.user.userStore.storeId;
-        let collectionName = "category";
+        let collectionName = "categories";
         const token = request.query.userToken || request.query.userTokenHide;
         function updateFunction(query) {
             mongoose.connection.db.collection(collectionName, function (
@@ -123,7 +123,7 @@ async function editCategoryAPI(request, response, next) {
                 .find({ _id: ObjectId(categoryId) })
                 .toArray();
             response.render("editCategory", {
-                category: resultCategory[0],
+                categories: resultCategory[0],
                 storeInfo: request.user.userStore,
                 categoryEdited: 1,
                 token: token,

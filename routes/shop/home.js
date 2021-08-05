@@ -30,7 +30,7 @@ async function contactUs(request, response, next) {
 }
 async function homeViewFunction(request, response, next) {
     try {
-        let collectionName = "category";
+        let collectionName = "categories";
         let storeId = request.store.userStore.storeId;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
@@ -42,7 +42,7 @@ async function homeViewFunction(request, response, next) {
             .find({ storeId: storeId })
             .toArray();
         let resultBanner = await ecommerce
-            .collection("banner")
+            .collection("banners")
             .find({ storeId: storeId })
             .toArray();
         return response.render("home", {

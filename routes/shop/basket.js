@@ -16,7 +16,7 @@ async function basketView(request, response, next) {
         });
         let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
         response.render("basket", {
@@ -59,7 +59,7 @@ async function basketFunction(request, response, next) {
         });
         let ecommerce = client.db(DATABASE_NAME);
         let resultCategories = await ecommerce
-            .collection("category")
+            .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
         let basketProducts = await ecommerce
