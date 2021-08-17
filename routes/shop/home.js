@@ -24,7 +24,7 @@ async function contactUs(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/landing",
+            path: "GET:/landing",
         });
     }
 }
@@ -36,12 +36,12 @@ async function homeViewFunction(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
-        let resultBanner = await ecommerce
+        let resultBanner = await databaseClient
             .collection("banners")
             .find({ storeId: storeId })
             .toArray();
@@ -56,7 +56,7 @@ async function homeViewFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/",
+            path: "GET:/",
         });
     }
 }
@@ -150,7 +150,7 @@ async function sendEmail(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/",
+            path: "POST:/",
         });
     }
 }

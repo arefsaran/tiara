@@ -58,7 +58,7 @@ async function pay(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/zarinpal/payment",
+            path: "POST:/zarinpal/payment",
         });
     }
 }
@@ -120,7 +120,7 @@ async function checker(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/zarinpal/checker",
+            path: "POST:/zarinpal/checker",
         });
     }
 }

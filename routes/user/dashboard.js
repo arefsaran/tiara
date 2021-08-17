@@ -12,7 +12,7 @@ async function dashboardView(request, response, next) {
         let storeId = request.user.userStore.storeId;
         let collectionName = "purchases";
         let nowISO = new Date();
-        let lastMonthSalesTotalPrice = 0;
+        let lastMonthSalesAmount = 0;
         let totalPrice = 0;
         let lastMonthISO = new Date(
             nowISO.getFullYear(),
@@ -29,18 +29,17 @@ async function dashboardView(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
+        let databaseClient = client.db(DATABASE_NAME);
 
-        let lastMonthSales = await ecommerce
+        let lastMonthSales = await databaseClient
             .collection(collectionName)
             .find(lastMonthSalesQuery, { totalPrice: 1 })
             .toArray();
         lastMonthSales.forEach((sale) => {
-            lastMonthSalesTotalPrice =
-                lastMonthSalesTotalPrice + sale.totalPrice;
+            lastMonthSalesAmount = lastMonthSalesAmount + sale.totalPrice;
         });
 
-        let totalSales = await ecommerce
+        let totalSales = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId, done: 1 }, { totalPrice: 1 })
             .toArray();
@@ -62,7 +61,7 @@ async function dashboardView(request, response, next) {
             numberOfPurchases: numberOfPurchases,
             storeInfo: request.user.userStore,
             purchases: purchases,
-            lastMonthSalesTotalPrice: lastMonthSalesTotalPrice,
+            lastMonthSalesAmount: lastMonthSalesAmount,
             totalPriceOfPurchases: totalPrice,
             userToken: userToken,
         });
@@ -72,7 +71,7 @@ async function dashboardView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/dashboard",
+            path: "GET:/user/dashboard",
         });
     }
 }

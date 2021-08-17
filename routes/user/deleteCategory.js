@@ -17,14 +17,14 @@ async function deleteCategory(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
+        let databaseClient = client.db(DATABASE_NAME);
         mongoose.connection.db.collection(collectionName, (err, collection) => {
             collection.deleteOne({ _id: ObjectId(deleteCategoryId) });
             mongoose.connection.db.collection(storeId, (err, collection) => {
                 collection.deleteMany({ categoryName: categoryName });
             });
         });
-        let resultCategories = await ecommerce
+        let resultCategories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
@@ -39,7 +39,7 @@ async function deleteCategory(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/deleteCategory",
+            path: "GET:/user/deleteCategory",
         });
     }
 }

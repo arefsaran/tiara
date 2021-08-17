@@ -39,7 +39,7 @@ async function uploadCategoryView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/uploadCategory",
+            path: "GET:/user/uploadCategory",
         });
     }
 }
@@ -93,7 +93,7 @@ async function uploadCategoryFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/uploadCategory",
+            path: "POST:/user/uploadCategory",
         });
     }
 }

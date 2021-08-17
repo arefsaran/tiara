@@ -14,8 +14,8 @@ async function basketView(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection("categories")
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
@@ -30,7 +30,7 @@ async function basketView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/basket",
+            path: "GET:/basket",
         });
     }
 }
@@ -44,7 +44,7 @@ async function basketCreator(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/basket",
+            path: "POST:/basket",
         });
     }
 }
@@ -57,12 +57,12 @@ async function basketFunction(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
-        let basketProducts = await ecommerce
+        let basketProducts = await databaseClient
             .collection(collectionName)
             .find({ _id: ObjectId(productId) })
             .toArray();
@@ -76,14 +76,13 @@ async function basketFunction(request, response, next) {
             quantity: quantity,
             totalPrice: totalPrice,
         });
-        // response.json({basketProducts:basketProducts});
         next();
     } catch (error) {
         response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/basket/api",
+            path: "POST:/basket/api",
         });
     }
 }

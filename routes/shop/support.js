@@ -12,7 +12,7 @@ async function supportView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/support",
+            path: "GET:/support",
         });
     }
 }

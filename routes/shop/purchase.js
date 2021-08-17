@@ -105,7 +105,7 @@ function inStockAPI(request, response) {
                                 message:
                                     "The request has succeeded || inStock Changed and Invoices Deleted",
                                 data: "Deleted",
-                                address: "POST:/purchase",
+                                path: "POST:/purchase",
                             });
                         });
                 }
@@ -145,7 +145,7 @@ function inStockAPI(request, response) {
                                                 productName: element.name,
                                                 succeeded: false,
                                             },
-                                            address: "POST:/inStock",
+                                            path: "POST:/inStock",
                                         });
                                     }
                                 });
@@ -222,7 +222,7 @@ function inStockAPI(request, response) {
                                             totalPrice: totalPrice,
                                             succeeded: true,
                                         },
-                                        address: "POST:/purchase",
+                                        path: "POST:/purchase",
                                     });
                                 });
                         } else if (outOfOrderProducts.length >= 1) {
@@ -234,7 +234,7 @@ function inStockAPI(request, response) {
                                     outOfOrderProducts: outOfOrderProducts,
                                     succeeded: false,
                                 },
-                                address: "POST:/inStock",
+                                path: "POST:/inStock",
                             });
                         } else {
                             response.json({
@@ -244,7 +244,7 @@ function inStockAPI(request, response) {
                                 data: {
                                     succeeded: false,
                                 },
-                                address: "POST:/inStock",
+                                path: "POST:/inStock",
                             });
                         }
                     } catch (error) {
@@ -304,7 +304,7 @@ function inStockAPI(request, response) {
                                     RefID: purchaseId,
                                     // invoicePath: invoicePath,
                                 },
-                                address: "POST:/purchase",
+                                path: "POST:/purchase",
                             });
                         });
                 }
@@ -315,7 +315,7 @@ function inStockAPI(request, response) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/purchase",
+            path: "POST:/purchase",
         });
     }
 }

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { auth } = require("../../middlewares/auth");
-const signUp = require("./signUp");
-const logIn = require("./logIn");
+const signup = require("./signup");
+const login = require("./login");
 const changePassword = require("./changePassword");
 const dashboard = require("./dashboard");
 const settings = require("./settings");
@@ -18,8 +18,8 @@ const editCategory = require("./editCategory");
 const mergeCategories = require("./mergeCategories");
 const banner = require("./banner");
 
-router.use("/signUp", signUp);
-router.use("/logIn", logIn);
+router.use("/signup", signup);
+router.use("/login", login);
 router.use("/changePassword", auth, changePassword);
 router.use("/dashboard", auth, dashboard);
 router.use("/settings", auth, settings);

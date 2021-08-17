@@ -13,12 +13,12 @@ async function productPage(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
-        let resultProduct = await ecommerce
+        let resultProduct = await databaseClient
             .collection(collectionName)
             .find({ _id: ObjectId(productId) })
             .toArray();
@@ -33,7 +33,7 @@ async function productPage(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/productPage",
+            path: "GET:/productPage",
         });
     }
 }

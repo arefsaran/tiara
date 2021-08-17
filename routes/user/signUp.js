@@ -7,24 +7,24 @@ const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 
-router.get("/", signUpView);
-router.post("/", signUpFunction);
+router.get("/", signupView);
+router.post("/", signupFunction);
 
-async function signUpView(request, response, next) {
+async function signupView(request, response, next) {
     try {
-        response.render("signUp", { error: "" });
+        response.render("signup", { error: "" });
         next();
     } catch (error) {
         response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/signUp",
+            path: "GET:/user/signup",
         });
     }
 }
 
-async function signUpFunction(request, response, next) {
+async function signupFunction(request, response, next) {
     try {
         const { error } = validate(request.body);
         let nowISO = new Date();
@@ -44,7 +44,7 @@ async function signUpFunction(request, response, next) {
             userStoreNameInEnglish,
         } = request.body;
         if (error) {
-            response.render("signUp", {
+            response.render("signup", {
                 error: `${error}`,
             });
             // response.json({ error: `${error}` });
@@ -63,15 +63,15 @@ async function signUpFunction(request, response, next) {
             });
             if (userWithThisEmail) {
                 // response.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
-                return response.render("signUp", {
+                return response.render("signup", {
                     error: "با این ایمیل قبلا ثبت نام شده است",
                 });
             } else if (subDomainWithThisStoreName) {
-                return response.render("signUp", {
+                return response.render("signup", {
                     error: "با این آدرس قبلا ثبت نام شده است",
                 });
             } else if (blockedUserStoreName || blockedSubDomain) {
-                return response.render("signUp", {
+                return response.render("signup", {
                     error:
                         "نام فروشگاه یا آدرس اینترنتی فروشگاه شما نامناسب تشخیص داده شد، . در صورت مناسب بودن نام یا آدرس پیشنهادی به پشتیبانی پیام دهید. ",
                 });
@@ -121,7 +121,7 @@ async function signUpFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/signUp",
+            path: "POST:/user/signup",
         });
     }
 }

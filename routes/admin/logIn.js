@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
-const { Admin, validateLogin, validate } = require("../../models/admin");
+const { Admin, validateLogin } = require("../../models/admin");
 
-async function adminlogInView(request, response, next) {
+async function loginView(request, response, next) {
     try {
         response.render("adminLogIn", { error: "" });
         next();
@@ -10,12 +10,12 @@ async function adminlogInView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/admin/logIn",
+            path: "GET:/admin/login",
         });
     }
 }
 
-async function adminLogin(request, response, next) {
+async function login(request, response, next) {
     try {
         const { error } = validateLogin({
             email: request.body.email.toLowerCase(),
@@ -34,11 +34,11 @@ async function adminLogin(request, response, next) {
                     error: "نام کاربری یا رمز عبور اشتباه است",
                 });
             } else {
-                const validPassword = await bcrypt.compare(
+                const isValidPassword = await bcrypt.compare(
                     request.body.password,
                     admin.password
                 );
-                if (validPassword) {
+                if (isValidPassword) {
                     const token = admin.generateAuthToken();
                     response.redirect(`/admin/dashboard?adminToken=${token}`);
                 } else {
@@ -54,10 +54,10 @@ async function adminLogin(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/admin/logIn",
+            path: "POST:/admin/login",
         });
     }
 }
 
-exports.adminlogInView = adminlogInView;
-exports.adminLogin = adminLogin;
+exports.loginView = loginView;
+exports.login = login;

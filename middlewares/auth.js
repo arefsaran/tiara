@@ -6,7 +6,7 @@ module.exports.auth = async function (request, response, next) {
     try {
         const token = request.query.userToken || request.query.userTokenHide;
         if (!token) {
-            return response.render("logIn", {
+            return response.render("login", {
                 error: "مشکلی پیش آمده است، مجددا تلاش کنید",
             });
         } else {
@@ -17,7 +17,7 @@ module.exports.auth = async function (request, response, next) {
         }
         next();
     } catch (error) {
-        response.render("logIn", {
+        response.render("login", {
             error: "مشکلی پیش آمده است، مجددا تلاش کنید",
         });
     }

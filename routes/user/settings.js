@@ -39,7 +39,7 @@ async function settingsFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/settings",
+            path: "GET:/user/settings",
         });
     }
 }
@@ -164,7 +164,7 @@ async function settingsAPI(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/settings",
+            path: "POST:/user/settings",
         });
     }
 }

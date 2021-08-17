@@ -16,11 +16,11 @@ async function deleteProduct(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
+        let databaseClient = client.db(DATABASE_NAME);
         mongoose.connection.db.collection(collectionName, (err, collection) => {
             collection.deleteOne({ _id: ObjectId(deleteProductId) });
         });
-        let resultProducts = await ecommerce
+        let resultProducts = await databaseClient
             .collection(collectionName)
             .find({ categoryName: categoryName })
             .toArray();
@@ -35,7 +35,7 @@ async function deleteProduct(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/deleteProduct",
+            path: "GET:/user/deleteProduct",
         });
     }
 }

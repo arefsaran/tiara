@@ -16,8 +16,8 @@ async function mergeCategoriesView(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
@@ -49,7 +49,7 @@ async function mergeCategoriesView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/mergeCategories",
+            path: "GET:/user/mergeCategories",
         });
     }
 }
@@ -68,7 +68,7 @@ async function mergeCategories(request, response, next) {
             destinationCategory &&
             originCategory !== destinationCategory
         ) {
-            let ecommerce = client.db(DATABASE_NAME);
+            let databaseClient = client.db(DATABASE_NAME);
             mongoose.connection.db.collection(storeId, (err, collection) => {
                 collection.updateMany(
                     { categoryName: originCategory },
@@ -84,7 +84,7 @@ async function mergeCategories(request, response, next) {
                     }
                 );
             });
-            let resultCategories = await ecommerce
+            let resultCategories = await databaseClient
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
@@ -98,7 +98,7 @@ async function mergeCategories(request, response, next) {
                 token: token,
             });
         } else {
-            let resultCategories = await ecommerce
+            let resultCategories = await databaseClient
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
@@ -125,7 +125,7 @@ async function mergeCategories(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/mergeCategories",
+            path: "POST:/user/mergeCategories",
         });
     }
 }

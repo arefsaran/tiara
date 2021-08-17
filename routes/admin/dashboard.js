@@ -2,13 +2,13 @@ const { User } = require("../../models/user");
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
-async function adminDashboardView(request, response, next) {
+async function adminDashboard(request, response, next) {
     try {
         let adminToken = request.query.adminToken;
         let collectionName = "users";
         let nowISO = new Date();
-        let lastMonthSalesTotalPrice = 0;
-        let totalPrice = 0;
+        let lastMonthSalesAmount = 0;
+        let salesAmount = 0;
         let lastMonthISO = new Date(
             nowISO.getFullYear(),
             nowISO.getMonth() - 1,
@@ -21,31 +21,31 @@ async function adminDashboardView(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let lastMonthSales = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let lastMonthSales = await databaseClient
             .collection(collectionName)
             .find(lastMonthSalesQuery)
             .toArray();
         lastMonthSales.forEach((sale) => {
-            lastMonthSalesTotalPrice = lastMonthSalesTotalPrice + sale.userPaid;
+            lastMonthSalesAmount = lastMonthSalesAmount + sale.userPaid;
         });
-        let totalSales = await ecommerce
+        let sales = await databaseClient
             .collection(collectionName)
             .find({})
             .toArray();
-        totalSales.forEach((sale) => {
-            totalPrice = totalPrice + sale.userPaid;
+        sales.forEach((sale) => {
+            salesAmount = salesAmount + sale.userPaid;
         });
         client.close();
-        let numberOfUsers = await User.find({}).countDocuments();
+        let usersNumber = await User.find({}).countDocuments();
         let users = await User.find({}).sort({ _id: -1 }).limit(5);
         response.render("adminDashboard", {
-            numberOfUsers: numberOfUsers,
+            usersNumber: usersNumber,
             users: users,
             adminInfo: request.admin.firstName,
-            lastMonthSalesTotalPrice: lastMonthSalesTotalPrice,
-            lastMonthSalesCount: lastMonthSales.length,
-            totalPriceOfUsers: totalPrice,
+            lastMonthSalesAmount: lastMonthSalesAmount,
+            lastMonthSalesNumber: lastMonthSales.length,
+            salesAmount: salesAmount,
             adminToken: adminToken,
         });
         next();
@@ -54,9 +54,9 @@ async function adminDashboardView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/admin/dashboard",
+            path: "GET:/admin/dashboard",
         });
     }
 }
 
-exports.adminDashboardView = adminDashboardView;
+exports.adminDashboard = adminDashboard;

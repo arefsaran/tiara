@@ -1,9 +1,9 @@
 const { User } = require("../../models/user");
 
-async function usersView(request, response, next) {
+async function users(request, response, next) {
     try {
         let resultUsers = await User.find({}).sort({ _id: -1 });
-        response.render("usersView", {
+        response.render("users", {
             resultUsers: resultUsers,
         });
         next();
@@ -12,9 +12,9 @@ async function usersView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/admin/purchase",
+            path: "GET:/admin/purchase",
         });
     }
 }
 
-exports.usersView = usersView;
+exports.users = users;

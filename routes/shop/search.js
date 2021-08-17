@@ -14,8 +14,8 @@ async function searchAPI(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection("categories")
             .find({ storeId: storeId })
             .toArray();
@@ -100,7 +100,7 @@ async function searchAPI(request, response, next) {
                     message:
                         "The request could not be understood by the server",
                     data: { error: error },
-                    address: "GET:/search (resultFunction)",
+                    path: "GET:/search (resultFunction)",
                 });
             }
         }
@@ -110,7 +110,7 @@ async function searchAPI(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/search",
+            path: "GET:/search",
         });
     }
 }

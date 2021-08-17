@@ -37,8 +37,8 @@ async function uploadProductView(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
@@ -57,7 +57,7 @@ async function uploadProductView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/uploadProduct",
+            path: "GET:/user/uploadProduct",
         });
     }
 }
@@ -117,8 +117,8 @@ async function uploadProductFunction(request, response, next) {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            let ecommerce = client.db(DATABASE_NAME);
-            let resultCategories = await ecommerce
+            let databaseClient = client.db(DATABASE_NAME);
+            let resultCategories = await databaseClient
                 .collection("categories")
                 .find()
                 .toArray();
@@ -141,7 +141,7 @@ async function uploadProductFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/uploadProduct",
+            path: "POST:/user/uploadProduct",
         });
     }
 }

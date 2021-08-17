@@ -23,7 +23,7 @@ async function changePasswordView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/changePassword",
+            path: "GET:/user/changePassword",
         });
     }
 }
@@ -35,11 +35,11 @@ async function changePassword(request, response, next) {
             if (newPassword.length > 3) {
                 let user = request.user;
                 if (user.userPassword.length > 0) {
-                    const validPassword = await bcrypt.compare(
+                    const isValidPassword = await bcrypt.compare(
                         oldPassword,
                         user.userPassword
                     );
-                    if (validPassword == true) {
+                    if (isValidPassword == true) {
                         const salt = await bcrypt.genSalt(10);
                         let newHash = await bcrypt.hash(newPassword, salt);
                         await User.findOneAndUpdate(
@@ -83,7 +83,7 @@ async function changePassword(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/changePassword",
+            path: "POST:/user/changePassword",
         });
     }
 }

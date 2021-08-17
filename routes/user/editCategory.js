@@ -40,8 +40,8 @@ async function editCategory(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategory = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategory = await databaseClient
             .collection(collectionName)
             .find({ _id: ObjectId(categoryId) })
             .toArray();
@@ -57,7 +57,7 @@ async function editCategory(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/editCategory",
+            path: "GET:/user/editCategory",
         });
     }
 }
@@ -117,8 +117,8 @@ async function editCategoryAPI(request, response, next) {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            let ecommerce = client.db(DATABASE_NAME);
-            let resultCategory = await ecommerce
+            let databaseClient = client.db(DATABASE_NAME);
+            let resultCategory = await databaseClient
                 .collection(collectionName)
                 .find({ _id: ObjectId(categoryId) })
                 .toArray();
@@ -135,7 +135,7 @@ async function editCategoryAPI(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/editCategory",
+            path: "POST:/user/editCategory",
         });
     }
 }

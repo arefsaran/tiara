@@ -39,8 +39,8 @@ async function uploadBannerView(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultBanners = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultBanners = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
@@ -60,7 +60,7 @@ async function uploadBannerView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/banner",
+            path: "GET:/user/banner",
         });
     }
 }
@@ -91,8 +91,8 @@ async function uploadBannerFunction(request, response, next) {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             });
-            let ecommerce = client.db(DATABASE_NAME);
-            let resultBanners = await ecommerce
+            let databaseClient = client.db(DATABASE_NAME);
+            let resultBanners = await databaseClient
                 .collection("banners")
                 .find()
                 .toArray();
@@ -117,7 +117,7 @@ async function uploadBannerFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/banner",
+            path: "POST:/user/banner",
         });
     }
 }
@@ -132,11 +132,11 @@ async function deleteBanner(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
+        let databaseClient = client.db(DATABASE_NAME);
         mongoose.connection.db.collection(collectionName, (err, collection) => {
             collection.deleteOne({ _id: ObjectId(deleteBannerId) });
         });
-        let resultBanners = await ecommerce
+        let resultBanners = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
@@ -152,7 +152,7 @@ async function deleteBanner(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "DELETE:/user/deleteBanner",
+            path: "DELETE:/user/deleteBanner",
         });
     }
 }

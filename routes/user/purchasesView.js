@@ -21,7 +21,7 @@ async function purchasesView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/purchasesView",
+            path: "GET:/user/purchasesView",
         });
     }
 }

@@ -13,8 +13,8 @@ async function landing(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection(collectionName)
             .find()
             .toArray();
@@ -28,7 +28,7 @@ async function landing(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/landing",
+            path: "GET:/landing",
         });
     }
 }

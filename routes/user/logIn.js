@@ -3,31 +3,31 @@ const router = express.Router();
 const { User, validateLogin } = require("../../models/user");
 const bcrypt = require("bcryptjs");
 
-router.get("/", logInView);
-router.post("/", logInFunction);
+router.get("/", loginView);
+router.post("/", loginFunction);
 
-async function logInView(request, response, next) {
+async function loginView(request, response, next) {
     try {
-        response.render("logIn", { error: "" });
+        response.render("login", { error: "" });
         next();
     } catch (error) {
         response.json({
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/user/logIn",
+            path: "GET:/user/login",
         });
     }
 }
 
-async function logInFunction(request, response, next) {
+async function loginFunction(request, response, next) {
     try {
         const { error } = validateLogin({
             userEmail: request.body.userEmail.toLowerCase(),
             userPassword: request.body.userPassword,
         });
         if (error) {
-            response.render("logIn", {
+            response.render("login", {
                 error: `${error}`,
             });
         } else {
@@ -35,22 +35,22 @@ async function logInFunction(request, response, next) {
                 userEmail: request.body.userEmail.toLowerCase(),
             });
             if (!user) {
-                response.render("logIn", {
+                response.render("login", {
                     error: "ایمیل یا رمز عبور اشتباه است",
                 });
             } else {
-                const validPassword = await bcrypt.compare(
+                const isValidPassword = await bcrypt.compare(
                     request.body.userPassword,
                     user.userPassword
                 );
-                if (validPassword) {
+                if (isValidPassword) {
                     const token = user.generateAuthToken();
                     // response.render("dashboard", {
                     //     userToken: token,
                     // });
                     response.redirect(`/user/dashboard?userToken=${token}`);
                 } else {
-                    response.render("logIn", {
+                    response.render("login", {
                         error: "ایمیل یا رمز عبور اشتباه است",
                     });
                 }
@@ -62,7 +62,7 @@ async function logInFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "POST:/user/logIn",
+            path: "POST:/user/login",
         });
     }
 }

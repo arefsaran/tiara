@@ -12,8 +12,8 @@ async function storeInfo(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        let ecommerce = client.db(DATABASE_NAME);
-        let resultCategories = await ecommerce
+        let databaseClient = client.db(DATABASE_NAME);
+        let resultCategories = await databaseClient
             .collection("categories")
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
@@ -27,7 +27,7 @@ async function storeInfo(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "GET:/storeInfo",
+            path: "GET:/storeInfo",
         });
     }
 }

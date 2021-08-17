@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { Admin, validate } = require("../../models/admin");
 
-async function adminSignUp(request, response, next) {
+async function signup(request, response, next) {
     try {
         const { error } = validate(request.body);
         let { firstName, lastName, email, password } = request.body;
@@ -10,10 +10,10 @@ async function adminSignUp(request, response, next) {
                 error: `${error}`,
             });
         } else {
-            let AdminWithThisEmail = await Admin.findOne({
+            let isAdmin = await Admin.findOne({
                 email: email.toLowerCase(),
             });
-            if (AdminWithThisEmail) {
+            if (isAdmin) {
                 return response.json({
                     error: "با این ایمیل قبلا ثبت نام شده است",
                 });
@@ -39,9 +39,9 @@ async function adminSignUp(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            address: "PUT:/admin/signUp",
+            path: "PUT:/admin/signup",
         });
     }
 }
 
-exports.adminSignUp = adminSignUp;
+exports.signup = signup;
