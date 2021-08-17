@@ -39,13 +39,13 @@ function sortAPI(request, response) {
                     useUnifiedTopology: true,
                 });
                 let databaseClient = client.db(DATABASE_NAME);
-                let resultCategories = await databaseClient
+                let categories = await databaseClient
                     .collection("categories")
                     .find({ storeId: storeId })
                     .toArray();
                 response.render("products", {
                     sort: 1,
-                    resultCategories: resultCategories,
+                    categories: categories,
                     storeInfo: request.store.userStore,
                     resultProducts: sortedResult,
                 });

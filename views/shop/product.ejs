@@ -64,25 +64,7 @@
             var price = Number($(this).attr("data-price"));
             var count = Number(document.getElementById("quantity").value);
             shoppingCart.addItemToCart(id, count, price, picture, name);
-            let url = "/basket";
-            let data = {};
-            fetch(url, {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                mode: "cors", // no-cors, *cors, same-origin
-                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: "same-origin", // include, *same-origin, omit
-                headers: {
-                "Content-Type": "application/json",
-                },
-                redirect: "follow", // manual, *follow, error
-                referrerPolicy: "no-referrer", // no-referrer, *client
-                body: JSON.stringify(data) // body data type must match "Content-Type" header
-            }).then((response) => {
-                return response.json();
-            }) // expecting a json response
-            .then((response)=>{
-                window.location.href = "/basket";
-            });
+            window.location.href = "/basket";
         } catch (error) {
             console.log(error);
         }

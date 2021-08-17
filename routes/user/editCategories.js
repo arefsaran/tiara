@@ -15,13 +15,13 @@ async function categoriesPage(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
         response.render("editCategories", {
             storeInfo: request.user.userStore,
-            resultCategories: resultCategories,
+            categories: categories,
             token: token,
         });
         next();

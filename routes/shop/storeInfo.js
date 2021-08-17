@@ -13,12 +13,12 @@ async function storeInfo(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection("categories")
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
         response.render("storeInfo", {
-            resultCategories: resultCategories,
+            categories: categories,
             storeInfo: storeInfo,
         });
         next();

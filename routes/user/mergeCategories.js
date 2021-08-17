@@ -17,22 +17,22 @@ async function mergeCategoriesView(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
         let originCategory = "";
         let destinationCategory = "";
         let errorType = 0;
-        if (resultCategories.length > 1) {
-            originCategory = resultCategories[0].categoryName;
-            destinationCategory = resultCategories[0].categoryName;
-        } else if (resultCategories.length < 1) {
+        if (categories.length > 1) {
+            originCategory = categories[0].categoryName;
+            destinationCategory = categories[0].categoryName;
+        } else if (categories.length < 1) {
             errorType = 2;
-        } else if (resultCategories.length == 1) {
+        } else if (categories.length == 1) {
             errorType = 0;
-            originCategory = resultCategories[0].categoryName;
-            destinationCategory = resultCategories[0].categoryName;
+            originCategory = categories[0].categoryName;
+            destinationCategory = categories[0].categoryName;
         }
         response.render("mergeCategories", {
             storeInfo: request.user.userStore,
@@ -40,7 +40,7 @@ async function mergeCategoriesView(request, response, next) {
             error: errorType,
             originCategory: originCategory,
             destinationCategory: destinationCategory,
-            resultCategories: resultCategories,
+            categories: categories,
             token: token,
         });
         next();
@@ -84,7 +84,7 @@ async function mergeCategories(request, response, next) {
                     }
                 );
             });
-            let resultCategories = await databaseClient
+            let categories = await databaseClient
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
@@ -94,20 +94,20 @@ async function mergeCategories(request, response, next) {
                 error: 0,
                 originCategory: originCategory,
                 destinationCategory: destinationCategory,
-                resultCategories: resultCategories,
+                categories: categories,
                 token: token,
             });
         } else {
-            let resultCategories = await databaseClient
+            let categories = await databaseClient
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
             console.log(
-                "storeInfo, originCategory,destinationCategory,resultCategories",
+                "storeInfo, originCategory,destinationCategory,categories",
                 request.user.userStore,
                 originCategory,
                 destinationCategory,
-                resultCategories
+                categories
             );
             response.render("mergeCategories", {
                 storeInfo: request.user.userStore,
@@ -115,7 +115,7 @@ async function mergeCategories(request, response, next) {
                 error: 1,
                 originCategory: originCategory,
                 destinationCategory: destinationCategory,
-                resultCategories: resultCategories,
+                categories: categories,
                 token: token,
             });
         }

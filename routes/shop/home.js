@@ -37,7 +37,7 @@ async function homeViewFunction(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
@@ -46,7 +46,7 @@ async function homeViewFunction(request, response, next) {
             .find({ storeId: storeId })
             .toArray();
         return response.render("home", {
-            resultCategories: resultCategories,
+            categories: categories,
             resultBanner: resultBanner,
             storeInfo: request.store.userStore,
         });

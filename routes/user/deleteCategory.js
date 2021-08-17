@@ -24,13 +24,13 @@ async function deleteCategory(request, response, next) {
                 collection.deleteMany({ categoryName: categoryName });
             });
         });
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
         response.render("editCategories", {
             storeInfo: request.user.userStore,
-            resultCategories: resultCategories,
+            categories: categories,
             token: token,
         });
         next();

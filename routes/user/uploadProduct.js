@@ -38,17 +38,17 @@ async function uploadProductView(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
         let productUploaded = 0;
-        if (resultCategories.length == 0) {
+        if (categories.length == 0) {
             productUploaded = "2";
         }
         response.render("uploadProduct", {
             storeInfo: request.user.userStore,
-            resultCategories: resultCategories,
+            categories: categories,
             productUploaded: productUploaded,
         });
         next();
@@ -118,19 +118,19 @@ async function uploadProductFunction(request, response, next) {
                 useUnifiedTopology: true,
             });
             let databaseClient = client.db(DATABASE_NAME);
-            let resultCategories = await databaseClient
+            let categories = await databaseClient
                 .collection("categories")
                 .find()
                 .toArray();
             response.render("uploadProduct", {
                 storeInfo: request.user.userStore,
-                resultCategories: resultCategories,
+                categories: categories,
                 productUploaded: "1",
             });
         } else if (!categoryName && storeId) {
             response.render("uploadProduct", {
                 storeInfo: request.user.userStore,
-                resultCategories: [],
+                categories: [],
                 productUploaded: "2",
             });
         }

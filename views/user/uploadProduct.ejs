@@ -65,7 +65,7 @@
                                         <div class="form-group row">
                                             <label for="categoryName" class="col-xl-3 col-sm-4 mb-0">دسته ی محصول را انتخاب کنید :</label>
                                             <select name="categoryName" class="form-control digits col-xl-8 col-sm-7" id="categoryName">
-                                            <% resultCategories.forEach(category=> { %>
+                                            <% categories.forEach(category=> { %>
                                                 <option><%= category.categoryName %></option>
                                                 <% }) %>
                                             </select>

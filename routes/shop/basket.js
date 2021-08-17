@@ -5,8 +5,7 @@ const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 router.get("/", basketView);
-router.post("/", basketCreator);
-router.post("/api", basketFunction);
+router.post("/", basketFunction);
 
 async function basketView(request, response, next) {
     try {
@@ -15,13 +14,13 @@ async function basketView(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection("categories")
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
         response.render("basket", {
             storeInfo: request.store.userStore,
-            resultCategories: resultCategories,
+            categories: categories,
             error: "",
         });
         next();
@@ -35,20 +34,6 @@ async function basketView(request, response, next) {
     }
 }
 
-async function basketCreator(request, response, next) {
-    try {
-        response.json({ Ok });
-        next();
-    } catch (error) {
-        response.json({
-            status: 500,
-            message: "The request could not be understood by the server",
-            data: { error: error },
-            path: "POST:/basket",
-        });
-    }
-}
-
 async function basketFunction(request, response, next) {
     try {
         let collectionName = request.store.userStore.storeId;
@@ -58,7 +43,7 @@ async function basketFunction(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
@@ -70,7 +55,7 @@ async function basketFunction(request, response, next) {
             basketProducts[0].productDetails.productPriceEnglishNumber *
             quantity;
         response.render("basket", {
-            resultCategories: resultCategories,
+            categories: categories,
             basketProducts: basketProducts,
             storeInfo: request.store.userStore,
             quantity: quantity,
@@ -82,7 +67,7 @@ async function basketFunction(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            path: "POST:/basket/api",
+            path: "POST:/basket",
         });
     }
 }

@@ -60,7 +60,7 @@
                 </form>
                 <a id="basketIcon" href="/basket">   
                     <sub>
-                        <strong id="numberOfProductInBasket">
+                        <strong id="basketProductsNumber">
                         </strong>
                     </sub>
                     <svg xmlns="https://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart2" viewBox="0 0 16 16">
@@ -93,7 +93,7 @@
                         <span>دسته ها</span>
                         </p>
                         <ul>
-                        <% resultCategories.forEach(category=> { %>
+                        <% categories.forEach(category=> { %>
                             <form method="GET" action="/productsPage">
                                 <li class="m-1 shadow-sm"><input class="w-100 bg-white border-0" name="categoryName" value="<%= category.categoryName %>" type="submit"></li>
                             </form>
@@ -115,7 +115,7 @@
         <script src="./assets/js/shoppingCart.js"></script>
         <script>
             function totalNumber() {
-                document.getElementById("numberOfProductInBasket").innerHTML = shoppingCart.countCart();
+                document.getElementById("basketProductsNumber").innerHTML = shoppingCart.countCart();
             }
             totalNumber();
         </script>

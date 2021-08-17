@@ -14,7 +14,7 @@ async function productPage(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
@@ -23,7 +23,7 @@ async function productPage(request, response, next) {
             .find({ _id: ObjectId(productId) })
             .toArray();
         response.render("product", {
-            resultCategories: resultCategories,
+            categories: categories,
             storeInfo: request.store.userStore,
             resultProduct: resultProduct[0],
         });

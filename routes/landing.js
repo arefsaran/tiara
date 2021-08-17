@@ -14,13 +14,13 @@ async function landing(request, response, next) {
             useUnifiedTopology: true,
         });
         let databaseClient = client.db(DATABASE_NAME);
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection(collectionName)
             .find()
             .toArray();
         response.render("home", {
             storeInfo: request.store.userStore,
-            resultCategories: resultCategories,
+            categories: categories,
         });
         next();
     } catch (error) {

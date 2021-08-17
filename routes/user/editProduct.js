@@ -44,14 +44,14 @@ async function editProduct(request, response, next) {
             .collection(collectionName)
             .find({ _id: ObjectId(productId) })
             .toArray();
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection("categories")
             .find()
             .toArray();
         response.render("editProduct", {
             product: resultProducts[0],
             storeInfo: request.user.userStore,
-            resultCategories: resultCategories,
+            categories: categories,
             productEdited: 0,
             token: token,
         });
@@ -166,14 +166,14 @@ async function editProductAPI(request, response, next) {
                 .collection(collectionName)
                 .find({ _id: ObjectId(productId) })
                 .toArray();
-            let resultCategories = await databaseClient
+            let categories = await databaseClient
                 .collection("categories")
                 .find()
                 .toArray();
             response.render("editProduct", {
                 product: resultProducts[0],
                 storeInfo: request.user.userStore,
-                resultCategories: resultCategories,
+                categories: categories,
                 productEdited: 1,
                 token: token,
             });

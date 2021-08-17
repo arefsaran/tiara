@@ -18,13 +18,13 @@ async function productsPage(request, response, next) {
             .collection(collectionName)
             .find({ categoryName: categoryName, inStock: { $gt: 0 } })
             .toArray();
-        let resultCategories = await databaseClient
+        let categories = await databaseClient
             .collection("categories")
             .find({ storeId: collectionName })
             .toArray();
         response.render("products", {
             sort: 1,
-            resultCategories: resultCategories,
+            categories: categories,
             storeInfo: request.store.userStore,
             resultProducts: resultProducts,
         });

@@ -49,7 +49,7 @@
     });
     function displayCart() {
         let cartArray = shoppingCart.listCart();
-        document.getElementById("numberOfProductInBasket").innerHTML = shoppingCart.countCart();
+        document.getElementById("basketProductsNumber").innerHTML = shoppingCart.countCart();
         var output = "";
         if(cartArray.length === 0){
             document.getElementById("checkout").style.visibility = 'hidden';
