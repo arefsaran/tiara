@@ -6,7 +6,6 @@ const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
-let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
     destination: (request, file, cb) => {
@@ -27,7 +26,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/", uploadBannerView);
-router.post("/", upload.array("bannerPictures", 3), uploadBannerFunction);
+router.post("/", upload.array("bannerPictures", 3), uploadBanner);
 router.get("/delete", deleteBanner);
 
 async function uploadBannerView(request, response, next) {
@@ -65,13 +64,13 @@ async function uploadBannerView(request, response, next) {
     }
 }
 
-async function uploadBannerFunction(request, response, next) {
+async function uploadBanner(request, response, next) {
     try {
         let pictures = request.files;
         let token = request.query.userToken;
         let collectionName = "banners";
         let storeId = request.user.userStore.storeId;
-        function insertFunction(collectionName, query) {
+        function insert(collectionName, query) {
             mongoose.connection.db.collection(collectionName, function (
                 err,
                 collection
@@ -85,7 +84,7 @@ async function uploadBannerFunction(request, response, next) {
                     picture: picture.path.replace(/\\/g, "/").substr(7),
                     storeId: storeId,
                 };
-                insertFunction(collectionName, query);
+                insert(collectionName, query);
             });
             const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,

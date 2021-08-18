@@ -4,7 +4,7 @@ const app = express.Router();
 const { MERCHANT_ID } = require("../../config/config");
 const { subDomainChecker } = require("../../middlewares/subDomainChecker");
 
-function getUrlOption(url, params) {
+function getUrlOption(url, parameters) {
     return {
         method: "POST",
         uri: url,
@@ -12,7 +12,7 @@ function getUrlOption(url, params) {
             "cache-control": "no-cache",
             "content-type": "application/json",
         },
-        body: params,
+        body: parameters,
         json: true,
     };
 }
@@ -32,7 +32,7 @@ async function pay(request, response, next) {
         let amount = parseInt(totalPrice) + shippingCost;
         let userEmail = request.store.userEmail || "tiaraplatform@gmail.com";
         let Zarinpal_MERCHANT_ID = request.store.MERCHANT_ID || MERCHANT_ID;
-        let params = {
+        let parameters = {
             MerchantID: Zarinpal_MERCHANT_ID,
             Amount: amount,
             CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${store}`,
@@ -42,7 +42,7 @@ async function pay(request, response, next) {
 
         let options = getUrlOption(
             "https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json",
-            params
+            parameters
         );
 
         await request(options)
@@ -65,18 +65,18 @@ async function pay(request, response, next) {
 
 async function checker(request, response, next) {
     try {
-        let paramsPuchase = {
+        let purchaseParameters = {
             done: 0,
             purchaseId: request.query.purchaseId,
         };
         let requestURL = `https://${request.query.storeId}.tiaraplatform.ir/purchase`;
-        let optionsPurchase = getUrlOption(requestURL, paramsPuchase);
+        let optionsPurchase = getUrlOption(requestURL, purchaseParameters);
         if (request.query.Status !== "OK") {
             request(optionsPurchase).then(async (data) => {
                 return response.render("unsuccessfulPayment");
             });
         } else {
-            let params = {
+            let parameters = {
                 MerchantID: MERCHANT_ID,
                 Amount: request.query.Amount,
                 Authority: request.query.Authority,
@@ -84,18 +84,18 @@ async function checker(request, response, next) {
 
             let options = getUrlOption(
                 "https://www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json",
-                params
+                parameters
             );
 
             request(options)
                 .then(async (data) => {
                     if (data.Status == 100) {
-                        let params = {
+                        let parameters = {
                             done: 1,
                             purchaseId: request.query.purchaseId,
                         };
                         let requestURL = `https://${request.query.storeId}.tiaraplatform.ir/purchase`;
-                        let options = getUrlOption(requestURL, params);
+                        let options = getUrlOption(requestURL, parameters);
                         request(options).then(async (result) => {
                             return response.render("successfulPayment", {
                                 RefID: result.data.RefID,

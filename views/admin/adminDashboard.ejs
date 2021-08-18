@@ -121,14 +121,14 @@
 </div>
 <input type="hidden" value="<%= adminToken %>" id="adminToken" >
 <script>
-    function tokenSaverFunction() {
+    function tokenSaver() {
         let adminToken =  document.getElementById("adminToken").value;
         localStorage.setItem("adminToken", adminToken);
         document.getElementById("logoutButton").onclick = function logout() {
             localStorage.removeItem("adminToken");
         }
     }
-    tokenSaverFunction();
+    tokenSaver();
 </script>
 
 <%- include("adminDashboardFooter"); -%>

@@ -21,10 +21,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/", settingsFunction);
+router.get("/", settings);
 router.post("/", upload.single("storePicture"), settingsAPI);
 
-async function settingsFunction(request, response, next) {
+async function settings(request, response, next) {
     try {
         let userToken = request.query.userToken;
         response.render("settings", {
@@ -62,7 +62,7 @@ async function settingsAPI(request, response, next) {
         let collectionName = "users";
         let userId = request.user._id;
         const token = request.query.userToken || request.query.userTokenHide;
-        async function updateFunction(name, query) {
+        async function update(name, query) {
             // await mongoose.connection.db
             //     .collection(`${collection}`)
             //     .rename(`${storeId}`);
@@ -146,7 +146,7 @@ async function settingsAPI(request, response, next) {
                     updateTime: jalaliDate,
                 };
             }
-            updateFunction(collectionName, query);
+            update(collectionName, query);
             const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
             let userInfo = await User.findOne({
                 _id: decoded._id,

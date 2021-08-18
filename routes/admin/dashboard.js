@@ -2,7 +2,7 @@ const { User } = require("../../models/user");
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
-async function adminDashboard(request, response, next) {
+async function view(request, response, next) {
     try {
         let adminToken = request.query.adminToken;
         let collectionName = "users";
@@ -59,4 +59,4 @@ async function adminDashboard(request, response, next) {
     }
 }
 
-exports.adminDashboard = adminDashboard;
+exports.view = view;

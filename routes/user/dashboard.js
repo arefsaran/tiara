@@ -48,7 +48,7 @@ async function dashboardView(request, response, next) {
         });
         client.close();
 
-        let numberOfPurchases = await Purchase.find({
+        let purchasesNumber = await Purchase.find({
             storeId: storeId,
             done: 1,
         }).countDocuments();
@@ -58,11 +58,11 @@ async function dashboardView(request, response, next) {
             .limit(5);
 
         response.render("dashboard", {
-            numberOfPurchases: numberOfPurchases,
+            purchasesNumber: purchasesNumber,
             storeInfo: request.user.userStore,
             purchases: purchases,
             lastMonthSalesAmount: lastMonthSalesAmount,
-            totalPriceOfPurchases: totalPrice,
+            purchasesTotalPrice: totalPrice,
             userToken: userToken,
         });
         next();

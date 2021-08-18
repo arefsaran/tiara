@@ -25,13 +25,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/", uploadCategoryView);
-router.post("/", upload.single("categoryPicture"), uploadCategoryFunction);
+router.post("/", upload.single("categoryPicture"), uploadCategory);
 
 async function uploadCategoryView(request, response, next) {
     try {
         response.render("uploadCategory", {
             storeInfo: request.user.userStore,
-            categoryUploaded: "0",
+            isCategoryUpload: "0",
         });
         next();
     } catch (error) {
@@ -44,12 +44,12 @@ async function uploadCategoryView(request, response, next) {
     }
 }
 
-async function uploadCategoryFunction(request, response, next) {
+async function uploadCategory(request, response, next) {
     try {
         let { categoryName } = request.body;
         let storeId = request.user.userStore.storeId;
         let collectionName = "categories";
-        function insertFunction(collectionName, query) {
+        function insert(collectionName, query) {
             mongoose.connection.db.collection(collectionName, async function (
                 err,
                 collection
@@ -74,15 +74,15 @@ async function uploadCategoryFunction(request, response, next) {
                     storeId: storeId,
                     createdAt: jalaliDate,
                 };
-                insertFunction(collectionName, query);
+                insert(collectionName, query);
                 response.render("uploadCategory", {
                     storeInfo: request.user.userStore,
-                    categoryUploaded: "1",
+                    isCategoryUpload: "1",
                 });
             } else {
                 response.render("uploadCategory", {
                     storeInfo: request.user.userStore,
-                    categoryUploaded: "2",
+                    isCategoryUpload: "2",
                 });
             }
         }

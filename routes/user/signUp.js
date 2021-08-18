@@ -8,7 +8,7 @@ const { DATABASE_ADDRESS } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 
 router.get("/", signupView);
-router.post("/", signupFunction);
+router.post("/", signup);
 
 async function signupView(request, response, next) {
     try {
@@ -24,7 +24,7 @@ async function signupView(request, response, next) {
     }
 }
 
-async function signupFunction(request, response, next) {
+async function signup(request, response, next) {
     try {
         const { error } = validate(request.body);
         let nowISO = new Date();
@@ -49,10 +49,10 @@ async function signupFunction(request, response, next) {
             });
             // response.json({ error: `${error}` });
         } else {
-            let userWithThisEmail = await User.findOne({
+            let isUser = await User.findOne({
                 userEmail: userEmail.toLowerCase(),
             });
-            let subDomainWithThisStoreName = await User.findOne({
+            let isSubdomain = await User.findOne({
                 "userStore.storeId": userStoreNameInEnglish.toLowerCase(),
             });
             let blockedUserStoreName = await BlockedSubDomain.findOne({
@@ -61,12 +61,12 @@ async function signupFunction(request, response, next) {
             let blockedSubDomain = await BlockedSubDomain.findOne({
                 subDomain: userStoreNameInEnglish.toLowerCase(),
             });
-            if (userWithThisEmail) {
+            if (isUser) {
                 // response.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
                 return response.render("signup", {
                     error: "با این ایمیل قبلا ثبت نام شده است",
                 });
-            } else if (subDomainWithThisStoreName) {
+            } else if (isSubdomain) {
                 return response.render("signup", {
                     error: "با این آدرس قبلا ثبت نام شده است",
                 });

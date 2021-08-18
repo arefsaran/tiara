@@ -35,7 +35,6 @@ async function editCategory(request, response, next) {
         const token = request.query.userToken || request.query.userTokenHide;
         let { categoryId } = request.query;
         let collectionName = "categories";
-        let storeId = request.user.userStore.storeId;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -68,7 +67,7 @@ async function editCategoryAPI(request, response, next) {
         let storeId = request.user.userStore.storeId;
         let collectionName = "categories";
         const token = request.query.userToken || request.query.userTokenHide;
-        function updateFunction(query) {
+        function update(query) {
             mongoose.connection.db.collection(collectionName, function (
                 err,
                 collection
@@ -112,7 +111,7 @@ async function editCategoryAPI(request, response, next) {
                     editedAt: jalaliDate,
                 };
             }
-            updateFunction(query);
+            update(query);
             const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,

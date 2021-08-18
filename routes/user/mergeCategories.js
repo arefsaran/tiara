@@ -102,13 +102,6 @@ async function mergeCategories(request, response, next) {
                 .collection(collectionName)
                 .find({ storeId: storeId })
                 .toArray();
-            console.log(
-                "storeInfo, originCategory,destinationCategory,categories",
-                request.user.userStore,
-                originCategory,
-                destinationCategory,
-                categories
-            );
             response.render("mergeCategories", {
                 storeInfo: request.user.userStore,
                 mergeCategories: 0,

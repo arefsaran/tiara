@@ -5,7 +5,7 @@ const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 router.get("/", basketView);
-router.post("/", basketFunction);
+router.post("/", basket);
 
 async function basketView(request, response, next) {
     try {
@@ -34,7 +34,7 @@ async function basketView(request, response, next) {
     }
 }
 
-async function basketFunction(request, response, next) {
+async function basket(request, response, next) {
     try {
         let collectionName = request.store.userStore.storeId;
         let { productId, quantity } = request.query;

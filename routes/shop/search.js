@@ -5,9 +5,9 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
-router.get("/", searchAPI);
+router.get("/", search);
 
-async function searchAPI(request, response, next) {
+async function search(request, response, next) {
     try {
         let storeId = request.store.userStore.storeId;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
@@ -23,19 +23,6 @@ async function searchAPI(request, response, next) {
         let query = { _id: ObjectId(productIdForSearch) };
         let totalResult = [];
         searchInCollection(storeId);
-        // getCollectionsName();
-        // function getCollectionsName(){
-        //     mongoose.connection.db.listCollections().toArray(selectCollection);
-        // }
-        // function selectCollection(err, collectionsNamesList){
-        //     for (let index = 0; index < collectionsNamesList.length; index++) {
-        //         let collectionName = collectionsNamesList[index].name;
-        //         if(collectionName != "categories" && collectionName != "Stores") {
-        //             mongoose.connection.db.collection(collectionName, searchInCollection);
-        //         }
-        //     }
-        // }
-        // function searchInCollection(err, collection) {
         function searchInCollection(storeId) {
             if (productNameForSearch && !productIdForSearch) {
                 mongoose.connection.db.collection(storeId, function (
@@ -47,26 +34,26 @@ async function searchAPI(request, response, next) {
                             productName: { $regex: productNameForSearch },
                             inStock: { $gt: 0 },
                         })
-                        .toArray(resultFunction);
-                    // collection.find({ $text:{ $search: `\"${productNameForSearch}\"` } }).project({ score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } ).toArray(resultFunction);
+                        .toArray(result);
+                    // collection.find({ $text:{ $search: `\"${productNameForSearch}\"` } }).project({ score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } ).toArray(result);
                 });
             } else if (productIdForSearch && !productNameForSearch) {
                 mongoose.connection.db.collection(storeId, function (
                     err,
                     collection
                 ) {
-                    collection.find(query).toArray(resultFunction);
+                    collection.find(query).toArray(result);
                 });
             }
         }
-        function resultFunction(err, searchResult) {
+        function result(err, searchResult) {
             try {
                 if (err) {
                     console.log(err);
                 }
                 totalResult.push(searchResult);
-                let numberOfCollections = totalResult.length;
-                if (numberOfCollections == 1) {
+                let collectionsNumber = totalResult.length;
+                if (collectionsNumber == 1) {
                     totalResult = [].concat.apply([], totalResult);
                     // totalResult = totalResult.filter((x => x));
                     totalResult = totalResult.filter(function (eachResult) {
@@ -76,12 +63,12 @@ async function searchAPI(request, response, next) {
                     });
                     let { sortBy } = request.body;
                     if (sortBy == "priceLowToHigh") {
-                        sortFunctionLowToHigh(
+                        sortLowToHigh(
                             "productDetails.productPriceEnglishNumber",
                             totalResult
                         );
                     } else if (sortBy == "priceHighToLow") {
-                        sortFunctionHighToLow(
+                        sortHighToLow(
                             "productDetails.productPriceEnglishNumber",
                             totalResult
                         );
@@ -100,7 +87,7 @@ async function searchAPI(request, response, next) {
                     message:
                         "The request could not be understood by the server",
                     data: { error: error },
-                    path: "GET:/search (resultFunction)",
+                    path: "GET:/search (result)",
                 });
             }
         }
@@ -114,16 +101,16 @@ async function searchAPI(request, response, next) {
         });
     }
 }
-let sortFunctionLowToHigh = function (prop, arr) {
-    prop = prop.split(".");
-    let len = prop.length;
+let sortLowToHigh = function (property, array) {
+    property = property.split(".");
+    let length = property.length;
 
-    arr.sort(function (a, b) {
-        let i = 0;
-        while (i < len) {
-            a = a[prop[i]];
-            b = b[prop[i]];
-            i++;
+    array.sort(function (a, b) {
+        let counter = 0;
+        while (counter < length) {
+            a = a[property[counter]];
+            b = b[property[counter]];
+            counter++;
         }
         if (a < b) {
             return -1;
@@ -133,18 +120,18 @@ let sortFunctionLowToHigh = function (prop, arr) {
             return 0;
         }
     });
-    return arr;
+    return array;
 };
-let sortFunctionHighToLow = function (prop, arr) {
-    prop = prop.split(".");
-    let len = prop.length;
+let sortHighToLow = function (property, array) {
+    property = property.split(".");
+    let length = property.length;
 
-    arr.sort(function (a, b) {
-        let i = 0;
-        while (i < len) {
-            a = a[prop[i]];
-            b = b[prop[i]];
-            i++;
+    array.sort(function (a, b) {
+        let counter = 0;
+        while (counter < length) {
+            a = a[property[counter]];
+            b = b[property[counter]];
+            counter++;
         }
         if (a < b) {
             return 1;
@@ -154,7 +141,7 @@ let sortFunctionHighToLow = function (prop, arr) {
             return 0;
         }
     });
-    return arr;
+    return array;
 };
 
 module.exports = router;

@@ -21,7 +21,7 @@
                                                     <div class="align-self-center text-center"><i data-feather="dollar-sign" class="font-warning"></i></div>
                                                 </div>
                                                 <div class="media-body col-8"><p class="m-0"></p>
-                                                    <h4 class="mb-0">درآمد کل<p class="counter"><%= totalPriceOfPurchases %> <strong>تومان</strong></p></h4>
+                                                    <h4 class="mb-0">درآمد کل<p class="counter"><%= purchasesTotalPrice %> <strong>تومان</strong></p></h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -50,7 +50,7 @@
                                                     <div class="align-self-center text-center"><i data-feather="dollar-sign" class="font-primary"></i></div>
                                                 </div>
                                                 <div class="media-body col-8"><p class="m-0"></p>
-                                                    <h4 class="mb-0">مانده حساب<p class="counter"><%= totalPriceOfPurchases %> <strong>تومان</strong></p></h4>
+                                                    <h4 class="mb-0">مانده حساب<p class="counter"><%= purchasesTotalPrice %> <strong>تومان</strong></p></h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -65,7 +65,7 @@
                                                     <div class="align-self-center text-center"><i data-feather="bar-chart" class="font-danger"></i></div>
                                                 </div>
                                                 <div class="media-body col-8"><p class="m-0"></p>
-                                                    <h4 class="mb-0">تعداد فروش<p class="counter"><%= numberOfPurchases %> <strong>بار</strong></p></h4>
+                                                    <h4 class="mb-0">تعداد فروش<p class="counter"><%= purchasesNumber %> <strong>بار</strong></p></h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -121,13 +121,13 @@
 </div>
 <input type="hidden" value="<%= userToken %>" id="userToken" >
 <script>
-    function tokenSaverFunction() {
+    function tokenSaver() {
         let userToken =  document.getElementById("userToken").value;
         localStorage.setItem("userToken", userToken);
         document.getElementById("logoutButton").onclick = function logout() {
             localStorage.removeItem("userToken");
         }
     }
-    tokenSaverFunction();
+    tokenSaver();
 </script>
 <%- include("dashboardFooter"); -%>

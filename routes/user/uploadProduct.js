@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/", uploadProductView);
-router.post("/", upload.single("productPicture"), uploadProductFunction);
+router.post("/", upload.single("productPicture"), uploadProduct);
 
 async function uploadProductView(request, response, next) {
     try {
@@ -42,14 +42,14 @@ async function uploadProductView(request, response, next) {
             .collection(collectionName)
             .find({ storeId: storeId })
             .toArray();
-        let productUploaded = 0;
+        let isProductUpload = 0;
         if (categories.length == 0) {
-            productUploaded = "2";
+            isProductUpload = "2";
         }
         response.render("uploadProduct", {
             storeInfo: request.user.userStore,
             categories: categories,
-            productUploaded: productUploaded,
+            isProductUpload: isProductUpload,
         });
         next();
     } catch (error) {
@@ -62,7 +62,7 @@ async function uploadProductView(request, response, next) {
     }
 }
 
-async function uploadProductFunction(request, response, next) {
+async function uploadProduct(request, response, next) {
     try {
         let {
             productName,
@@ -76,7 +76,7 @@ async function uploadProductFunction(request, response, next) {
             productDetail,
         } = request.body;
         let storeId = request.user.userStore.storeId;
-        function insertFunction(name, query) {
+        function insert(name, query) {
             mongoose.connection.db.collection(name, function (err, collection) {
                 collection.insertOne(query);
             });
@@ -112,7 +112,7 @@ async function uploadProductFunction(request, response, next) {
                 inStock: Number(inStock),
                 createdAt: jalaliDate,
             };
-            insertFunction(storeId, query);
+            insert(storeId, query);
             const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
@@ -125,13 +125,13 @@ async function uploadProductFunction(request, response, next) {
             response.render("uploadProduct", {
                 storeInfo: request.user.userStore,
                 categories: categories,
-                productUploaded: "1",
+                isProductUpload: "1",
             });
         } else if (!categoryName && storeId) {
             response.render("uploadProduct", {
                 storeInfo: request.user.userStore,
                 categories: [],
-                productUploaded: "2",
+                isProductUpload: "2",
             });
         }
         return;

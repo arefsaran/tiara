@@ -11,7 +11,7 @@ const support = require("./support");
 const purchase = require("./purchase");
 const basket = require("./basket");
 const zarinpal = require("./zarinpal");
-const customerInfo = require("./customerInfo");
+const customer = require("./customer");
 
 router.use("/", subDomainChecker, home);
 router.use("/storeInfo", subDomainChecker, storeInfo);
@@ -23,6 +23,6 @@ router.use("/support", subDomainChecker, support);
 router.use("/purchase", subDomainChecker, purchase);
 router.use("/basket", subDomainChecker, basket);
 router.use("/zarinpal", zarinpal);
-router.use("/customerInfo", customerInfo);
+router.use("/customer", customer);
 
 module.exports = router;

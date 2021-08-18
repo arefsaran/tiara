@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 const fetch = require("node-fetch");
 const { stringify } = require("querystring");
 
-router.get("/", homeViewFunction);
+router.get("/", homeView);
 router.get("/contactUs", contactUs);
 router.post("/", sendEmail);
 
@@ -28,7 +28,7 @@ async function contactUs(request, response, next) {
         });
     }
 }
-async function homeViewFunction(request, response, next) {
+async function homeView(request, response, next) {
     try {
         let collectionName = "categories";
         let storeId = request.store.userStore.storeId;

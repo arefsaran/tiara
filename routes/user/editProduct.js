@@ -52,7 +52,7 @@ async function editProduct(request, response, next) {
             product: resultProducts[0],
             storeInfo: request.user.userStore,
             categories: categories,
-            productEdited: 0,
+            isProductEdit: 0,
             token: token,
         });
         next();
@@ -82,7 +82,7 @@ async function editProductAPI(request, response, next) {
         } = request.body;
         let collectionName = request.user.userStore.storeId;
         const token = request.query.userToken || request.query.userTokenHide;
-        function updateFunction(name, query) {
+        function update(name, query) {
             mongoose.connection.db.collection(name, function (err, collection) {
                 collection.updateOne(
                     { _id: ObjectId(productId) },
@@ -156,7 +156,7 @@ async function editProductAPI(request, response, next) {
                     createdAt: jalaliDate,
                 };
             }
-            updateFunction(collectionName, query);
+            update(collectionName, query);
             const client = await MongoClient.connect(DATABASE_ADDRESS, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
@@ -174,7 +174,7 @@ async function editProductAPI(request, response, next) {
                 product: resultProducts[0],
                 storeInfo: request.user.userStore,
                 categories: categories,
-                productEdited: 1,
+                isProductEdit: 1,
                 token: token,
             });
         }

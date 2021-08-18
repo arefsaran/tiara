@@ -54,7 +54,7 @@ function generateCustomerInformation(doc, invoice) {
         .font(`${process.env.PWD}/static/assets/fonts/IRANSansWeb.ttf`)
         .text(invoice.shipping.address, 400, customerInformationTop + 35)
         .text(
-            invoice.shipping.phone + ", " + invoice.shipping.postal_code,
+            invoice.shipping.phone + ", " + invoice.shipping.postalCode,
             300,
             customerInformationTop + 50
         )

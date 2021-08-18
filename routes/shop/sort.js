@@ -15,8 +15,8 @@ function sortAPI(request, response) {
         } else if (sortBy == "priceHighToLow") {
             sortBy = { "productDetails.productPriceEnglishNumber": -1 };
         }
-        findFunction(categoryName, storeId);
-        function findFunction(categoryName, storeId) {
+        find(categoryName, storeId);
+        function find(categoryName, storeId) {
             mongoose.connection.db.collection(storeId, function (
                 err,
                 collection

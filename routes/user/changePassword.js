@@ -13,7 +13,7 @@ async function changePasswordView(request, response, next) {
         const token = request.query.userToken || request.query.userTokenHide;
         response.render("changePassword", {
             error: "",
-            passwordChanged: 0,
+            isPasswordChange: 0,
             token: token,
             storeInfo: storeInfo,
         });
@@ -29,9 +29,9 @@ async function changePasswordView(request, response, next) {
 }
 async function changePassword(request, response, next) {
     try {
-        let { oldPassword, newPassword, newPassword2 } = request.body;
+        let { oldPassword, newPassword, newPasswordConfirm } = request.body;
         const token = request.query.userToken;
-        if (newPassword === newPassword2) {
+        if (newPassword === newPasswordConfirm) {
             if (newPassword.length > 3) {
                 let user = request.user;
                 if (user.userPassword.length > 0) {
@@ -48,14 +48,14 @@ async function changePassword(request, response, next) {
                         );
                         response.render("changePassword", {
                             error: "",
-                            passwordChanged: 1,
+                            isPasswordChange: 1,
                             token: token,
                             storeInfo: storeInfo,
                         });
                     } else {
                         response.render("changePassword", {
                             error: "رمز عبور قدیمی اشتباه است.",
-                            passwordChanged: 0,
+                            isPasswordChange: 0,
                             token: token,
                             storeInfo: storeInfo,
                         });
@@ -64,7 +64,7 @@ async function changePassword(request, response, next) {
             } else {
                 response.render("changePassword", {
                     error: "رمزعبور باید حداقل 4 کاراکتر باشد.",
-                    passwordChanged: 0,
+                    isPasswordChange: 0,
                     token: token,
                     storeInfo: storeInfo,
                 });
@@ -72,7 +72,7 @@ async function changePassword(request, response, next) {
         } else {
             response.render("changePassword", {
                 error: "رمزعبور جدید را درست تکرار کنید.",
-                passwordChanged: 0,
+                isPasswordChange: 0,
                 token: token,
                 storeInfo: storeInfo,
             });

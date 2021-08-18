@@ -3,9 +3,9 @@ const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
-router.get("/", customerInfoView);
+router.get("/", customer);
 
-async function customerInfoView(request, response, next) {
+async function customer(request, response, next) {
     try {
         let { error } = request.query;
         const client = await MongoClient.connect(DATABASE_ADDRESS, {
@@ -18,14 +18,14 @@ async function customerInfoView(request, response, next) {
             .find({ storeId: request.store.userStore.storeId })
             .toArray();
         if (error) {
-            response.render("customerInfo", {
+            response.render("customer", {
                 categories: categories,
                 storeInfo: request.store.userStore,
                 MERCHANT_ID: request.store.MERCHANT_ID,
                 error: error,
             });
         } else {
-            response.render("customerInfo", {
+            response.render("customer", {
                 categories: categories,
                 storeInfo: request.store.userStore,
                 MERCHANT_ID: request.store.MERCHANT_ID,
@@ -38,7 +38,7 @@ async function customerInfoView(request, response, next) {
             status: 500,
             message: "The request could not be understood by the server",
             data: { error: error },
-            path: "GET:/customerInfo",
+            path: "GET:/customer",
         });
     }
 }

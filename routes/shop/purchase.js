@@ -1,17 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const { Purchase } = require("../../models/purchase");
-const config = require("config");
-const { json } = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
 const { DATABASE_ADDRESS } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 const { createInvoice } = require("./createInvoice.js");
 
-router.post("/", inStockAPI);
+router.post("/", inStock);
 
-function inStockAPI(request, response) {
+function inStock(request, response) {
     try {
         let {
             customerName,
@@ -24,13 +22,6 @@ function inStockAPI(request, response) {
             done,
         } = request.body;
         let storeId = request.store.userStore.storeId;
-        // let basket = [];
-        // basketJSON = JSON.parse(basketJSON);
-        // for (let inCart in basketJSON) {
-        //     let item = basketJSON[inCart];
-        //     basket.push(item);
-        // }
-        // console.log(typeof basket, basket.length);
         let date = Date.now() / 10 ** 7;
         let newPurchaseId = Math.floor(date + Math.random() * 900000)
             .toString()
@@ -53,8 +44,8 @@ function inStockAPI(request, response) {
                     if (err) {
                         return console.log("erroR:", err);
                     }
-                    let ecommerceDatabase = database.db(DATABASE_NAME);
-                    ecommerceDatabase
+                    let databaseClient = database.db(DATABASE_NAME);
+                    databaseClient
                         .collection("purchases")
                         .findOne({ purchaseId: purchaseId })
                         .then((purchaseResult) => {
@@ -65,11 +56,11 @@ function inStockAPI(request, response) {
                                 index++
                             ) {
                                 let element = resultBasket[index];
-                                ecommerceDatabase
+                                databaseClient
                                     .collection(storeId)
                                     .findOne({ _id: ObjectId(element.id) })
                                     .then((inStock) => {
-                                        ecommerceDatabase
+                                        databaseClient
                                             .collection(storeId)
                                             .updateOne(
                                                 {
@@ -95,8 +86,8 @@ function inStockAPI(request, response) {
                     if (err) {
                         return console.log("erroR:", err);
                     }
-                    let ecommerceDatabase = database.db(DATABASE_NAME);
-                    ecommerceDatabase
+                    let databaseClient = database.db(DATABASE_NAME);
+                    databaseClient
                         .collection("purchases")
                         .deleteOne({ purchaseId: purchaseId })
                         .then((productInStock) => {
@@ -121,10 +112,10 @@ function inStockAPI(request, response) {
                         if (err) {
                             return console.log("erroR:", err);
                         }
-                        let ecommerceDatabase = database.db(DATABASE_NAME);
+                        let databaseClient = database.db(DATABASE_NAME);
                         for (let index = 0; index < basket.length; index++) {
                             let element = basket[index];
-                            await ecommerceDatabase
+                            await databaseClient
                                 .collection(storeId)
                                 .findOne({ _id: ObjectId(element.id) })
                                 .then((productInStock) => {
@@ -175,7 +166,7 @@ function inStockAPI(request, response) {
                                     if (err) {
                                         return console.log("erroR:", err);
                                     }
-                                    let ecommerceDatabase = database.db(
+                                    let databaseClient = database.db(
                                         DATABASE_NAME
                                     );
                                     for (
@@ -184,13 +175,13 @@ function inStockAPI(request, response) {
                                         index++
                                     ) {
                                         let element = basket[index];
-                                        ecommerceDatabase
+                                        databaseClient
                                             .collection(storeId)
                                             .findOne({
                                                 _id: ObjectId(element.id),
                                             })
                                             .then((inStock) => {
-                                                ecommerceDatabase
+                                                databaseClient
                                                     .collection(storeId)
                                                     .updateOne(
                                                         {
@@ -210,7 +201,7 @@ function inStockAPI(request, response) {
                                     }
                                 }
                             );
-                            ecommerceDatabase
+                            databaseClient
                                 .collection("purchases")
                                 .findOne({ _id: purchaseInvoice._id })
                                 .then(() => {
@@ -260,8 +251,8 @@ function inStockAPI(request, response) {
                     if (err) {
                         return console.log("erroR:", err);
                     }
-                    let ecommerceDatabase = database.db(DATABASE_NAME);
-                    ecommerceDatabase
+                    let databaseClient = database.db(DATABASE_NAME);
+                    databaseClient
                         .collection("purchases")
                         .findOneAndUpdate(
                             { purchaseId: purchaseId },
@@ -280,7 +271,7 @@ function inStockAPI(request, response) {
                                     phone:
                                         purchaseForPDF.value
                                             .customerInformations.customerPhone,
-                                    postal_code:
+                                    postalCode:
                                         purchaseForPDF.value
                                             .customerInformations
                                             .customerPostalCode,

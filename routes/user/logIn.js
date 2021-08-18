@@ -4,7 +4,7 @@ const { User, validateLogin } = require("../../models/user");
 const bcrypt = require("bcryptjs");
 
 router.get("/", loginView);
-router.post("/", loginFunction);
+router.post("/", login);
 
 async function loginView(request, response, next) {
     try {
@@ -20,7 +20,7 @@ async function loginView(request, response, next) {
     }
 }
 
-async function loginFunction(request, response, next) {
+async function login(request, response, next) {
     try {
         const { error } = validateLogin({
             userEmail: request.body.userEmail.toLowerCase(),
@@ -45,9 +45,6 @@ async function loginFunction(request, response, next) {
                 );
                 if (isValidPassword) {
                     const token = user.generateAuthToken();
-                    // response.render("dashboard", {
-                    //     userToken: token,
-                    // });
                     response.redirect(`/user/dashboard?userToken=${token}`);
                 } else {
                     response.render("login", {

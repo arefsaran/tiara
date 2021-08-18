@@ -3,9 +3,9 @@ const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
-router.get("/", homeViewFunction);
+router.get("/", homeView);
 
-async function homeViewFunction(request, response, next) {
+async function homeView(request, response, next) {
     try {
         let collectionName = "categories";
         let storeId = request.user.userStore.storeId;
