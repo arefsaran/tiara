@@ -22,7 +22,7 @@ Functions & Methods =>
 
 Classes =>
     use Classes to create "things"
-    examples: a use, a product, a http request body
+    examples: a user, a product, a http request body
     choose name: use nouns or short phrases with nouns
 
 -------------------------------------------------------------------------------------------------------------------------

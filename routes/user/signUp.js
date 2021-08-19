@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const { User, validate } = require("../../models/user");
 const { BlockedSubDomain } = require("../../models/blockedSubDomain");
 const MongoClient = require("mongodb").MongoClient;
-const { DATABASE_ADDRESS } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 
 router.get("/", signupView);
@@ -32,8 +32,7 @@ async function signup(request, response, next) {
             this.setTime(this.getTime() + h * 60 * 60 * 1000);
             return this;
         };
-        // let iranTime = nowISO.addHours(3.5);
-        let iranTime = nowISO.addHours(0);
+        let iranTime = nowISO.addHours(3.5);
         momentJalaali.loadPersian({ usePersianDigits: true });
         let paidTime = momentJalaali(iranTime).format("jYYYY/jMM/jDD HH:mm");
         let {
@@ -47,7 +46,6 @@ async function signup(request, response, next) {
             response.render("signup", {
                 error: `${error}`,
             });
-            // response.json({ error: `${error}` });
         } else {
             let isUser = await User.findOne({
                 userEmail: userEmail.toLowerCase(),
@@ -62,7 +60,6 @@ async function signup(request, response, next) {
                 subDomain: userStoreNameInEnglish.toLowerCase(),
             });
             if (isUser) {
-                // response.json({ error: "با این ایمیل قبلا ثبت نام شده است" });
                 return response.render("signup", {
                     error: "با این ایمیل قبلا ثبت نام شده است",
                 });
@@ -109,9 +106,6 @@ async function signup(request, response, next) {
                 user.userPassword = await bcrypt.hash(user.userPassword, salt);
                 await user.save();
                 const token = user.generateAuthToken();
-                // response.render("dashboard", {
-                //     userToken: token,
-                // });
                 return response.redirect(`/user/dashboard?userToken=${token}`);
             }
         }
