@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
+let ObjectId = require("mongodb").ObjectID;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 momentJalaali.loadPersian({ usePersianDigits: true });
@@ -26,7 +27,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/", uploadBannerView);
-router.post("/", upload.array("bannerPictures", 3), uploadBanner);
+router.post("/", upload.array("bannerPictures"), uploadBanner);
 router.get("/delete", deleteBanner);
 
 async function uploadBannerView(request, response, next) {
