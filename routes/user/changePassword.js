@@ -31,39 +31,29 @@ async function changePassword(request, response, next) {
     try {
         let { oldPassword, newPassword, newPasswordConfirm } = request.body;
         const token = request.query.userToken;
-        if (newPassword === newPasswordConfirm) {
-            if (newPassword.length > 3) {
-                let user = request.user;
-                if (user.userPassword.length > 0) {
-                    const isValidPassword = await bcrypt.compare(
-                        oldPassword,
-                        user.userPassword
-                    );
-                    if (isValidPassword == true) {
-                        const salt = await bcrypt.genSalt(10);
-                        let newHash = await bcrypt.hash(newPassword, salt);
-                        await User.findOneAndUpdate(
-                            { _id: ObjectId(user._id) },
-                            { $set: { userPassword: newHash } }
-                        );
-                        response.render("changePassword", {
-                            error: "",
-                            isPasswordChange: 1,
-                            token: token,
-                            storeInfo: storeInfo,
-                        });
-                    } else {
-                        response.render("changePassword", {
-                            error: "رمز عبور قدیمی اشتباه است.",
-                            isPasswordChange: 0,
-                            token: token,
-                            storeInfo: storeInfo,
-                        });
-                    }
-                }
+        let storeInfo = request.user.userStore;
+        if (newPassword === newPasswordConfirm && newPassword.length > 3) {
+            let user = request.user;
+            const isValidPassword = await bcrypt.compare(
+                oldPassword,
+                user.userPassword
+            );
+            if (isValidPassword == true) {
+                const salt = await bcrypt.genSalt(10);
+                let newHash = await bcrypt.hash(newPassword, salt);
+                await User.findOneAndUpdate(
+                    { _id: ObjectId(user._id) },
+                    { $set: { userPassword: newHash } }
+                );
+                response.render("changePassword", {
+                    error: "",
+                    isPasswordChange: 1,
+                    token: token,
+                    storeInfo: storeInfo,
+                });
             } else {
                 response.render("changePassword", {
-                    error: "رمزعبور باید حداقل 4 کاراکتر باشد.",
+                    error: "رمز عبور قدیمی اشتباه است.",
                     isPasswordChange: 0,
                     token: token,
                     storeInfo: storeInfo,
