@@ -45,7 +45,7 @@ async function editCategory(request, response, next) {
             .find({ _id: ObjectId(categoryId) })
             .toArray();
         response.render("editCategory", {
-            categories: resultCategory[0],
+            category: resultCategory[0],
             storeInfo: request.user.userStore,
             categoryEdited: 0,
             token: token,
@@ -122,7 +122,7 @@ async function editCategoryAPI(request, response, next) {
                 .find({ _id: ObjectId(categoryId) })
                 .toArray();
             response.render("editCategory", {
-                categories: resultCategory[0],
+                category: resultCategory[0],
                 storeInfo: request.user.userStore,
                 categoryEdited: 1,
                 token: token,

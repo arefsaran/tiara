@@ -146,25 +146,13 @@
                                     </div>
                                     <input type="hidden" name="userTokenHide" id="userTokenHide" value="<%= token %>">
                                     <div class="offset-xl-3 offset-sm-4">
-                                        <% if(error == 0 || error == 1 || error == 2){ %>
-                                            <button
-                                            onclick="actionSet()"
-                                            type="submit"
-                                            disabled
-                                            class="btn btn-success"
-                                            >
-                                                ترکیب
-                                            </button>
-                                        <% }else { %>
-                                            <button
-                                            onclick="actionSet()"
-                                            type="submit"
-                                            class="btn btn-success"
-                                            >
-                                                ترکیب
-                                            </button>
-                                        <% } %>
-                                        
+                                    <button
+                                    onclick="actionSet()"
+                                    type="submit"
+                                    class="btn btn-success"
+                                    >
+                                        ترکیب
+                                    </button>
                                     </div>
                                 </form>
                             </div>

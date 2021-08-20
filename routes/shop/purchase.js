@@ -3,7 +3,7 @@ const router = express.Router();
 const { Purchase } = require("../../models/purchase");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectID;
-const { DATABASE_ADDRESS } = require("../../config/config");
+const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 const momentJalaali = require("moment-jalaali");
 const { createInvoice } = require("./createInvoice.js");
 

@@ -4,6 +4,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const persianJs = require("persianjs");
 const momentJalaali = require("moment-jalaali");
+const { Category } = require("../../models/category");
 momentJalaali.loadPersian({ usePersianDigits: true });
 let jalaliDate = momentJalaali(new Date()).format("jYYYY/jMM/jDD");
 const storage = multer.diskStorage({

@@ -63,12 +63,12 @@ async function mergeCategories(request, response, next) {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
+        let databaseClient = client.db(DATABASE_NAME);
         if (
             originCategory &&
             destinationCategory &&
             originCategory !== destinationCategory
         ) {
-            let databaseClient = client.db(DATABASE_NAME);
             mongoose.connection.db.collection(storeId, (err, collection) => {
                 collection.updateMany(
                     { categoryName: originCategory },

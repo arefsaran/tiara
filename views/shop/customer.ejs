@@ -146,7 +146,7 @@ return obj;
                 if (response.status === 200 && response.data !== "Deleted") {
                     localStorage.setItem("purchaseId",response.data.purchaseId);
                     window.location.href = `/zarinpal/payment?purchaseId=${response.data.purchaseId}&totalPrice=${response.data.totalPrice}`
-                } else if (response.status === 403 && outOfOrderProducts){
+                } else if (response.status === 403 && response.data.outOfOrderProducts){
                     window.location.href = `/customer?error=${response.data.outOfOrderProducts[0].name} سفارش شما بیش از تعداد موجود می باشد`
                 }
             });

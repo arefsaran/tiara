@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
 const { DATABASE_ADDRESS, DATABASE_NAME } = require("../../config/config");
 
