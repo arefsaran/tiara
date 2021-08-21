@@ -1,4 +1,4 @@
-const request = require("request-promise");
+const requestPromise = require("request-promise");
 const express = require("express");
 const app = express.Router();
 const { MERCHANT_ID } = require("../../config/config");
@@ -27,15 +27,15 @@ async function pay(request, response, next) {
             process.env.PWD = process.cwd();
         }
         let invoicePath = `/invoices/${purchaseId}.pdf`;
-        let store = request.store.userStore.storeId;
+        let storeId = request.store.userStore.storeId;
         let shippingCost = request.store.userStore.shippingCost * 1000 || 0;
         let amount = parseInt(totalPrice) + shippingCost;
         let userEmail = request.store.userEmail || "tiaraplatform@gmail.com";
-        let Zarinpal_MERCHANT_ID = request.store.MERCHANT_ID || MERCHANT_ID;
+        let ZARINPAL_MERCHANT_ID = request.store.MERCHANT_ID || MERCHANT_ID;
         let parameters = {
-            MerchantID: Zarinpal_MERCHANT_ID,
+            MerchantID: ZARINPAL_MERCHANT_ID,
             Amount: amount,
-            CallbackURL: `https://${store}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${store}`,
+            CallbackURL: `https://${storeId}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${storeId}`,
             Description: `${purchaseId}`,
             Email: userEmail,
         };
@@ -45,7 +45,7 @@ async function pay(request, response, next) {
             parameters
         );
 
-        await request(options)
+        await requestPromise(options)
             .then(async (data) => {
                 return response.redirect(
                     `https://www.zarinpal.com/pg/StartPay/${data.Authority}`
@@ -63,16 +63,17 @@ async function pay(request, response, next) {
     }
 }
 
-async function checker(request, response, next) {
+function checker(request, response) {
     try {
         let purchaseParameters = {
             done: 0,
             purchaseId: request.query.purchaseId,
         };
-        let requestURL = `https://${request.query.storeId}.tiaraplatform.ir/purchase`;
+        let storeId = request.query.storeId;
+        let requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
         let optionsPurchase = getUrlOption(requestURL, purchaseParameters);
         if (request.query.Status !== "OK") {
-            request(optionsPurchase).then(async (data) => {
+            requestPromise(optionsPurchase).then(async (data) => {
                 return response.render("unsuccessfulPayment");
             });
         } else {
@@ -87,34 +88,33 @@ async function checker(request, response, next) {
                 parameters
             );
 
-            request(options)
+            requestPromise(options)
                 .then(async (data) => {
                     if (data.Status == 100) {
                         let parameters = {
                             done: 1,
                             purchaseId: request.query.purchaseId,
                         };
-                        let requestURL = `https://${request.query.storeId}.tiaraplatform.ir/purchase`;
+                        let requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
                         let options = getUrlOption(requestURL, parameters);
-                        request(options).then(async (result) => {
+                        requestPromise(options).then(async (result) => {
                             return response.render("successfulPayment", {
                                 RefID: result.data.RefID,
                                 invoicePath: request.query.invoicePath,
                             });
                         });
                     } else {
-                        request(optionsPurchase).then(async (data) => {
+                        requestPromise(optionsPurchase).then(async (data) => {
                             return response.render("unsuccessfulPayment");
                         });
                     }
                 })
                 .catch((err) => {
-                    request(optionsPurchase).then(async (data) => {
+                    requestPromise(optionsPurchase).then(async (data) => {
                         return response.render("unsuccessfulPayment");
                     });
                 });
         }
-        next();
     } catch (error) {
         response.json({
             status: 500,
