@@ -53,6 +53,7 @@ async function settingsAPI(request, response, next) {
             storePhoneNumber,
             shippingCost,
             MERCHANT_ID,
+            raychat,
         } = request.body;
         let userEmail = request.user.userEmail;
         let storeId = request.user.userStore.storeId;
@@ -109,6 +110,7 @@ async function settingsAPI(request, response, next) {
                             persianJs(storePhoneNumber)
                                 .toEnglishNumber()
                                 .toString() || "",
+                        raychat: raychat,
                     },
                     updateTime: jalaliDate,
                 };
@@ -142,6 +144,7 @@ async function settingsAPI(request, response, next) {
                         storePhoneNumber: persianJs(storePhoneNumber)
                             .toEnglishNumber()
                             .toString(),
+                        raychat: raychat,
                     },
                     updateTime: jalaliDate,
                 };

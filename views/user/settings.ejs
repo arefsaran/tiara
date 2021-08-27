@@ -114,7 +114,7 @@
                                             <label
                                                 for="validationCustom10"
                                                 class="col-xl-3 col-sm-4 mb-0"
-                                                >کد درگاه پرداخت زرین پال:
+                                                >کد درگاه پرداخت <a target="_blank" href="https://zarinpal.com/">زرین پال</a> : 
                                             </label>
                                             <input
                                                 name="MERCHANT_ID"
@@ -123,6 +123,27 @@
                                                 type="text"
                                                 placeholder="مانند: e1t456fb-567u-626f-rt43-99a03987f621"
                                                 value="<%= storeDetails.MERCHANT_ID %>"
+                                                required
+                                            />
+                                            <div
+                                                class="invalid-feedback offset-sm-4 offset-xl-3"
+                                            >
+                                                لطفا مقدار معتبر وارد کنید
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                for="validationCustom11"
+                                                class="col-xl-3 col-sm-4 mb-0"
+                                                >توکن <a target="_blank" href="https://raychat.io/">رایچت</a> :
+                                            </label>
+                                            <input
+                                                name="raychat"
+                                                class="form-control col-xl-8 col-sm-7"
+                                                id="validationCustom11"
+                                                type="text"
+                                                placeholder="مانند: 65eaa084-bb6e-4557-a6yt-d4r30c9932eq"
+                                                value="<%= storeDetails.raychat %>"
                                                 required
                                             />
                                             <div

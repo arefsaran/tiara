@@ -98,6 +98,9 @@ const userSchema = new mongoose.Schema(
             storeFreeDeliveryPrice: {
                 type: Number,
             },
+            raychat: {
+                type: String,
+            },
         },
         purchaseID: {
             type: String,
