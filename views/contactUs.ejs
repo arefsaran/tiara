@@ -6,7 +6,7 @@
     
     <!--====== Title ======-->
     <title>پلتفرم تیارا</title>
-
+    <base href="/contactUs">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -101,7 +101,6 @@
                                 <span class="toggler-icon"></span>
                                 <span class="toggler-icon"></span>
                             </button>
-
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ml-auto">
                                     <li class="nav-item active">
@@ -115,7 +114,6 @@
                 </div> <!-- row -->
             </div> <!-- container -->
         </div> <!-- navbar area -->
-        
         <div id="home" class="header-hero bg_cover" style="background-image: url(./assets/images/banner-bg.svg)">
             <div class="container">
                 <div class="row justify-content-center">
@@ -126,22 +124,34 @@
                         </div> <!-- header hero content -->
                     </div>
                 </div>
+                <% if (message.length !== 0) { %>
+                    <% if (message === "لطفا تیک من ربات نیستم را بزنید" || message === "صفحه را refresh کنید") { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="text-align: right;">
+                    <%} else if (message === "پیام شما با موفقیت ارسال شد") { %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: right;">
+                    <% } %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>پلتفرم تیارا :</strong> <%= message %>
+                    </div>
+                <% } %>
                 <div class="col-lg-10 m-auto p-5" data-wow-duration="1s" data-wow-delay="200" style="padding-top: 100px;">
                     <script src="https://www.google.com/recaptcha/api.js"></script>
-                    <form id="sendMsg">
+                    <form id="sendMessage" method="POST" action="/contactUs" enctype="application/x-www-form-urlencoded">
                       <div class="form-row">
                         <div class="form-group col-lg-6">
-                          <input type="text" name="customerName" class="form-control" id="customerName" placeholder="نام شما" required/>
+                          <input type="text" name="name" class="form-control" id="name" placeholder="نام شما" required/>
                         </div>
                         <div class="form-group col-lg-6">
-                          <input type="email" class="form-control " name="customerEmail" id="customerEmail" placeholder="آدرس ایمیل شما" required/>
+                          <input type="tel" class="form-control" minlength="11" maxlength="11" name="phone" id="phone" placeholder="شماره تماس به صورت 09xxx" required/>
                         </div>
                       </div>
                       <div class="form-group">
-                        <input type="text" class="form-control" name="customerSubject" id="customerSubject" placeholder="موضوع پیام" required/>
+                        <input type="text" class="form-control" name="subject" id="subject" placeholder="موضوع پیام" required/>
                       </div>
                       <div class="form-group">
-                        <textarea class="form-control" name="customerMessage" id="customerMessage" cols="30" rows="5" placeholder="متن پیام" required></textarea>
+                        <textarea class="form-control" name="text" id="text" cols="30" rows="5" placeholder="متن پیام" required></textarea>
                       </div>
                       <div class="form-group">
                         <div
@@ -149,30 +159,8 @@
                           data-sitekey="6Lc1vocbAAAAABqC3K4JrP8bgalAWz6EI-q_yoE0"
                         ></div>
                       </div>
-                      <input disabled type="submit" value="ارسال پیام" class="btn btn-success">
+                      <input form="sendMessage" type="submit" value="ارسال پیام" class="btn btn-success">
                     </form>
-                    <script>
-                      document.getElementById("sendMsg").addEventListener("submit", e => {
-                        e.preventDefault();
-                
-                        const customerName = document.getElementById("customerName").value;
-                        const customerEmail = document.getElementById("customerEmail").value;
-                        const customerSubject = document.getElementById("customerSubject").value;
-                        const customerMessage = document.getElementById("customerMessage").value;
-                        const captcha = document.getElementById("g-recaptcha-response").value;
-                
-                        return fetch("/", {
-                          method: "POST",
-                          headers: { "Content-type": "application/json" },
-                          body: JSON.stringify({ customerName, customerEmail, captcha ,customerSubject ,customerMessage})
-                        })
-                          .then(response => response.json())
-                          .then(data => {
-                            alert(data.msg);
-                            if (data.success) return location.reload();
-                          });
-                      });
-                    </script>
                   </div>
             </div> <!-- container -->
             <div id="particles-1" class="particles"></div>
