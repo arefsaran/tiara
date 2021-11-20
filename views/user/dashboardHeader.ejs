@@ -37,8 +37,34 @@
 
     <!-- Theme css -->
     <link rel="stylesheet" type="text/css" href="./assets/css/color3.css" media="screen" id="color">
+    <style>
+        /* width */
+            .workarea-view-scroll-wrapper::-webkit-scrollbar {
+                width: 10px;
+                background-color: #F5F5F5;
+            }
+    
+            /* Track */
+            .workarea-view-scroll-wrapper::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                background-color: #F5F5F5;
+            }
+            
+            /* Handle */
+            .workarea-view-scroll-wrapper::-webkit-scrollbar-thumb {
+                background-color: rgb(153, 153, 153); 
+                background-image: -webkit-linear-gradient(90deg,
+                        rgba(255, 255, 255, .2) 25%,
+                        transparent 25%,
+                        transparent 50%,
+                        rgba(255, 255, 255, .2) 50%,
+                        rgba(255, 255, 255, .2) 75%,
+                        transparent 75%,
+                        transparent)
+            }
+        </style>
 </head>
-<body class="rtl">
+<body class="rtl workarea-view-scroll-wrapper">
 <!-- page-wrapper Start-->
 <div class="page-wrapper">
 
@@ -97,9 +123,14 @@
                     </li>
                     <li><a class="sidebar-header" id="settingsButton" href=""><i data-feather="settings" ></i><span>تنظیمات</span></a>
                     </li>
+                    <% if(storeInfo.domain.length == 0){ %>
                     <li><a class="sidebar-header" id="myStore" href="https://<%= storeInfo.storeId %>.tiaraplatform.ir" target="_blank"><i data-feather="link" ></i><span>رفتن به فروشگاه</span></a>
-                    <li><a class="sidebar-header" id="changePasswordButton" href=""><i data-feather="lock" ></i><span>تغییر رمزعبور</span></a>
+                    </li> 
+                    <% } else if(storeInfo.domain.length >= 1){ %>
+                    <li><a class="sidebar-header" id="myStore" href="http://<%= storeInfo.domain %>" target="_blank"><i data-feather="link" ></i><span>رفتن به فروشگاه</span></a>
                     </li>
+                    <% } %>
+                    <li><a class="sidebar-header" id="changePasswordButton" href=""><i data-feather="lock" ></i><span>تغییر رمزعبور</span></a>
                     </li>
                     <li><a class="sidebar-header" id="aboutUsButton" href="https://tiaraplatform.ir"><i data-feather="link-2" ></i><span>درباره ما</span></a>
                     </li>

@@ -3,7 +3,7 @@ const { Admin, validateLogin } = require("../../models/admin");
 
 async function loginView(request, response, next) {
     try {
-        response.render("adminLogIn", { error: "" });
+        response.render("adminLogin", { error: "" });
         next();
     } catch (error) {
         response.json({
@@ -22,7 +22,7 @@ async function login(request, response, next) {
             password: request.body.password,
         });
         if (error) {
-            response.render("adminLogIn", {
+            response.render("adminLogin", {
                 error: `${error}`,
             });
         } else {
@@ -30,7 +30,7 @@ async function login(request, response, next) {
                 email: request.body.email.toLowerCase(),
             });
             if (!admin) {
-                response.render("adminLogIn", {
+                response.render("adminLogin", {
                     error: "نام کاربری یا رمز عبور اشتباه است",
                 });
             } else {
@@ -42,7 +42,7 @@ async function login(request, response, next) {
                     const token = admin.generateAuthToken();
                     response.redirect(`/admin/dashboard?adminToken=${token}`);
                 } else {
-                    response.render("adminLogIn", {
+                    response.render("adminLogin", {
                         error: "نام کاربری یا رمز عبور اشتباه است",
                     });
                 }

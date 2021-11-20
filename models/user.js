@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema(
                 type: String,
                 index: true,
             },
+            domain: {
+                type: String,
+                default: "",
+                index: true,
+                unique: true,
+            },
             storeId: {
                 type: String,
                 required: true,

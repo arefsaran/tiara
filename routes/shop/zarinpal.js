@@ -28,6 +28,13 @@ async function pay(request, response, next) {
         }
         let invoicePath = `/invoices/${purchaseId}.pdf`;
         let storeId = request.store.userStore.storeId;
+        let domain = request.store.userStore.domain;
+        let callbackURL = "";
+        if (domain.length == 0) {
+            callbackURL = `https://${storeId}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${storeId}`;
+        } else if (domain.length >= 1) {
+            callbackURL = `http://${domain}/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${storeId}`;
+        }
         let shippingCost = request.store.userStore.shippingCost * 1000 || 0;
         let amount = parseInt(totalPrice) + shippingCost;
         let userEmail = request.store.userEmail || "tiaraplatform@gmail.com";
@@ -35,7 +42,7 @@ async function pay(request, response, next) {
         let parameters = {
             MerchantID: ZARINPAL_MERCHANT_ID,
             Amount: amount,
-            CallbackURL: `https://${storeId}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${storeId}`,
+            CallbackURL: callbackURL,
             Description: `${purchaseId}`,
             Email: userEmail,
         };
@@ -70,7 +77,14 @@ function checker(request, response) {
             purchaseId: request.query.purchaseId,
         };
         let storeId = request.query.storeId;
-        let requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
+        let requestURL = "";
+        let domain = request.store.userStore.domain;
+        console.log("domain checker", domain);
+        if (domain.length == 0) {
+            requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
+        } else if (domain.length >= 1) {
+            requestURL = `http://${domain}/purchase`;
+        }
         let optionsPurchase = getUrlOption(requestURL, purchaseParameters);
         if (request.query.Status !== "OK") {
             requestPromise(optionsPurchase).then(async (data) => {
@@ -95,7 +109,12 @@ function checker(request, response) {
                             done: 1,
                             purchaseId: request.query.purchaseId,
                         };
-                        let requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
+                        let requestURL = "";
+                        if (domain.length == 0) {
+                            requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
+                        } else if (domain.length >= 1) {
+                            requestURL = `http://${domain}/purchase`;
+                        }
                         let options = getUrlOption(requestURL, parameters);
                         requestPromise(options).then(async (result) => {
                             return response.render("successfulPayment", {

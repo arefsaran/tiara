@@ -54,6 +54,7 @@ async function settingsAPI(request, response, next) {
             shippingCost,
             MERCHANT_ID,
             raychat,
+            domain,
         } = request.body;
         let userEmail = request.user.userEmail;
         let storeId = request.user.userStore.storeId;
@@ -62,7 +63,13 @@ async function settingsAPI(request, response, next) {
             request.user.userStore.storePlan.planTimeToExpiry;
         let collectionName = "users";
         let userId = request.user._id;
+        domain = domain.toLowerCase();
         const token = request.query.userToken || request.query.userTokenHide;
+        console.log(request.body);
+        console.log(request.user);
+        if (domain.startsWith("www.")) {
+            domain = domain.replace("www.", "");
+        }
         async function update(name, query) {
             // await mongoose.connection.db
             //     .collection(`${collection}`)
@@ -74,93 +81,85 @@ async function settingsAPI(request, response, next) {
                 );
             });
         }
-        if (collectionName) {
-            let storePicture = "";
-            let query = {};
-            if (request.file != undefined) {
-                storePicture = request.file.path.replace(/\\/g, "/").substr(7);
-                query = {
-                    userName: persianJs(userName.toLowerCase())
+        let storePicture = "";
+        let query = {};
+        if (request.file != undefined) {
+            storePicture = request.file.path.replace(/\\/g, "/").substr(7);
+            query = {
+                userName: persianJs(userName.toLowerCase())
+                    .englishNumber()
+                    .toString(),
+                userEmail: persianJs(userEmail.toLowerCase())
+                    .toEnglishNumber()
+                    .toString(),
+                MERCHANT_ID: MERCHANT_ID,
+                userStore: {
+                    storePlan: {
+                        planType: Number(planType),
+                        planTimeToExpiry: Number(planTimeToExpiry),
+                    },
+                    storePicture: storePicture,
+                    storeName: persianJs(storeName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    userEmail: persianJs(userEmail.toLowerCase())
-                        .toEnglishNumber()
-                        .toString(),
-                    MERCHANT_ID: MERCHANT_ID,
-                    userStore: {
-                        storePlan: {
-                            planType: Number(planType),
-                            planTimeToExpiry: Number(planTimeToExpiry),
-                        },
-                        storePicture: storePicture,
-                        storeName: persianJs(storeName.toLowerCase())
-                            .englishNumber()
-                            .toString(),
-                        storeId: persianJs(storeId)
+                    domain: persianJs(domain).toEnglishNumber().toString(),
+                    storeId: persianJs(storeId).toEnglishNumber().toString(),
+                    shippingCost: parseInt(
+                        persianJs(shippingCost).toEnglishNumber()
+                    ),
+                    storeAddress:
+                        persianJs(storeAddress).englishNumber().toString() ||
+                        "",
+                    storePhoneNumber:
+                        persianJs(storePhoneNumber)
                             .toEnglishNumber()
-                            .toString(),
-                        shippingCost: parseInt(
-                            persianJs(shippingCost).toEnglishNumber()
-                        ),
-                        storeAddress:
-                            persianJs(storeAddress)
-                                .englishNumber()
-                                .toString() || "",
-                        storePhoneNumber:
-                            persianJs(storePhoneNumber)
-                                .toEnglishNumber()
-                                .toString() || "",
-                        raychat: raychat,
+                            .toString() || "",
+                    raychat: raychat,
+                },
+                updateTime: jalaliDate,
+            };
+        } else {
+            query = {
+                userName: persianJs(userName.toLowerCase())
+                    .englishNumber()
+                    .toString(),
+                userEmail: persianJs(userEmail.toLowerCase())
+                    .toEnglishNumber()
+                    .toString(),
+                MERCHANT_ID: MERCHANT_ID,
+                userStore: {
+                    storePicture: request.user.userStore.storePicture,
+                    storePlan: {
+                        planType: Number(planType),
+                        planTimeToExpiry: Number(planTimeToExpiry),
                     },
-                    updateTime: jalaliDate,
-                };
-            } else {
-                query = {
-                    userName: persianJs(userName.toLowerCase())
+                    shippingCost: parseInt(
+                        persianJs(shippingCost).toEnglishNumber()
+                    ),
+                    storeName: persianJs(storeName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    userEmail: persianJs(userEmail.toLowerCase())
+                    domain: persianJs(domain).toEnglishNumber().toString(),
+                    storeId: persianJs(storeId).toEnglishNumber().toString(),
+                    storeAddress: persianJs(storeAddress)
+                        .englishNumber()
+                        .toString(),
+                    storePhoneNumber: persianJs(storePhoneNumber)
                         .toEnglishNumber()
                         .toString(),
-                    MERCHANT_ID: MERCHANT_ID,
-                    userStore: {
-                        storePicture: request.user.userStore.storePicture,
-                        storePlan: {
-                            planType: Number(planType),
-                            planTimeToExpiry: Number(planTimeToExpiry),
-                        },
-                        shippingCost: parseInt(
-                            persianJs(shippingCost).toEnglishNumber()
-                        ),
-                        storeName: persianJs(storeName.toLowerCase())
-                            .englishNumber()
-                            .toString(),
-                        storeId: persianJs(storeId)
-                            .toEnglishNumber()
-                            .toString(),
-                        storeAddress: persianJs(storeAddress)
-                            .englishNumber()
-                            .toString(),
-                        storePhoneNumber: persianJs(storePhoneNumber)
-                            .toEnglishNumber()
-                            .toString(),
-                        raychat: raychat,
-                    },
-                    updateTime: jalaliDate,
-                };
-            }
-            update(collectionName, query);
-            const decoded = jwt.verify(token, JWT_PRIVATE_KEY);
-            let userInfo = await User.findOne({
-                _id: decoded._id,
-            });
-            response.render("settings", {
-                storeInfo: request.user.userStore,
-                storeDetails: userInfo,
-                token: token,
-                edit: 1,
-            });
+                    raychat: raychat,
+                },
+                updateTime: jalaliDate,
+            };
         }
+        update(collectionName, query);
+        response.render("settings", {
+            storeInfo: request.user.userStore,
+            storeDetails: request.user,
+            token: token,
+            edit: 1,
+        });
+
         next();
     } catch (error) {
         response.json({
