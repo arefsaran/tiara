@@ -65,8 +65,9 @@ async function settingsAPI(request, response, next) {
         let userId = request.user._id;
         domain = domain.toLowerCase();
         const token = request.query.userToken || request.query.userTokenHide;
-        console.log(request.body);
-        console.log(request.user);
+        if (domain.length > 0) {
+            domain = persianJs(domain).toEnglishNumber().toString();
+        }
         if (domain.startsWith("www.")) {
             domain = domain.replace("www.", "");
         }
@@ -102,7 +103,7 @@ async function settingsAPI(request, response, next) {
                     storeName: persianJs(storeName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    domain: persianJs(domain).toEnglishNumber().toString(),
+                    domain: domain,
                     storeId: persianJs(storeId).toEnglishNumber().toString(),
                     shippingCost: parseInt(
                         persianJs(shippingCost).toEnglishNumber()
@@ -139,7 +140,7 @@ async function settingsAPI(request, response, next) {
                     storeName: persianJs(storeName.toLowerCase())
                         .englishNumber()
                         .toString(),
-                    domain: persianJs(domain).toEnglishNumber().toString(),
+                    domain: domain,
                     storeId: persianJs(storeId).toEnglishNumber().toString(),
                     storeAddress: persianJs(storeAddress)
                         .englishNumber()
@@ -153,6 +154,9 @@ async function settingsAPI(request, response, next) {
             };
         }
         update(collectionName, query);
+        request.user = await User.findOne({
+            _id: request.user._id,
+        });
         response.render("settings", {
             storeInfo: request.user.userStore,
             storeDetails: request.user,

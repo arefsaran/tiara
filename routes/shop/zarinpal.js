@@ -30,13 +30,13 @@ async function pay(request, response, next) {
         let storeId = request.store.userStore.storeId;
         let domain = request.store.userStore.domain;
         let callbackURL = "";
+        let shippingCost = request.store.userStore.shippingCost * 1000 || 0;
+        let amount = parseInt(totalPrice) + shippingCost;
         if (domain.length == 0) {
             callbackURL = `https://${storeId}.tiaraplatform.ir/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${storeId}`;
         } else if (domain.length >= 1) {
             callbackURL = `http://${domain}/zarinpal/checker?Amount=${amount}&invoicePath=${invoicePath}&purchaseId=${purchaseId}&storeId=${storeId}`;
         }
-        let shippingCost = request.store.userStore.shippingCost * 1000 || 0;
-        let amount = parseInt(totalPrice) + shippingCost;
         let userEmail = request.store.userEmail || "tiaraplatform@gmail.com";
         let ZARINPAL_MERCHANT_ID = request.store.MERCHANT_ID || MERCHANT_ID;
         let parameters = {
@@ -46,7 +46,6 @@ async function pay(request, response, next) {
             Description: `${purchaseId}`,
             Email: userEmail,
         };
-
         let options = getUrlOption(
             "https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json",
             parameters
@@ -79,7 +78,6 @@ function checker(request, response) {
         let storeId = request.query.storeId;
         let requestURL = "";
         let domain = request.store.userStore.domain;
-        console.log("domain checker", domain);
         if (domain.length == 0) {
             requestURL = `https://${storeId}.tiaraplatform.ir/purchase`;
         } else if (domain.length >= 1) {
@@ -118,7 +116,7 @@ function checker(request, response) {
                         let options = getUrlOption(requestURL, parameters);
                         requestPromise(options).then(async (result) => {
                             return response.render("successfulPayment", {
-                                RefID: result.data.RefID,
+                                RefID: request.query.purchaseId,
                                 invoicePath: request.query.invoicePath,
                             });
                         });

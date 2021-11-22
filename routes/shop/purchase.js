@@ -21,6 +21,7 @@ function inStock(request, response) {
             basket,
             done,
         } = request.body;
+        done = parseInt(done);
         let storeId = request.store.userStore.storeId;
         let date = Date.now() / 10 ** 7;
         let newPurchaseId = Math.floor(date + Math.random() * 900000)
