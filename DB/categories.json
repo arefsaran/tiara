@@ -1,1 +1,163 @@
-[]
+[
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616f9"
+    },
+    "categoryName": "سبزی",
+    "categoryPicture": "uploads/categories/images/Vegetables.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:19:38.271Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:19:38.271Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616fa"
+    },
+    "categoryName": "خواربار",
+    "categoryPicture": "uploads/categories/images/Grocery.png",
+    "createdAt": {
+      "$date": "2020-03-25T12:56:45.103Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T12:56:45.103Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616fb"
+    },
+    "categoryName": "پروتئینی",
+    "categoryPicture": "uploads/categories/images/protein.png",
+    "createdAt": {
+      "$date": "2020-03-25T12:48:44.516Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T12:48:44.516Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616fc"
+    },
+    "categoryName": "نان و شیرینی",
+    "categoryPicture": "uploads/categories/images/cookie.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:31:52.999Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:31:52.999Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616fd"
+    },
+    "categoryName": "لبنیات",
+    "categoryPicture": "uploads/categories/images/dairy.png",
+    "createdAt": {
+      "$date": "2020-03-25T12:44:15.724Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T12:44:15.724Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616fe"
+    },
+    "categoryName": "شوینده و پاک کننده",
+    "categoryPicture": "uploads/categories/images/cleaner.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:38:39.859Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:38:39.859Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd616ff"
+    },
+    "categoryName": "نوشیدنی",
+    "categoryPicture": "uploads/categories/images/Beverages.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:16:30.164Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:16:30.164Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd61700"
+    },
+    "categoryName": "میوه",
+    "categoryPicture": "uploads/categories/images/fruit.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:18:16.584Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:18:16.584Z"
+    },
+    "__v": 0,
+    "storeId": "software",
+    "editedAt": "۱۴۰۰/۰۴/۱۴"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd61701"
+    },
+    "categoryName": "تنقلات",
+    "categoryPicture": "uploads/categories/images/junkfood.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:23:43.358Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:23:43.358Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610bde1eeb1a295a3cd61702"
+    },
+    "categoryName": "خشکبار",
+    "categoryPicture": "uploads/categories/images/driedfood.png",
+    "createdAt": {
+      "$date": "2020-03-25T13:26:35.609Z"
+    },
+    "updatedAt": {
+      "$date": "2020-03-25T13:26:35.609Z"
+    },
+    "__v": 0,
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "61447f587ea28f16b9f33719"
+    },
+    "categoryName": "دسته جدید",
+    "categoryPicture": "uploads/products/images/fortest_709438.6671114229_1.jpg",
+    "storeId": "fortest",
+    "createdAt": "۱۴۰۰/۰۶/۲۶",
+    "editedAt": "۱۴۰۰/۰۶/۲۶"
+  }
+]

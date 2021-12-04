@@ -1,0 +1,23 @@
+[
+  {
+    "_id": {
+      "$oid": "610e547e909e96cc03408ca6"
+    },
+    "picture": "uploads/banners/software_482823.6758348297_2.jpg",
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "610e547e909e96cc03408ca7"
+    },
+    "picture": "uploads/banners/software_833934.4115614768_3.jpg",
+    "storeId": "software"
+  },
+  {
+    "_id": {
+      "$oid": "61447fa57ea28f16b9f33742"
+    },
+    "picture": "uploads/banners/fortest_839683.8089574595_1.jpg",
+    "storeId": "fortest"
+  }
+]

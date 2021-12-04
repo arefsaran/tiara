@@ -1,0 +1,22 @@
+[
+  {
+    "_id": {
+      "$oid": "61447f787ea28f16b9f33722"
+    },
+    "productName": "برای تست است",
+    "productPicture": "uploads/products/images/fortest_446262.93253845756_1.jpg",
+    "categoryName": "دسته جدید",
+    "productDetails": {
+      "productDetail": "این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. این محصول بسیار کاربردی است. ",
+      "productPrice": "۹۰۰",
+      "productManufacturingDate": "۱۳۹۹/۲/۴",
+      "productExpirationDate": "۱۴۰۰/۳/۵",
+      "productSize": "۳ لیتری",
+      "productPriceEnglishNumber": 900,
+      "subType": "other"
+    },
+    "storeId": "fortest",
+    "inStock": 2,
+    "createdAt": "۱۴۰۰/۰۶/۲۶"
+  }
+]

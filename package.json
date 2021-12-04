@@ -41,6 +41,7 @@
     "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.2",
     "eslint": "^7.28.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
@@ -50,6 +51,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "express-subdomain": "^1.0.5",
+    "jest": "^27.3.1",
     "prettier": "2.1.2"
   }
 }

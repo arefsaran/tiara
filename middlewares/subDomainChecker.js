@@ -4,6 +4,7 @@ module.exports.subDomainChecker = async function (request, response, next) {
     try {
         let subDomain = request.headers["x-subdomain"];
         let domain = request.headers["x-host"];
+        domain = domain.replace(`${subDomain}.`, "");
         let localhost = request
             .header("host")
             .split(".")
