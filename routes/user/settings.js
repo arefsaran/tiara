@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const mongoose = require("mongoose");
+const { exec } = require("child_process");
 const { User } = require("../../models/user");
 let ObjectId = require("mongodb").ObjectID;
 const persianJs = require("persianjs");
@@ -79,6 +80,16 @@ async function settingsAPI(request, response, next) {
                     { $set: query }
                 );
             });
+            if (domain.length > 0) {
+                let yourscript = exec(
+                    `sudo sh "/root/sites/tiaraplatform/bind9Config.sh" ${domain}`,
+                    (error, stdout, stderr) => {
+                        if (error !== null) {
+                            console.log(`exec error: ${error}`);
+                        }
+                    }
+                );
+            }
         }
         let storePicture = "";
         let query = {};

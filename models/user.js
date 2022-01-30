@@ -46,7 +46,6 @@ const userSchema = new mongoose.Schema(
                 type: String,
                 default: "",
                 index: true,
-                unique: true,
             },
             storeId: {
                 type: String,
