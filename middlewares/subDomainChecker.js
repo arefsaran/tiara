@@ -7,6 +7,10 @@ module.exports.subDomainChecker = async function (request, response, next) {
         let subDomain = request.headers["host"].split(".").slice(-2)[0];
         let domain = request.headers["host"];
         domain = domain.replace(`${subDomain}.`, "");
+
+        console.log("subDomain", subDomain);
+        console.log("domain", domain);
+
         let localhost = request
             .header("host")
             .split(".")
@@ -54,6 +58,7 @@ module.exports.subDomainChecker = async function (request, response, next) {
         }
         next();
     } catch (error) {
+        console.log(request);
         response.render("404");
     }
 };
