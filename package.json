@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha"
+    "test": "mocha",
+    "knip": "knip"
   },
   "repository": {
     "type": "git",
@@ -32,16 +33,16 @@
     "multer": "^1.4.2",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.6.2",
-    "nodemon": "^2.0.19",
+    "nodemon": "^3.0.2",
     "pdfkit": "^0.12.1",
     "persianjs": "^0.4.0",
     "request": "^2.88.2",
-    "request-promise": "^4.2.6",
     "tailwindcss": "^2.1.4",
-    "zarinpal-checkout": "^0.2.7"
+    "zarinpal-checkout": "^0.1.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
+    "@types/node": "^20.10.3",
     "eslint": "^7.28.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
@@ -52,6 +53,8 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "express-subdomain": "^1.0.5",
     "jest": "^27.3.1",
-    "prettier": "2.1.2"
+    "knip": "^3.5.1",
+    "prettier": "2.1.2",
+    "typescript": "^5.3.2"
   }
 }

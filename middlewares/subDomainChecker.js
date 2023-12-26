@@ -2,10 +2,10 @@ const { User } = require("../models/user");
 
 module.exports.subDomainChecker = async function (request, response, next) {
     try {
-        // let subDomain = request.headers["x-subdomain"];
-        // let domain = request.headers["x-host"];
-        let subDomain = request.headers["host"].split(".").slice(-2)[0];
-        let domain = request.headers["host"];
+        let subDomain = request.headers["x-subdomain"];
+        let domain = request.headers["x-host"];
+        // let subDomain = request.headers["host"].split(".").slice(-2)[0];
+        // let domain = request.headers["host"];
         domain = domain.replace(`${subDomain}.`, "");
 
         console.log("subDomain", subDomain);

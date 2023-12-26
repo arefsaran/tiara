@@ -1,4 +1,5 @@
-const requestPromise = require("request-promise");
+// const requestPromise = require("request-promise");
+const requestPromise = null;
 const express = require("express");
 const app = express.Router();
 const { MERCHANT_ID } = require("../../config/config");
