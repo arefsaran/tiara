@@ -1,0 +1,13 @@
+.vscode
+node_modules
+DB
+package-lock.json
+static/uploads
+static/invoices
+static/assets/images
+.env
+.eslintrc.json
+.prettierignore
+.prettierrc
+.prettierrc.json
+clearnCode.txt
